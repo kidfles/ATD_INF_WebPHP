@@ -1,0 +1,44 @@
+1. System Design Pattern
+We will use the Repository/Service pattern alongside standard MVC.
+
+Models: Data relationships.
+
+Controllers: Route traffic, return Views or JSON (for API).
+
+Services: Heavy lifting (e.g., CsvImportService, PdfContractService, WearAndTearService).
+
+2. Database Schema (Core Entities)
+Here is how you should structure your database migrations to handle the complex requirements:
+
+users: id, name, email, password, role (enum: user, private_ad, business_ad, admin).
+
+company_profiles: id, user_id, kvk_number, brand_color, custom_url_slug, contract_status (pending, approved).
+
+page_components (For Whitelabel landing pages): id, company_id, component_type (hero, text, featured_ads), content (JSON), order.
+
+advertisements: id, user_id, type (sell, rent, auction), title, description, price, expires_at.
+
+ad_relations (For Upsells): parent_ad_id, child_ad_id (Many-to-Many self-referencing).
+
+rentals: id, advertisement_id, renter_id, start_date, end_date, return_photo_path, wear_and_tear_cost.
+
+bids: id, advertisement_id, user_id, amount.
+
+reviews: id, reviewer_id, reviewable_id, reviewable_type (Polymorphic: can be applied to a User/Advertiser or an Advertisement/Product), rating, comment.
+
+favorites: user_id, advertisement_id.
+
+3. The Whitelabel Implementation Strategy
+To achieve the requirement: "Als bedrijf wil ik een eigen URL kunnen instellen" and "mijn eigen look en feel":
+
+Routing: Create a fallback route or a wildcard subdomain route in web.php.
+
+Route: /{company_slug}
+
+Controller Logic: Look up the CompanyProfile by the slug.
+
+Dynamic CSS: Pass the brand_color from the DB to the Blade view and inject it into the <style> tag as CSS variables:
+<style> :root { --primary-color: {{ $company->brand_color }}; } </style>
+
+4. API Security
+Use Laravel Sanctum. Businesses will click "Generate API Token" in their dashboard. They must send this token as a Bearer Token in the header of their API requests. Your API controller will simply return: return response()->json($request->user()->advertisements);

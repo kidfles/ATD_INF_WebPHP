@@ -1,0 +1,18 @@
+1. Laravel MVC Strict Rules
+Skinny Controllers: Controllers should only handle HTTP requests. Move complex logic (like Wear & Tear calculation or CSV processing) into Service Classes or Actions (e.g., app/Services/RentalService.php).
+
+Form Requests: NEVER validate data in the controller. Always create a Form Request (php artisan make:request StoreAdRequest).
+
+No PHP in Views: Your Blade files (.blade.php) should contain NO raw <?php ?> tags. Use Blade directives (@if, @foreach) and localized strings ({{ __('messages.welcome') }}).
+
+2. Eloquent & Database Strict Rules (KO 4)
+NO RAW QUERIES: Absolutely no DB::select('SELECT * FROM...'). Use Eloquent ORM exclusively.
+
+Eager Loading: Always use with() to prevent N+1 queries. E.g., Advertisement::with('user', 'bids')->get();.
+
+Database "Code First": All database structure must be generated via Migrations. If a reviewer runs php artisan migrate:fresh --seed, the app must be 100% ready to use.
+
+3. Testing & QA
+Dusk is Mandatory: Write tests from the user's perspective. (e.g., $browser->loginAs($user)->visit('/ads/create')->type('title', 'Test Ad')->press('Save')).
+
+Zero "Hatsieflats" Data: Use $faker->nl_NL and $faker->en_US in your Factories to generate real-looking data.
