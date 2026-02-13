@@ -58,4 +58,24 @@ class Advertisement extends Model
     {
         return $this->belongsToMany(Advertisement::class, 'ad_relations', 'parent_ad_id', 'child_ad_id');
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+             $query->where(function ($query) use ($search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                      ->orWhere('description', 'like', '%' . $search . '%');
+             });
+        });
+
+        $query->when($filters['sort'] ?? false, function ($query, $sort) {
+            match ($sort) {
+                'price_asc' => $query->orderBy('price', 'asc'),
+                'price_desc' => $query->orderBy('price', 'desc'),
+                'date_asc' => $query->orderBy('created_at', 'asc'),
+                'date_desc' => $query->orderBy('created_at', 'desc'),
+                default => $query,
+            };
+        });
+    }
 }
