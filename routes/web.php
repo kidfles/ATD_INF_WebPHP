@@ -4,7 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $featuredAds = \App\Models\Advertisement::latest()->take(6)->get();
+    return view('welcome', compact('featuredAds'));
 });
 
 Route::get('/dashboard', function () {
