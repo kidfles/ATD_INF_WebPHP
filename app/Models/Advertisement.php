@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,67 +15,45 @@ class Advertisement extends Model
     /** @use HasFactory<\Database\Factories\AdvertisementFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'type',
-        'title',
-        'description',
-        'price',
-        'expires_at',
-    ];
+    protected $fillable = ['user_id', 'title', 'description', 'price', 'type', 'image_path'];
 
-    protected $casts = [
-        'expires_at' => 'datetime',
-        'price' => 'decimal:2',
-    ];
-
-    public function user(): BelongsTo
+    // RELATION: An ad belongs to a user
+    public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function rentals(): HasMany
+    // RELATION: Self-referencing Many-to-Many (Upsells)
+    public function relatedAds()
     {
-        return $this->hasMany(Rental::class);
+        return $this->belongsToMany(
+            Advertisement::class, 
+            'ad_relations',      // Pivot table name
+            'parent_ad_id',      // Foreign key 1
+            'child_ad_id'        // Foreign key 2
+        );
     }
 
-    public function bids(): HasMany
+    // SCOPE: Filter Logic (Keeps Controller Clean)
+    public function scopeFilter(Builder $query, array $filters): void
     {
-        return $this->hasMany(Bid::class);
-    }
+        $query->when($filters['search'] ?? false, fn($q, $search) => 
+            $q->where(fn($sub) => 
+                $sub->where('title', 'like', "%$search%")
+                    ->orWhere('description', 'like', "%$search%")
+            )
+        );
 
-    public function favoritedBy(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'favorites');
-    }
+        $query->when($filters['type'] ?? false, fn($q, $type) => 
+            $q->where('type', $type)
+        );
 
-    public function reviews(): MorphMany
-    {
-        return $this->morphMany(Review::class, 'reviewable');
-    }
-
-    // Upsell relations (Parent -> Children)
-    public function upsells(): BelongsToMany
-    {
-        return $this->belongsToMany(Advertisement::class, 'ad_relations', 'parent_ad_id', 'child_ad_id');
-    }
-
-    public function scopeFilter($query, array $filters)
-    {
-        $query->when($filters['search'] ?? false, function ($query, $search) {
-             $query->where(function ($query) use ($search) {
-                $query->where('title', 'like', '%' . $search . '%')
-                      ->orWhere('description', 'like', '%' . $search . '%');
-             });
-        });
-
-        $query->when($filters['sort'] ?? false, function ($query, $sort) {
+        $query->when($filters['sort'] ?? false, function($q, $sort) {
             match ($sort) {
-                'price_asc' => $query->orderBy('price', 'asc'),
-                'price_desc' => $query->orderBy('price', 'desc'),
-                'date_asc' => $query->orderBy('created_at', 'asc'),
-                'date_desc' => $query->orderBy('created_at', 'desc'),
-                default => $query,
+                'price_asc' => $q->orderBy('price', 'asc'),
+                'price_desc' => $q->orderBy('price', 'desc'),
+                'newest' => $q->orderBy('created_at', 'desc'),
+                default => $q->orderBy('created_at', 'desc'),
             };
         });
     }
