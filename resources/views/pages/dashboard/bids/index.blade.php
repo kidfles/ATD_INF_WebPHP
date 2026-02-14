@@ -68,8 +68,14 @@
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                 {{ $bid->created_at->format('d-m-Y H:i') }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end gap-3">
                                                 <a href="{{ route('market.show', $bid->advertisement) }}" class="text-indigo-600 hover:text-indigo-900">Bekijk</a>
+                                                
+                                                <form action="{{ route('bids.destroy', $bid) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit bod wilt intrekken?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-600 hover:text-red-900">Annuleren</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach

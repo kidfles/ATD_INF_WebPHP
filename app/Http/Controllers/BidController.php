@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\StoreBidRequest;
 use App\Models\Advertisement;
+use App\Models\Bid;
 use Illuminate\Http\RedirectResponse;
 
 class BidController extends Controller
@@ -25,5 +26,16 @@ class BidController extends Controller
         ]);
 
         return back()->with('status', 'Bid placed successfully!');
+    }
+
+    public function destroy(Bid $bid): RedirectResponse
+    {
+        if ($bid->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $bid->delete();
+
+        return back()->with('status', 'Bid cancelled successfully.');
     }
 }
