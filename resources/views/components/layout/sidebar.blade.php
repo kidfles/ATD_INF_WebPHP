@@ -19,9 +19,13 @@
             My Ads
         </a>
         
-        {{-- 
-        <a href="{{ route('rentals.calendar') }}" class="block p-3 hover:bg-gray-50">Rental Calendar</a>
-        --}}
+        <div class="px-3 pt-4 pb-2 text-xs font-bold text-gray-400 uppercase tracking-wider">Buying / Renting</div>
+        <a href="{{ route('dashboard.bids.index') }}" class="block p-3 hover:bg-gray-50 {{ request()->routeIs('dashboard.bids.*') ? 'bg-gray-50 font-semibold' : '' }}">
+            My Bids
+        </a>
+        <a href="{{ route('dashboard.rentals.index') }}" class="block p-3 hover:bg-gray-50 {{ request()->routeIs('dashboard.rentals.*') ? 'bg-gray-50 font-semibold' : '' }}">
+            My Rentals
+        </a>
 
         {{-- Business Specific Links --}}
         {{-- 

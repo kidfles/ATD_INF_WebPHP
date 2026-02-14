@@ -11,8 +11,16 @@ class StoreBidRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Rule: You can only have 4 active bids at a time
-        return $this->user()->bids()->count() < 4;
+        return true;
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+             if ($this->user()->bids()->count() >= 4) {
+                 $validator->errors()->add('amount', 'Je hebt het maximum aantal actieve biedingen (4) bereikt.');
+             }
+        });
     }
 
     /**

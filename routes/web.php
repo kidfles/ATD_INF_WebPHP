@@ -41,6 +41,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     })->name('index');
 
     Route::get('/rentals', [\App\Http\Controllers\RentalController::class, 'index'])->name('rentals.index');
+    Route::get('/bids', [\App\Http\Controllers\BidController::class, 'index'])->name('bids.index');
     Route::resource('advertisements', AdvertisementController::class);
     
     // Future: Rentals, Favorites, etc.

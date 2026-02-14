@@ -57,10 +57,15 @@
                                     <h3 class="font-bold text-lg mb-2">Plaats een bod</h3>
                                     <p class="text-sm text-gray-500 mb-4">Huidig hoogste bod: € {{ number_format($advertisement->bids->max('amount') ?? $advertisement->price, 2) }}</p>
                                     
-                                    <form action="{{ route('bids.store', $advertisement) }}" method="POST" class="flex gap-2">
+                                    <form action="{{ route('bids.store', $advertisement) }}" method="POST" class="flex flex-col gap-2">
                                         @csrf
-                                        <input type="number" name="amount" step="0.01" min="{{ ($advertisement->bids->max('amount') ?? $advertisement->price) + 1 }}" required class="flex-1 border rounded px-3 py-2" placeholder="Uw bod">
-                                        <button type="submit" class="bg-indigo-600 text-white font-bold px-4 py-2 rounded hover:bg-indigo-700">Bieden</button>
+                                        <div class="flex gap-2">
+                                            <input type="number" name="amount" step="0.01" min="{{ ($advertisement->bids->max('amount') ?? $advertisement->price) + 1 }}" required class="flex-1 border rounded px-3 py-2" placeholder="Uw bod">
+                                            <button type="submit" class="bg-indigo-600 text-white font-bold px-4 py-2 rounded hover:bg-indigo-700">Bieden</button>
+                                        </div>
+                                        @error('amount')
+                                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                        @enderror
                                     </form>
                                 </div>
 

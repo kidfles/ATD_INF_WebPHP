@@ -11,6 +11,12 @@ use Illuminate\Http\RedirectResponse;
 
 class BidController extends Controller
 {
+    public function index()
+    {
+        $bids = auth()->user()->bids()->with('advertisement')->latest()->get();
+        return view('pages.dashboard.bids.index', compact('bids'));
+    }
+
     public function store(StoreBidRequest $request, Advertisement $advertisement): RedirectResponse
     {
         $advertisement->bids()->create([
