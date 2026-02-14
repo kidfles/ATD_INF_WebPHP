@@ -23,6 +23,16 @@ class Advertisement extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function bids(): HasMany
+    {
+        return $this->hasMany(Bid::class);
+    }
+
+    public function rentals(): HasMany
+    {
+        return $this->hasMany(Rental::class);
+    }
+
     // RELATION: Self-referencing Many-to-Many (Upsells)
     public function relatedAds()
     {

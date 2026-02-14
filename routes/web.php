@@ -11,6 +11,18 @@ Route::get('/test', function () {
     return 'Test OK';
 });
 
+Route::get('/create-test-auction', function () {
+    $user = \App\Models\User::factory()->create();
+    $ad = \App\Models\Advertisement::factory()->create([
+        'user_id' => $user->id,
+        'type' => 'auction',
+        'title' => 'Test Auction Item',
+        'description' => 'This is a test auction item created for you to bid on.',
+        'price' => 10.00,
+    ]);
+    return redirect()->route('market.show', $ad);
+});
+
 Route::get('/', function () {
     $featuredAds = \App\Models\Advertisement::latest()->take(6)->get();
     return view('pages.home', compact('featuredAds'));
@@ -28,12 +40,17 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
         return view('pages.dashboard.index');
     })->name('index');
 
+    Route::get('/rentals', [\App\Http\Controllers\RentalController::class, 'index'])->name('rentals.index');
     Route::resource('advertisements', AdvertisementController::class);
     
     // Future: Rentals, Favorites, etc.
 });
 
 Route::middleware('auth')->group(function () {
+    Route::post('/advertisements/{advertisement}/bid', [\App\Http\Controllers\BidController::class, 'store'])->name('bids.store');
+    Route::post('/advertisements/{advertisement}/rent', [\App\Http\Controllers\RentalController::class, 'store'])->name('rentals.store');
+    Route::post('/rentals/{rental}/return', [\App\Http\Controllers\RentalReturnController::class, 'store'])->name('rentals.return');
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
