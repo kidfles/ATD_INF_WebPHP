@@ -10,22 +10,22 @@ class AdvertisementController extends Controller
 {
     public function index(Request $request)
     {
-        // 1. Filter, 2. Sort, 3. Eager Load User, 4. Paginate
-        $advertisements = Advertisement::filter($request->only(['search', 'type', 'sort']))
-            ->with('user') // Prevents N+1 Query Problem
+        // Dashboard Logic: Show ONLY my ads
+        $advertisements = $request->user()->advertisements()
+            ->filter($request->only(['search', 'type', 'sort']))
             ->paginate(12)
-            ->withQueryString(); // Keeps search params in pagination links
+            ->withQueryString();
 
-        return view('advertisements.index', compact('advertisements'));
+        return view('pages.dashboard.advertisements.index', compact('advertisements'));
     }
 
     public function create()
     {
         // Check limit again for UI (optional, good UX)
         if (auth()->user()->advertisements()->count() >= 4) {
-            return redirect()->route('dashboard')->with('error', 'Maximum advertenties bereikt.');
+            return redirect()->route('dashboard.index')->with('error', 'Maximum advertenties bereikt.');
         }
-        return view('advertisements.create');
+        return view('pages.dashboard.advertisements.create');
     }
 
     public function store(StoreAdvertisementRequest $request)
@@ -41,13 +41,13 @@ class AdvertisementController extends Controller
         // Create via Relationship (Automatically sets user_id)
         $request->user()->advertisements()->create($data);
 
-        return redirect()->route('advertisements.index')
+        return redirect()->route('dashboard.advertisements.index')
             ->with('success', 'Advertentie succesvol aangemaakt!');
     }
 
     public function show(Advertisement $advertisement)
     {
-        return view('advertisements.show', compact('advertisement'));
+        return view('pages.dashboard.advertisements.show', compact('advertisement'));
     }
 
     public function edit(Advertisement $advertisement)
@@ -56,7 +56,7 @@ class AdvertisementController extends Controller
         if ($advertisement->user_id !== auth()->id()) {
             abort(403);
         }
-        return view('advertisements.edit', compact('advertisement'));
+        return view('pages.dashboard.advertisements.edit', compact('advertisement'));
     }
 
     public function update(\App\Http\Requests\UpdateAdvertisementRequest $request, Advertisement $advertisement)
@@ -69,7 +69,7 @@ class AdvertisementController extends Controller
 
         $advertisement->update($data);
 
-        return redirect()->route('advertisements.index')
+        return redirect()->route('dashboard.advertisements.index')
             ->with('success', 'Advertentie bijgewerkt!');
     }
 
@@ -81,7 +81,7 @@ class AdvertisementController extends Controller
 
         $advertisement->delete();
 
-        return redirect()->route('advertisements.index')
+        return redirect()->route('dashboard.advertisements.index')
             ->with('success', 'Advertentie verwijderd!');
     }
 }

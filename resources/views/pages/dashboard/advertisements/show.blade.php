@@ -31,12 +31,12 @@
 
                             @if(auth()->id() === $advertisement->user_id)
                                 <div class="mt-8 flex gap-4">
-                                    <a href="{{ route('advertisements.edit', $advertisement) }}" class="bg-yellow-500 text-white px-4 py-2 rounded">Bewerken</a>
+                                    <a href="{{ route('dashboard.advertisements.edit', $advertisement) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-4 py-2 rounded">Bewerken</a>
                                     
-                                    <form action="{{ route('advertisements.destroy', $advertisement) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze advertentie wilt verwijderen?');">
+                                    <form action="{{ route('dashboard.advertisements.destroy', $advertisement) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze advertentie wilt verwijderen?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Verwijderen</button>
+                                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded">Verwijderen</button>
                                     </form>
                                 </div>
                             @endif
