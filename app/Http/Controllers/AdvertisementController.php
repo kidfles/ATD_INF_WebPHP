@@ -44,4 +44,44 @@ class AdvertisementController extends Controller
         return redirect()->route('advertisements.index')
             ->with('success', 'Advertentie succesvol aangemaakt!');
     }
+
+    public function show(Advertisement $advertisement)
+    {
+        return view('advertisements.show', compact('advertisement'));
+    }
+
+    public function edit(Advertisement $advertisement)
+    {
+        // Authorization is handled in the Request or Policy, but we can do a quick check here for UX or use middleware
+        if ($advertisement->user_id !== auth()->id()) {
+            abort(403);
+        }
+        return view('advertisements.edit', compact('advertisement'));
+    }
+
+    public function update(\App\Http\Requests\UpdateAdvertisementRequest $request, Advertisement $advertisement)
+    {
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('ads', 'public');
+        }
+
+        $advertisement->update($data);
+
+        return redirect()->route('advertisements.index')
+            ->with('success', 'Advertentie bijgewerkt!');
+    }
+
+    public function destroy(Advertisement $advertisement)
+    {
+        if ($advertisement->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $advertisement->delete();
+
+        return redirect()->route('advertisements.index')
+            ->with('success', 'Advertentie verwijderd!');
+    }
 }

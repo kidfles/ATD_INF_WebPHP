@@ -37,8 +37,10 @@
                     {{-- Advertisements Grid --}}
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         @foreach($advertisements as $ad)
-                            <div class="border rounded p-4 shadow">
-                                <h3 class="font-bold text-lg">{{ $ad->title }}</h3>
+                            <div class="border rounded p-4 shadow hover:shadow-lg transition">
+                                <a href="{{ route('advertisements.show', $ad) }}">
+                                    <h3 class="font-bold text-lg text-blue-600">{{ $ad->title }}</h3>
+                                </a>
                                 <p class="text-gray-600 truncate">{{ $ad->description }}</p>
                                 <p class="font-bold mt-2">€ {{ number_format($ad->price, 2) }}</p>
                                 <p class="text-sm text-gray-500">{{ ucfirst($ad->type) }}</p>
