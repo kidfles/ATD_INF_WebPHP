@@ -1,8 +1,13 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Advertenties') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Advertenties') }}
+            </h2>
+            <a href="{{ route('dashboard.advertisements.create') }}" class="bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 px-4 py-2">
+                {{ __('Nieuwe Advertentie') }}
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -30,9 +35,7 @@
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Filter</button>
                     </form>
 
-                    <div class="mb-4">
-                        <a href="{{ route('dashboard.advertisements.create') }}" class="bg-green-500 text-white px-4 py-2 rounded">Nieuwe Advertentie</a>
-                    </div>
+
 
                     {{-- Advertisements Grid --}}
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
