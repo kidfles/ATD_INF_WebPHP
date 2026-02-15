@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 
 use App\Models\Rental;
 use App\Services\WearAndTearCalculator;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 
 class RentalReturnController extends Controller

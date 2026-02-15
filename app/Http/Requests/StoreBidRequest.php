@@ -17,6 +17,7 @@ class StoreBidRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
+             // Max 4 active bids per user
              if ($this->user()->bids()->count() >= 4) {
                  $validator->errors()->add('amount', 'Je hebt het maximum aantal actieve biedingen (4) bereikt.');
              }

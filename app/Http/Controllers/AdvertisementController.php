@@ -47,6 +47,9 @@ class AdvertisementController extends Controller
 
     public function show(Advertisement $advertisement)
     {
+        if ($advertisement->user_id !== auth()->id()) {
+            abort(403);
+        }
         return view('pages.dashboard.advertisements.show', compact('advertisement'));
     }
 

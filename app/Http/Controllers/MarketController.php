@@ -20,6 +20,7 @@ class MarketController extends Controller
 
     public function show(Advertisement $advertisement)
     {
+        $advertisement->load(['user', 'bids.user']); // Eager load for view
         return view('pages.market.show', compact('advertisement'));
     }
 }

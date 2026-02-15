@@ -32,7 +32,7 @@ Route::get('/market', [MarketController::class, 'index'])->name('market.index');
 Route::get('/market/{advertisement}', [MarketController::class, 'show'])->name('market.show');
 
 // ZONE C: Whitelabel Company Pages
-Route::get('/company/{company:slug}', [CompanyController::class, 'show'])->name('company.show');
+Route::get('/company/{company:custom_url_slug}', [CompanyController::class, 'show'])->name('company.show');
 
 // ZONE B: Dashboard (Secure)
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
