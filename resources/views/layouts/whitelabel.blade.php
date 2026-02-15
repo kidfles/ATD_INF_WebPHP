@@ -10,27 +10,26 @@
 
     <x-global-header />
 
-    <header class="bg-white shadow-sm sticky top-0 z-40 border-t-4" 
-            style="border-color: {{ $company->brand_color ?? '#3b82f6' }}">
-        
+    <header class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded flex items-center justify-center text-white font-bold text-xl"
-                     style="background-color: {{ $company->brand_color ?? '#3b82f6' }}">
+            <div class="flex items-center gap-4">
+                {{-- Logo / Initial Icon --}}
+                <div class="w-10 h-10 rounded-lg shadow-md flex items-center justify-center text-white font-bold text-xl transform hover:scale-105 transition duration-300"
+                     style="background: linear-gradient(135deg, {{ $company->brand_color ?? '#3b82f6' }}, {{ md5($company->brand_color ?? '#3b82f6') }});">
                     {{ substr($company->user->name ?? 'C', 0, 1) }}
                 </div>
-                <h1 class="font-bold text-2xl text-gray-900 tracking-tight">
+                <h1 class="font-extrabold text-2xl text-gray-900 tracking-tight hover:text-gray-700 transition">
                     {{ $company->user->name ?? 'Company Name' }}
                 </h1>
             </div>
 
             <nav class="hidden md:flex space-x-8">
-                <a href="#home" class="text-gray-600 hover:text-gray-900 font-medium">Home</a>
-                <a href="#about" class="text-gray-600 hover:text-gray-900 font-medium">About</a>
-                <a href="#products" class="text-gray-600 hover:text-gray-900 font-medium">Products</a>
+                <a href="#home" class="text-sm font-semibold text-gray-600 hover:text-gray-900 transition uppercase tracking-wide">Home</a>
+                <a href="#about" class="text-sm font-semibold text-gray-600 hover:text-gray-900 transition uppercase tracking-wide">About</a>
+                <a href="#products" class="text-sm font-semibold text-gray-600 hover:text-gray-900 transition uppercase tracking-wide">Products</a>
             </nav>
             
-            <button class="md:hidden text-gray-500">
+            <button class="md:hidden text-gray-500 hover:text-gray-900 p-2">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
             </button>
         </div>
