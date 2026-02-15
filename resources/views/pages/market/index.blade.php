@@ -2,28 +2,39 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold mb-6">Marketplace</h1>
 
-        <form action="{{ route('market.index') }}" method="GET" class="mb-8 flex gap-4">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Zoek op titel..." class="border rounded px-4 py-2 w-full">
+        <form action="{{ route('market.index') }}" method="GET" class="mb-8 flex flex-wrap gap-4 items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             
-            <select name="type" class="border rounded px-4 py-2">
+            {{-- Hidden Input to Preserve Search Term from Global Header --}}
+            @if(request('search'))
+                <input type="hidden" name="search" value="{{ request('search') }}">
+                <div class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium flex items-center gap-2">
+                    Zoekopdracht: "{{ request('search') }}"
+                    <a href="{{ route('market.index', request()->except('search')) }}" class="text-indigo-500 hover:text-indigo-900 font-bold ml-1">&times;</a>
+                </div>
+            @endif
+
+            <select name="type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" onchange="this.form.submit()">
                 <option value="">Alle types</option>
                 <option value="sell" {{ request('type') == 'sell' ? 'selected' : '' }}>Verkoop</option>
                 <option value="rent" {{ request('type') == 'rent' ? 'selected' : '' }}>Verhuur</option>
                 <option value="auction" {{ request('type') == 'auction' ? 'selected' : '' }}>Veiling</option>
             </select>
 
-            <select name="sort" class="border rounded px-4 py-2">
-                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Nieuwste</option>
-                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Prijs (Laag-Hoog)</option>
-                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Prijs (Hoog-Laag)</option>
+            <select name="sort" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" onchange="this.form.submit()">
+                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Nieuwste eerst</option>
+                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Prijs: Laag naar Hoog</option>
+                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Prijs: Hoog naar Laag</option>
             </select>
 
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Filter</button>
+            {{-- "Filter" button is less necessary with auto-submit, but good for accessibility/clarity if js fails --}}
+            <noscript>
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Filter</button>
+            </noscript>
             
             @if(request()->hasAny(['search', 'sort', 'type']))
-                <a href="{{ route('market.index', ['clear' => 1]) }}" 
-                   class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition flex items-center">
-                   Wis Filters
+                <a href="{{ route('market.index') }}" 
+                   class="ml-auto text-sm text-gray-500 hover:text-gray-900 underline">
+                   Wis alle filters
                 </a>
             @endif
         </form>

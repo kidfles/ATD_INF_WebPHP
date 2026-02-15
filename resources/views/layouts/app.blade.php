@@ -16,35 +16,46 @@
     </head>
     <body class="font-sans antialiased bg-gray-100">
         <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+            {{-- GLOBAL HEADER (Marktplaats Style) --}}
+            <x-global-header />
 
-            {{-- Main Content --}}
-            <main>
-                {{-- Page Heading --}}
-                @isset($header)
-                    <header class="bg-white shadow">
-                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                            {{ $header }}
-                        </div>
-                    </header>
-                @endisset
-
-                <div class="py-12">
-                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        {{-- Alert Messages --}}
-                        @if(session('success'))
-                            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        @if(session('error'))
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-
-                        {{ $slot }}
+            {{-- Page Heading --}}
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
                     </div>
+                </header>
+            @endisset
+
+            {{-- Main Content + Sidebar Wrapper --}}
+            <main class="py-6">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    
+                    {{-- Alert Messages --}}
+                    @if(session('success'))
+                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mx-4 sm:mx-0">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mx-4 sm:mx-0">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <div class="flex flex-col md:flex-row gap-6 px-4 sm:px-0">
+                        {{-- SIDEBAR --}}
+                        <div class="hidden md:block">
+                            <x-dashboard-sidebar />
+                        </div>
+                        
+                        {{-- MAIN CONTENT --}}
+                        <div class="flex-1 w-full">
+                            {{ $slot }}
+                        </div>
+                    </div>
+
                 </div>
             </main>
         </div>
