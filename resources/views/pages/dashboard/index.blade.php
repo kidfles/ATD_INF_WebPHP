@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <!-- Manage My Ads -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
                     <div class="p-6">
@@ -44,6 +44,20 @@
                         <a href="{{ route('market.index') }}" class="text-purple-600 font-semibold hover:text-purple-800">Start Browsing &rarr;</a>
                     </div>
                 </div>
+
+                <!-- Company Settings (Business Only) -->
+                @if(Auth::user()->isBusinessAdvertiser())
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
+                    <div class="p-6">
+                        <div class="bg-orange-100 rounded-full w-12 h-12 flex items-center justify-center mb-4 text-orange-600">
+                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Company Profile</h3>
+                        <p class="text-sm text-gray-500 mb-4">Manage branding & public page.</p>
+                        <a href="{{ route('dashboard.company.settings.edit') }}" class="text-orange-600 font-semibold hover:text-orange-800">Edit Settings &rarr;</a>
+                    </div>
+                </div>
+                @endif
             </div>
 
             <!-- Smart Dashboard: Activity Overview -->
