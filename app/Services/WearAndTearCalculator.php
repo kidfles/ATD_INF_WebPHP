@@ -27,9 +27,11 @@ class WearAndTearCalculator
         // Let's add a 25% penalty if returned after the end date.
         // Penalty calculation (1.5x price per day for late days)
         if (now()->startOfDay()->gt($end)) {
-            $overdueDays = $end->diffInDays(now()) + 1;
-            $penalty = ($pricePerDay * 1.5) * $overdueDays; // 150% price for late days
-            $totalCost += $penalty;
+            $overdueDays = $end->diffInDays(now());
+            if ($overdueDays > 0) {
+                $penalty = ($pricePerDay * 1.5) * $overdueDays; // 150% price for late days
+                $totalCost += $penalty;
+            }
         }
 
         return round((float) $totalCost, 2);

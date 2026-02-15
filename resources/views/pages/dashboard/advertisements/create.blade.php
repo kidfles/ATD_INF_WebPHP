@@ -63,7 +63,7 @@
                             <div x-show="imageUrl" class="mt-4">
                                 <p class="text-xs text-gray-500 mb-1">Voorbeeld:</p>
                                 <div class="h-40 w-40 rounded-lg border border-gray-200 shadow-sm overflow-hidden">
-                                    <img :src="imageUrl" class="w-full h-full object-cover" style="width: 160px; height: 160px;">
+                                    <img :src="imageUrl" class="w-full h-full object-cover">
                                 </div>
                             </div>
                         </div>

@@ -23,7 +23,24 @@ class StoreBidRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['required', 'numeric', 'min:1'], // In real app, check > current highest
+            'amount' => [
+                'required', 
+                'numeric',
+                function ($attribute, $value, $fail) {
+                    $advertisement = $this->route('advertisement');
+                    
+                    // Sanity check
+                    if (!$advertisement) return;
+
+                    $highestBid = $advertisement->bids()->max('amount');
+
+                    if ($highestBid && $value <= $highestBid) {
+                        $fail("Bod moet hoger zijn dan het huidige hoogste bod (€" . number_format($highestBid, 2) . ").");
+                    } elseif (!$highestBid && $value < $advertisement->price) {
+                        $fail("Het eerste bod moet minimaal gelijk zijn aan de startprijs (€" . number_format($advertisement->price, 2) . ").");
+                    }
+                }
+            ],
         ];
     }
 

@@ -1,6 +1,6 @@
 <x-market-layout>
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <a href="{{ route('market.index', session('ad_filters', [])) }}" class="text-blue-500 hover:underline mb-4 inline-block">&larr; Terug naar overzicht</a>
+        <a href="{{ session()->has('ad_filters') ? route('market.index', session('ad_filters')) : route('market.index') }}" class="text-blue-500 hover:underline mb-4 inline-block">&larr; Terug naar overzicht</a>
 
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="p-6 text-gray-900">
