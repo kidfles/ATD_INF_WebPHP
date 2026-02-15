@@ -21,7 +21,17 @@
                         
                         <div class="flex items-center justify-between mb-8">
                             <span class="bg-gray-200 px-3 py-1 rounded text-sm">{{ ucfirst($advertisement->type) }}</span>
-                            <span class="text-gray-500 text-sm">Aangeboden door: {{ $advertisement->user->name }}</span>
+                            <div class="flex items-center space-x-2 text-gray-500 text-sm">
+                                <span>Aangeboden door:</span>
+                                @if($advertisement->user->companyProfile)
+                                    <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
+                                       class="font-bold text-indigo-600 hover:underline flex items-center gap-1">
+                                        {{ $advertisement->user->name }}
+                                    </a>
+                                @else
+                                    <span class="font-semibold">{{ $advertisement->user->name }}</span>
+                                @endif
+                            </div>
                         </div>
 
                         {{-- Smart Action Buttons --}}
