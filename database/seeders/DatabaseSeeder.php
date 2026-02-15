@@ -28,6 +28,57 @@ class DatabaseSeeder extends Seeder
         // 2. Business Advertisers (10)
         $businessUsers = User::factory(10)->businessAdvertiser()->create();
 
+        // Specific Test Business for Whitelabel
+        $testBusiness = User::factory()->businessAdvertiser()->create([
+            'name' => 'Test Business',
+            'email' => 'business@example.com',
+        ]);
+        
+        // Create Company Profile for Test Business
+        $testCompany = CompanyProfile::factory()->create([
+            'user_id' => $testBusiness->id,
+            // 'company_name' removed as it doesn't exist in the model/migration
+            'custom_url_slug' => 'test-company',
+            'brand_color' => '#e11d48', // distinct red/pink
+            'kvk_number' => '12345678',
+        ]);
+
+        PageComponent::factory()->create([
+            'company_id' => $testCompany->id,
+            'component_type' => 'hero',
+            'order' => 1,
+            'content' => [
+                'title' => 'Welcome to Test Company',
+                'subtitle' => 'We provide the best services for testing purposes.',
+                'image' => null, // or a placeholder
+            ],
+        ]);
+
+        PageComponent::factory()->create([
+            'company_id' => $testCompany->id,
+            'component_type' => 'text',
+            'order' => 2,
+            'content' => [
+                'heading' => 'About Us',
+                'body' => 'This is a test company created by the seeder to demonstrate the whitelabel capabilities.',
+            ],
+        ]);
+
+         PageComponent::factory()->create([
+            'company_id' => $testCompany->id,
+            'component_type' => 'featured_ads',
+            'order' => 3,
+            'content' => [],
+        ]);
+
+        Advertisement::factory(5)->create([
+            'user_id' => $testBusiness->id,
+            'type' => 'sell',
+            'title' => 'Test Product',
+            'price' => 99.99,
+        ]);
+
+
         // For each business user, create a Company Profile and Landing Page Components
         foreach ($businessUsers as $user) {
             $company = CompanyProfile::factory()->create([
