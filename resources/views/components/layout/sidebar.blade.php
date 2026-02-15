@@ -1,16 +1,18 @@
 <aside class="w-64 bg-white border-r min-h-screen">
-    <div class="p-4 font-bold text-lg border-b">
-        <a href="{{ route('dashboard.index') }}">MarketMashup</a>
+    <div class="p-4 border-b flex justify-center">
+        <a href="{{ route('market.index') }}">
+            <img src="{{ asset('logo.png') }}" alt="ATD Webshop" class="h-12 w-auto">
+        </a>
     </div>
     
     <nav class="mt-4 space-y-1">
+        <a href="{{ route('market.index') }}" class="block p-3 hover:bg-gray-50 text-indigo-600 font-bold">
+            &larr; Visit Shop
+        </a>
+        
         <a href="{{ route('dashboard.index') }}" class="block p-3 hover:bg-gray-50 {{ request()->routeIs('dashboard.index') ? 'bg-gray-50 font-semibold' : '' }}">
             Overview
         </a>
-
-        {{-- <a href="{{ route('favorites.index') }}" class="block p-3 hover:bg-gray-50 {{ request()->routeIs('favorites.*') ? 'bg-gray-50 font-semibold' : '' }}">
-            Favorites
-        </a> --}}
 
         {{-- Advertiser / Seller Links --}}
         {{-- Assuming all logged in users can create ads for now, or check role if implemented --}}
