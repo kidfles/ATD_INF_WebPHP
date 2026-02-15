@@ -42,6 +42,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
             // "My Activity" - things I've bought/rented
             'myRentals' => $user->rentals()->with('advertisement')->latest()->get(),
             'myBids'    => $user->bids()->with('advertisement')->latest()->get(),
+            'myAds'     => $user->advertisements()->latest()->take(5)->get(),
             
             // "My Sales" - things people bought/rented FROM me (if I'm an advertiser)
             'incomingRentals' => \App\Models\Rental::whereHas('advertisement', function($q) use ($user) {
