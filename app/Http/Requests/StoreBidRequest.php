@@ -11,16 +11,8 @@ class StoreBidRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
-    }
-
-    public function withValidator($validator)
-    {
-        $validator->after(function ($validator) {
-             if ($this->user()->bids()->count() >= 4) {
-                 $validator->errors()->add('amount', 'Je hebt het maximum aantal actieve biedingen (4) bereikt.');
-             }
-        });
+        // Business Rule: Max 4 active bids
+        return $this->user()->bids()->count() < 4;
     }
 
     /**
@@ -31,7 +23,32 @@ class StoreBidRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['required', 'numeric', 'min:1'], // In real app, check > current highest
+            'amount' => [
+                'required', 
+                'numeric',
+                function ($attribute, $value, $fail) {
+                    $advertisement = $this->route('advertisement');
+                    
+                    // Sanity check
+                    if (!$advertisement) return;
+
+                    $highestBid = $advertisement->bids()->max('amount');
+
+                    if ($highestBid && $value <= $highestBid) {
+                        $fail("Bod moet hoger zijn dan het huidige hoogste bod (€" . number_format($highestBid, 2) . ").");
+                    } elseif (!$highestBid && $value < $advertisement->price) {
+                        $fail("Het eerste bod moet minimaal gelijk zijn aan de startprijs (€" . number_format($advertisement->price, 2) . ").");
+                    }
+                }
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'amount.required' => 'Vul een bedrag in.',
+            'authorize' => 'Je hebt het limiet van 4 actieve biedingen bereikt.',
         ];
     }
 }

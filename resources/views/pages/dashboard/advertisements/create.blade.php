@@ -48,9 +48,24 @@
                             </select>
                         </div>
 
-                        <div class="mb-4">
-                            <label class="block font-bold">Afbeelding</label>
-                            <input type="file" name="image" class="border rounded w-full px-4 py-2">
+                        <div class="mb-4" x-data="{ imageUrl: null }">
+                            <label class="block font-bold mb-2">Afbeelding</label>
+                            
+                            <input type="file" name="image" class="block w-full text-sm text-gray-500
+                              file:mr-4 file:py-2 file:px-4
+                              file:rounded-full file:border-0
+                              file:text-sm file:font-semibold
+                              file:bg-blue-50 file:text-blue-700
+                              hover:file:bg-blue-100"
+                              @change="imageUrl = URL.createObjectURL($event.target.files[0])" 
+                            />
+
+                            <div x-show="imageUrl" class="mt-4">
+                                <p class="text-xs text-gray-500 mb-1">Voorbeeld:</p>
+                                <div class="h-40 w-40 rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                                    <img :src="imageUrl" class="w-full h-full object-cover">
+                                </div>
+                            </div>
                         </div>
 
                         <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Opslaan</button>

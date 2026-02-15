@@ -2,7 +2,6 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h1 class="text-3xl font-bold mb-6">Marketplace</h1>
 
-        {{-- Filter & Search Form --}}
         <form action="{{ route('market.index') }}" method="GET" class="mb-8 flex gap-4">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Zoek op titel..." class="border rounded px-4 py-2 w-full">
             
@@ -20,6 +19,13 @@
             </select>
 
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Filter</button>
+            
+            @if(request()->hasAny(['search', 'sort', 'type']))
+                <a href="{{ route('market.index', ['clear' => 1]) }}" 
+                   class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition flex items-center">
+                   Wis Filters
+                </a>
+            @endif
         </form>
 
         {{-- Advertisements Grid --}}

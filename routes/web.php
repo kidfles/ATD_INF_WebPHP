@@ -32,12 +32,23 @@ Route::get('/market', [MarketController::class, 'index'])->name('market.index');
 Route::get('/market/{advertisement}', [MarketController::class, 'show'])->name('market.show');
 
 // ZONE C: Whitelabel Company Pages
-Route::get('/company/{company:slug}', [CompanyController::class, 'show'])->name('company.show');
+Route::get('/company/{company:custom_url_slug}', [CompanyController::class, 'show'])->name('company.show');
 
 // ZONE B: Dashboard (Secure)
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', function () {
-        return view('pages.dashboard.index');
+        $user = auth()->user();
+        return view('pages.dashboard.index', [
+            // "My Activity" - things I've bought/rented
+            'myRentals' => $user->rentals()->with('advertisement')->latest()->get(),
+            'myBids'    => $user->bids()->with('advertisement')->latest()->get(),
+            'myAds'     => $user->advertisements()->latest()->take(5)->get(),
+            
+            // "My Sales" - things people bought/rented FROM me (if I'm an advertiser)
+            'incomingRentals' => \App\Models\Rental::whereHas('advertisement', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->with(['advertisement', 'renter'])->get(),
+        ]);
     })->name('index');
 
     Route::get('/rentals', [\App\Http\Controllers\RentalController::class, 'index'])->name('rentals.index');

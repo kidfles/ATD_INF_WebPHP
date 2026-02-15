@@ -2,8 +2,8 @@
     <div class="min-h-screen">
         {{-- Header / Hero --}}
         <header class="py-12 px-6 text-center">
-            <h1 class="text-4xl font-bold mb-4">{{ $company->name }}</h1>
-            <p class="text-xl opacity-90">{{ $company->description ?? 'Welcome to our page' }}</p>
+            <h1 class="text-4xl font-bold mb-4">{{ optional($company->user)->name ?? $company->name }}</h1>
+            <p class="text-xl opacity-90">Welcome to our page</p>
         </header>
 
         {{-- Content Area --}}
@@ -11,7 +11,7 @@
             <h2 class="text-2xl font-bold mb-6">Our Offerings</h2>
             
             {{-- Here we could list the company's ads if we had the relation set up --}}
-            <p>Welcome to the official page of {{ $company->name }}.</p>
+            <p>Welcome to the official page of {{ optional($company->user)->name ?? 'Unknown' }}.</p>
             
             <div class="mt-8 text-center">
                 <a href="{{ route('market.index') }}" class="text-blue-500 hover:underline">Back to Market</a>

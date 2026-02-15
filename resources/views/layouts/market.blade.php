@@ -17,34 +17,7 @@
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen">
         <!-- Navigation -->
-        <nav class="bg-white shadow">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex">
-                        <div class="shrink-0 flex items-center">
-                            <a href="{{ route('home') }}" class="text-2xl font-bold text-indigo-600">ATD Webshop</a>
-                        </div>
-                        <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <a href="{{ route('market.index') }}" class="inline-flex items-center px-1 pt-1 border-b-2 border-indigo-500 text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-indigo-700 transition duration-150 ease-in-out">
-                                Market
-                            </a>
-                        </div>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="space-x-4">
-                            @auth
-                                <a href="{{ route('dashboard.index') }}" class="font-semibold text-gray-600 hover:text-gray-900">Dashboard</a>
-                            @else
-                                <a href="{{ route('login') }}" class="font-semibold text-gray-600 hover:text-gray-900">Log in</a>
-                                @if (Route::has('register'))
-                                    <a href="{{ route('register') }}" class="font-semibold text-indigo-600 hover:text-indigo-900">Register</a>
-                                @endif
-                            @endauth
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        @include('layouts.navigation')
 
         <!-- Page Content -->
         <main>
