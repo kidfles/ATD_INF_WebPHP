@@ -37,7 +37,17 @@ Route::get('/company/{company:custom_url_slug}', [CompanyController::class, 'sho
 // ZONE B: Dashboard (Secure)
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', function () {
-        return view('pages.dashboard.index');
+        $user = auth()->user();
+        return view('pages.dashboard.index', [
+            // "My Activity" - things I've bought/rented
+            'myRentals' => $user->rentals()->with('advertisement')->latest()->get(),
+            'myBids'    => $user->bids()->with('advertisement')->latest()->get(),
+            
+            // "My Sales" - things people bought/rented FROM me (if I'm an advertiser)
+            'incomingRentals' => \App\Models\Rental::whereHas('advertisement', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->with(['advertisement', 'renter'])->get(),
+        ]);
     })->name('index');
 
     Route::get('/rentals', [\App\Http\Controllers\RentalController::class, 'index'])->name('rentals.index');

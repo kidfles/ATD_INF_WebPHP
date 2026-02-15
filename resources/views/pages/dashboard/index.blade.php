@@ -46,12 +46,96 @@
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">Your Role Status</h3>
-                    <p>You are currently logged in as: <span class="font-bold uppercase text-indigo-600">{{ Auth::user()->role }}</span></p>
+            <!-- Smart Dashboard: Activity Overview -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- My Rentals (Outgoing & Incoming) -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
+                        <h3 class="font-bold text-lg mb-4">Rental Activity</h3>
+                        
+                        @if($myRentals->isEmpty() && $incomingRentals->isEmpty())
+                            <p class="text-gray-500 italic">No rental history yet.</p>
+                        @else
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        {{-- Outgoing Rentals (I am renting) --}}
+                                        @foreach($myRentals as $rental)
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    {{ $rental->advertisement->title }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {{ $rental->start_date->format('M d') }} - {{ $rental->end_date->format('M d') }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Renting</span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <form method="POST" action="{{ route('rentals.return', $rental) }}">
+                                                        @csrf
+                                                        <button type="submit" class="text-indigo-600 hover:text-indigo-900">Return</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+                                        {{-- Incoming Rentals (Someone is renting from me) --}}
+                                        @foreach($incomingRentals as $rental)
+                                            <tr>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    {{ $rental->advertisement->title }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {{ $rental->start_date->format('M d') }} - {{ $rental->end_date->format('M d') }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Incoming</span>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    <span class="text-gray-400">View</span>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
                 </div>
-            </div>
+
+                <!-- My Bids -->
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6 text-gray-900">
+                        <h3 class="font-bold text-lg mb-4">My Active Bids</h3>
+                        
+                        @if($myBids->isEmpty())
+                            <p class="text-gray-500 italic">No active bids.</p>
+                        @else
+                            <ul class="divide-y divide-gray-200">
+                                @foreach($myBids as $bid)
+                                    <li class="py-4 flex justify-between items-center">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-900">{{ $bid->advertisement->title }}</p>
+                                            <p class="text-sm text-gray-500">Bid Amount: €{{ number_format($bid->amount, 2) }}</p>
+                                        </div>
+                                        <div class="text-sm text-gray-500">
+                                            {{ $bid->created_at->diffForHumans() }}
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                </div>
         </div>
     </div>
 </x-app-layout>
