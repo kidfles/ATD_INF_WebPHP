@@ -4,17 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Models\Advertisement;
 
-class StoreAdvertisementRequest extends FormRequest
+class UpdateAdvertisementRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        // BUSINESS RULE: Max 4 ads per user
-        return $this->user()->advertisements()->count() < 4;
+        // BUSINESS RULE: Only the owner can update
+        $advertisement = $this->route('advertisement');
+        return $advertisement && $advertisement->user_id === $this->user()->id;
     }
 
     public function rules(): array
@@ -25,13 +22,6 @@ class StoreAdvertisementRequest extends FormRequest
             'price'       => ['required', 'numeric', 'min:0'],
             'type'        => ['required', 'in:sell,rent,auction'],
             'image'       => ['nullable', 'image', 'max:2048'], // Max 2MB
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'authorize' => 'Je hebt het limiet van 4 advertenties bereikt.',
         ];
     }
 }

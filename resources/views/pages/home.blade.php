@@ -58,7 +58,7 @@
                                 </a>
                             </div>
                             <div class="mt-3 sm:mt-0 sm:ml-3">
-                                <a href="{{ route('advertisements.index') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10">
+                                <a href="{{ route('market.index') }}" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10">
                                     Browse Ads
                                 </a>
                             </div>
@@ -96,14 +96,14 @@
                                     <span class="ml-auto text-sm text-gray-500">{{ $ad->created_at->diffForHumans() }}</span>
                                 </div>
                                 <h3 class="mt-4 text-xl font-bold text-gray-900">
-                                    <a href="{{ route('advertisements.show', $ad) }}" class="hover:underline">{{ $ad->title }}</a>
+                                    <a href="{{ route('market.show', $ad) }}" class="hover:underline">{{ $ad->title }}</a>
                                 </h3>
                                 <p class="mt-2 text-base text-gray-500 line-clamp-3">
                                     {{ $ad->description }}
                                 </p>
                                 <div class="mt-4 flex items-center justify-between">
                                     <span class="text-lg font-bold text-indigo-600">€{{ number_format($ad->price, 2) }}</span>
-                                    <a href="{{ route('advertisements.show', $ad) }}" class="text-indigo-600 hover:text-indigo-900 font-medium">View &rarr;</a>
+                                    <a href="{{ route('market.show', $ad) }}" class="text-indigo-600 hover:text-indigo-900 font-medium">View &rarr;</a>
                                 </div>
                             </div>
                         </div>
@@ -111,7 +111,7 @@
                 </div>
                 
                 <div class="mt-10 text-center">
-                    <a href="{{ route('advertisements.index') }}" class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
+                    <a href="{{ route('market.index') }}" class="text-base font-semibold text-indigo-600 hover:text-indigo-500">
                         View all advertisements <span aria-hidden="true">&rarr;</span>
                     </a>
                 </div>

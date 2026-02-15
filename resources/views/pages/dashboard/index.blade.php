@@ -17,7 +17,7 @@
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">My Advertisements</h3>
                         <p class="text-sm text-gray-500 mb-4">View and edit your current listings.</p>
-                        <a href="{{ route('advertisements.index') }}" class="text-blue-600 font-semibold hover:text-blue-800">Manage Ads &rarr;</a>
+                        <a href="{{ route('dashboard.advertisements.index') }}" class="text-blue-600 font-semibold hover:text-blue-800">Manage Ads &rarr;</a>
                     </div>
                 </div>
 
@@ -29,7 +29,7 @@
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">Create New Ad</h3>
                         <p class="text-sm text-gray-500 mb-4">Sell, rent, or auction a new item.</p>
-                        <a href="{{ route('advertisements.create') }}" class="text-green-600 font-semibold hover:text-green-800">Create Now &rarr;</a>
+                        <a href="{{ route('dashboard.advertisements.create') }}" class="text-green-600 font-semibold hover:text-green-800">Create Now &rarr;</a>
                     </div>
                 </div>
 
@@ -41,7 +41,7 @@
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">Internal Market</h3>
                         <p class="text-sm text-gray-500 mb-4">Browse items from other colleagues.</p>
-                        <a href="{{ route('advertisements.index') }}" class="text-purple-600 font-semibold hover:text-purple-800">Start Browsing &rarr;</a>
+                        <a href="{{ route('market.index') }}" class="text-purple-600 font-semibold hover:text-purple-800">Start Browsing &rarr;</a>
                     </div>
                 </div>
             </div>

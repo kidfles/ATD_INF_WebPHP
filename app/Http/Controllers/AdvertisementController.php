@@ -4,115 +4,84 @@ namespace App\Http\Controllers;
 
 use App\Models\Advertisement;
 use App\Http\Requests\StoreAdvertisementRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\View\View;
 
 class AdvertisementController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(): View
+    public function index(Request $request)
     {
-        // Filter scope handles search & sort. Paginate by 10.
-        $advertisements = Advertisement::filter(request(['search', 'sort']))
-            ->with('user') // Eager load user
-            ->paginate(10)
-            ->withQueryString(); // Keep filters in pagination links
+        // Dashboard Logic: Show ONLY my ads
+        $advertisements = $request->user()->advertisements()
+            ->filter($request->only(['search', 'type', 'sort']))
+            ->paginate(12)
+            ->withQueryString();
 
-        return view('advertisements.index', compact('advertisements'));
+        return view('pages.dashboard.advertisements.index', compact('advertisements'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): View
+    public function create()
     {
-        // For upsells, get user's other ads to link to?
-        // Or all ads? "Kettingzaag + Olie" implies checking other ads.
-        // Let's pass all ads for now (or maybe just those not yet linked).
-        // For scalability, this should be an AJAX search, but for <50 items, all() is fine.
-        $candidates = Advertisement::where('user_id', auth()->id())->get(); // Link to OWN ads usually?
-        // Actually, you usually cross-sell your own stuff.
-        
-        return view('advertisements.create', compact('candidates'));
+        // Check limit again for UI (optional, good UX)
+        if (auth()->user()->advertisements()->count() >= 4) {
+            return redirect()->route('dashboard.index')->with('error', 'Maximum advertenties bereikt.');
+        }
+        return view('pages.dashboard.advertisements.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreAdvertisementRequest $request): RedirectResponse
+    public function store(StoreAdvertisementRequest $request)
     {
-        // Validation & "Max 4" check passed in FormRequest
+        // The data is already validated and authorized here!
+        $data = $request->validated();
         
-        $advertisement = $request->user()->advertisements()->create($request->validated());
-        
-        // Sync upsells
-        if ($request->has('upsells')) {
-            $advertisement->upsells()->sync($request->input('upsells'));
+        // Handle Image Upload
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('ads', 'public');
         }
 
-        return redirect()->route('advertisements.index')
-            ->with('status', 'Advertisement created successfully!');
+        // Create via Relationship (Automatically sets user_id)
+        $request->user()->advertisements()->create($data);
+
+        return redirect()->route('dashboard.advertisements.index')
+            ->with('success', 'Advertentie succesvol aangemaakt!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Advertisement $advertisement): View
+    public function show(Advertisement $advertisement)
     {
-        $advertisement->load(['user', 'upsells']);
-        return view('advertisements.show', compact('advertisement'));
+        return view('pages.dashboard.advertisements.show', compact('advertisement'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Advertisement $advertisement): View
+    public function edit(Advertisement $advertisement)
     {
-        if ($request->user()->cannot('update', $advertisement)) {
-             abort(403);
+        // Authorization is handled in the Request or Policy, but we can do a quick check here for UX or use middleware
+        if ($advertisement->user_id !== auth()->id()) {
+            abort(403);
         }
-        
-        $candidates = Advertisement::where('user_id', auth()->id())
-                        ->where('id', '!=', $advertisement->id)
-                        ->get();
-                        
-        return view('advertisements.edit', compact('advertisement', 'candidates'));
+        return view('pages.dashboard.advertisements.edit', compact('advertisement'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(StoreAdvertisementRequest $request, Advertisement $advertisement): RedirectResponse
+    public function update(\App\Http\Requests\UpdateAdvertisementRequest $request, Advertisement $advertisement)
     {
-        // Validated & Authorized (policy check in request or here?)
-        // Request authorize() for updates checks ownership.
-        
-        $advertisement->update($request->validated());
+        $data = $request->validated();
 
-        if ($request->has('upsells')) {
-             $advertisement->upsells()->sync($request->input('upsells'));
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('ads', 'public');
         }
 
-        return redirect()->route('advertisements.index')
-            ->with('status', 'Advertisement updated successfully!');
+        $advertisement->update($data);
+
+        return redirect()->route('dashboard.advertisements.index')
+            ->with('success', 'Advertentie bijgewerkt!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Advertisement $advertisement)
     {
-        if (auth()->id() !== $advertisement->user_id) {
-             abort(403);
+        if ($advertisement->user_id !== auth()->id()) {
+            abort(403);
         }
-        
+
         $advertisement->delete();
 
-        return redirect()->route('advertisements.index')
-            ->with('status', 'Advertisement deleted!');
+        return redirect()->route('dashboard.advertisements.index')
+            ->with('success', 'Advertentie verwijderd!');
     }
 }
