@@ -66,6 +66,12 @@
                         </a>
                         
                         <div class="border-t border-gray-100 my-1"></div>
+
+                        @if(Auth::user()->isBusinessAdvertiser())
+                            <a href="{{ route('dashboard.company.settings.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                Bedrijfsinstellingen
+                            </a>
+                        @endif
                         
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Profielinstellingen

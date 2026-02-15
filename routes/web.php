@@ -55,7 +55,14 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     Route::get('/bids', [\App\Http\Controllers\BidController::class, 'index'])->name('bids.index');
     Route::resource('advertisements', AdvertisementController::class);
     
-    // Future: Rentals, Favorites, etc.
+    // Company Settings
+    Route::get('/company/settings', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'edit'])->name('company.settings.edit');
+    Route::patch('/company/settings', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'update'])->name('company.settings.update');
+
+    // Page Components
+    Route::post('/company/components', [App\Http\Controllers\Dashboard\PageComponentController::class, 'store'])->name('company.components.store');
+    Route::patch('/company/components/{component}', [App\Http\Controllers\Dashboard\PageComponentController::class, 'update'])->name('company.components.update');
+    Route::delete('/company/components/{component}', [App\Http\Controllers\Dashboard\PageComponentController::class, 'destroy'])->name('company.components.destroy');
 });
 
 Route::middleware('auth')->group(function () {
