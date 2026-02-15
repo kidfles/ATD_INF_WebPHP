@@ -55,7 +55,7 @@
             <nav class="space-x-4">
                 <a href="#home" class="hover:text-brand transition">Home</a>
                 <a href="#products" class="hover:text-brand transition">Products</a>
-                <a href="{{ route('advertisements.index') }}" class="text-gray-400 text-sm hover:text-gray-600 transition">Back to Market</a>
+                <a href="{{ route('market.index') }}" class="text-gray-400 text-sm hover:text-gray-600 transition">Back to Market</a>
             </nav>
         </div>
     </header>
