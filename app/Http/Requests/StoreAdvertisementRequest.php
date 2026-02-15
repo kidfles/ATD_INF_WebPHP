@@ -13,9 +13,9 @@ class StoreAdvertisementRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // Enforce max 4 ads rule only on creation
+        // Enforce max 4 ads rule only on creation - Handled in rules() per type now
         if ($this->isMethod('post')) {
-            return $this->user()->advertisements()->count() < 4;
+            return true; 
         }
 
         // For updates, check policy or ownership
@@ -33,8 +33,21 @@ class StoreAdvertisementRequest extends FormRequest
             'title'       => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'min:20'],
             'price'       => ['required', 'numeric', 'min:0'],
-            'type'        => ['required', 'in:sell,rent,auction'],
+            'type'        => [
+                'required', 
+                'in:sell,rent,auction',
+                function ($attribute, $value, $fail) {
+                    // Check limit per type
+                    $count = $this->user()->advertisements()->where('type', $value)->count();
+                    
+                    if ($count >= 4) {
+                        $fail("Je mag maximaal 4 {$value} advertenties hebben.");
+                    }
+                }
+            ],
             'image'       => ['nullable', 'image', 'max:2048'], // Max 2MB
+            'related_ads' => ['nullable', 'array'],
+            'related_ads.*' => ['exists:advertisements,id'],
         ];
     }
 

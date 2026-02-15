@@ -50,6 +50,21 @@
                         </div>
 
                         <div class="mb-4">
+                            <label class="block font-bold">Gerelateerde Producten (Koppelverkoop)</label>
+                            <p class="text-xs text-gray-500 mb-2">Selecteer producten die hierbij horen (houd Ctrl/Cmd ingedrukt om meerdere te selecteren)</p>
+                            <select name="related_ads[]" multiple class="border rounded w-full px-4 py-2 h-32">
+                                @foreach($myAdvertisements as $option)
+                                    <option value="{{ $option->id }}" 
+                                        @if($advertisement->relatedAds->contains($option->id)) selected @endif
+                                        @if(is_array(old('related_ads')) && in_array($option->id, old('related_ads'))) selected @endif
+                                    >
+                                        {{ ucfirst($option->type) }}: {{ $option->title }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
                             <label class="block font-bold">Afbeelding (Optioneel)</label>
                             @if($advertisement->image_path)
                                 <div class="mb-2">
