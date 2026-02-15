@@ -21,11 +21,10 @@ class AdvertisementController extends Controller
 
     public function create()
     {
-        // Check limit again for UI (optional, good UX)
-        if (auth()->user()->advertisements()->count() >= 4) {
-            return redirect()->route('dashboard.index')->with('error', 'Maximum advertenties bereikt.');
-        }
-        return view('pages.dashboard.advertisements.create');
+        // Fetch all ads of current user for selection list
+        $myAdvertisements = auth()->user()->advertisements()->select('id', 'title', 'type')->get();
+
+        return view('pages.dashboard.advertisements.create', compact('myAdvertisements'));
     }
 
     public function store(StoreAdvertisementRequest $request)
@@ -39,7 +38,12 @@ class AdvertisementController extends Controller
         }
 
         // Create via Relationship (Automatically sets user_id)
-        $request->user()->advertisements()->create($data);
+        $advertisement = $request->user()->advertisements()->create($data);
+
+        // Sync related ads
+        if ($request->has('related_ads')) {
+            $advertisement->relatedAds()->sync($request->input('related_ads'));
+        }
 
         return redirect()->route('dashboard.advertisements.index')
             ->with('success', 'Advertentie succesvol aangemaakt!');
@@ -55,11 +59,18 @@ class AdvertisementController extends Controller
 
     public function edit(Advertisement $advertisement)
     {
-        // Authorization is handled in the Request or Policy, but we can do a quick check here for UX or use middleware
+        // Check ownership
         if ($advertisement->user_id !== auth()->id()) {
             abort(403);
         }
-        return view('pages.dashboard.advertisements.edit', compact('advertisement'));
+
+        // Fetch all ads EXCEPT current one (cannot link to self)
+        $myAdvertisements = auth()->user()->advertisements()
+            ->where('id', '!=', $advertisement->id)
+            ->select('id', 'title', 'type')
+            ->get();
+
+        return view('pages.dashboard.advertisements.edit', compact('advertisement', 'myAdvertisements'));
     }
 
     public function update(\App\Http\Requests\UpdateAdvertisementRequest $request, Advertisement $advertisement)
@@ -71,6 +82,9 @@ class AdvertisementController extends Controller
         }
 
         $advertisement->update($data);
+
+        // Sync related ads (if empty array or not present, sync handles it if we pass default [])
+        $advertisement->relatedAds()->sync($request->input('related_ads', []));
 
         return redirect()->route('dashboard.advertisements.index')
             ->with('success', 'Advertentie bijgewerkt!');

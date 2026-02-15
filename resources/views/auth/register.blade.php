@@ -1,9 +1,40 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <form method="POST" action="{{ route('register') }}" x-data="{ accountType: 'private_ad' }">
         @csrf
 
+        <div class="mt-4">
+            <x-input-label for="role" :value="__('Ik wil mij registreren als:')" />
+            <div class="mt-1 flex gap-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" name="role" value="private_ad" x-model="accountType" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                    <span class="ml-2 text-sm text-gray-600">Particulier</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" name="role" value="business_ad" x-model="accountType" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                    <span class="ml-2 text-sm text-gray-600">Zakelijk (Adverteerder)</span>
+                </label>
+            </div>
+            <x-input-error :messages="$errors->get('role')" class="mt-2" />
+        </div>
+
+        <div x-show="accountType === 'business_ad'" style="display: none;" class="mt-4 border-l-4 border-indigo-400 pl-4 bg-gray-50 p-2 rounded">
+            <h3 class="font-bold text-gray-700 mb-2">Bedrijfsgegevens</h3>
+            
+            <div class="mt-2">
+                <x-input-label for="company_name" :value="__('Bedrijfsnaam')" />
+                <x-text-input id="company_name" class="block mt-1 w-full" type="text" name="company_name" :value="old('company_name')" />
+                <x-input-error :messages="$errors->get('company_name')" class="mt-2" />
+            </div>
+
+            <div class="mt-4">
+                <x-input-label for="kvk_number" :value="__('KVK Nummer')" />
+                <x-text-input id="kvk_number" class="block mt-1 w-full" type="text" name="kvk_number" :value="old('kvk_number')" />
+                <x-input-error :messages="$errors->get('kvk_number')" class="mt-2" />
+            </div>
+        </div>
+
         <!-- Name -->
-        <div>
+        <div class="mt-4">
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
