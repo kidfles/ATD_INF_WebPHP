@@ -14,24 +14,18 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-gray-50">
-    <div class="min-h-screen">
-        <!-- Navigation -->
-        <x-global-header />
+<body class="font-sans antialiased bg-gray-50 flex flex-col min-h-screen">
+    
+    <x-global-header />
 
-        <!-- Page Content -->
-        <main>
-            {{ $slot }}
-        </main>
-        
-        <!-- Footer -->
-        <footer class="bg-white border-t border-gray-200 mt-12">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <p class="text-center text-sm text-gray-400">
-                    &copy; {{ date('Y') }} ATD Webshop.
-                </p>
-            </div>
-        </footer>
-    </div>
+    <main class="flex-grow">
+        {{ $slot }}
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            &copy; {{ date('Y') }} ATD Webshop. All rights reserved.
+        </div>
+    </footer>
 </body>
 </html>

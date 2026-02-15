@@ -38,7 +38,12 @@ class MarketController extends Controller
 
     public function show(Advertisement $advertisement)
     {
-        $advertisement->load(['user', 'bids.user']); // Eager load for view
-        return view('pages.market.show', compact('advertisement'));
+        // Eager load the seller's company profile
+        $advertisement->load(['user.companyProfile', 'bids.user']);
+        
+        // Determine Brand Color (Default to Indigo if no company profile)
+        $brandColor = $advertisement->user->companyProfile->brand_color ?? '#4f46e5'; 
+
+        return view('pages.market.show', compact('advertisement', 'brandColor'));
     }
 }
