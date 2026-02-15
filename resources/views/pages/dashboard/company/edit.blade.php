@@ -74,46 +74,66 @@
                     </form>
                 </header>
 
-                <div id="sortable-components" class="space-y-4">
-                    @forelse($company->pageComponents as $component)
-                        <div class="border rounded-lg p-4 bg-gray-50 transition transform hover:shadow-md" data-id="{{ $component->id }}">
-                            <div class="flex justify-between items-center mb-4">
-                                <div class="flex items-center gap-3">
-                                    {{-- Drag Handle --}}
-                                    <div class="drag-handle cursor-move text-gray-400 hover:text-gray-600 p-1">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>
-                                    </div>
-                                    <span class="badge bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs uppercase font-bold">
-                                        {{ $component->component_type }}
-                                    </span>
-                                </div>
+                <form action="{{ route('dashboard.company.components.bulk') }}" method="POST" id="bulk-update-form">
+                    @csrf
+                    
+                    <div id="sortable-components" class="space-y-4 mb-24">
+                        @forelse($company->pageComponents as $component)
+                            <div class="border rounded-lg p-4 bg-gray-50 transition transform hover:shadow-md relative group" data-id="{{ $component->id }}">
+                                {{-- Hidden Input for Ordering --}}
+                                <input type="hidden" name="ordered_ids[]" value="{{ $component->id }}">
                                 
-                                <form action="{{ route('dashboard.company.components.destroy', $component) }}" method="POST" onsubmit="return confirm('Remove section?');">
-                                    @csrf @method('DELETE')
-                                    <button class="text-red-500 text-sm hover:underline">Remove</button>
-                                </form>
-                            </div>
-
-                            <form action="{{ route('dashboard.company.components.update', $component) }}" method="POST" class="space-y-3">
-                                @csrf @method('PATCH')
-
-                                @if($component->component_type === 'hero')
-                                    <input type="text" name="content[title]" value="{{ $component->content['title'] ?? '' }}" class="w-full border-gray-300 rounded text-sm" placeholder="Hero Title">
-                                    <input type="text" name="content[subtitle]" value="{{ $component->content['subtitle'] ?? '' }}" class="w-full border-gray-300 rounded text-sm" placeholder="Subtitle">
-                                @elseif($component->component_type === 'text')
-                                    <input type="text" name="content[heading]" value="{{ $component->content['heading'] ?? '' }}" class="w-full border-gray-300 rounded text-sm font-bold" placeholder="Heading">
-                                    <textarea name="content[body]" rows="3" class="w-full border-gray-300 rounded text-sm">{{ $component->content['body'] ?? '' }}</textarea>
-                                @endif
-
-                                <div class="text-right">
-                                    <button class="text-indigo-600 text-sm font-medium hover:underline">Update Content</button>
+                                <div class="flex justify-between items-center mb-4">
+                                    <div class="flex items-center gap-3">
+                                        {{-- Drag Handle --}}
+                                        <div class="drag-handle cursor-move text-gray-400 hover:text-gray-600 p-1">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"></path></svg>
+                                        </div>
+                                        <span class="badge bg-indigo-100 text-indigo-800 px-2 py-1 rounded text-xs uppercase font-bold">
+                                            {{ $component->component_type }}
+                                        </span>
+                                    </div>
+                                    
+                                    {{-- Remove Button --}}
+                                    <button type="button" 
+                                            onclick="if(confirm('Remove section?')) document.getElementById('delete-form-{{ $component->id }}').submit()" 
+                                            class="text-red-500 text-sm hover:underline">
+                                        Remove
+                                    </button>
                                 </div>
-                            </form>
+
+                                <div class="space-y-3">
+                                    {{-- Content Inputs Keyed by Component ID --}}
+                                    @if($component->component_type === 'hero')
+                                        <input type="text" name="components[{{ $component->id }}][content][title]" value="{{ $component->content['title'] ?? '' }}" class="w-full border-gray-300 rounded text-sm" placeholder="Hero Title">
+                                        <input type="text" name="components[{{ $component->id }}][content][subtitle]" value="{{ $component->content['subtitle'] ?? '' }}" class="w-full border-gray-300 rounded text-sm" placeholder="Subtitle">
+                                    @elseif($component->component_type === 'text')
+                                        <input type="text" name="components[{{ $component->id }}][content][heading]" value="{{ $component->content['heading'] ?? '' }}" class="w-full border-gray-300 rounded text-sm font-bold" placeholder="Heading">
+                                        <textarea name="components[{{ $component->id }}][content][body]" rows="3" class="w-full border-gray-300 rounded text-sm">{{ $component->content['body'] ?? '' }}</textarea>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-center text-gray-500 py-4">No sections added yet.</p>
+                        @endforelse
+                    </div>
+
+                    {{-- Sticky Footer Save Button --}}
+                    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex justify-end z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+                         <div class="max-w-7xl mx-auto w-full flex justify-end px-4 sm:px-6 lg:px-8">
+                            <x-primary-button class="py-3 px-6 text-base">
+                                {{ __('Save All Changes') }}
+                            </x-primary-button>
                         </div>
-                    @empty
-                        <p class="text-center text-gray-500 py-4">No sections added yet.</p>
-                    @endforelse
-                </div>
+                    </div>
+                </form>
+
+                {{-- Hidden Delete Forms --}}
+                @foreach($company->pageComponents as $component)
+                    <form id="delete-form-{{ $component->id }}" action="{{ route('dashboard.company.components.destroy', $component) }}" method="POST" class="hidden">
+                        @csrf @method('DELETE')
+                    </form>
+                @endforeach
             </div>
 
         </div>
@@ -127,28 +147,7 @@
         var sortable = Sortable.create(el, {
             handle: '.drag-handle',
             animation: 150,
-            onEnd: function (evt) {
-                var order = [];
-                document.querySelectorAll('#sortable-components > div').forEach(function(item) {
-                    order.push(item.getAttribute('data-id'));
-                });
-                
-                // Send new order to server
-                fetch('{{ route('dashboard.company.components.reorder') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({ order: order })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Order updated');
-                    // Optional: Show a toast notification
-                })
-                .catch(error => console.error('Error:', error));
-            }
+            // The order is now saved when the form is submitted, so we don't need onEnd fetch call.
         });
     });
 </script>

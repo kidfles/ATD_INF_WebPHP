@@ -61,8 +61,7 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
 
     // Page Components
     Route::post('/company/components', [App\Http\Controllers\Dashboard\PageComponentController::class, 'store'])->name('company.components.store');
-    Route::post('/company/components/reorder', [App\Http\Controllers\Dashboard\PageComponentController::class, 'reorder'])->name('company.components.reorder');
-    Route::patch('/company/components/{component}', [App\Http\Controllers\Dashboard\PageComponentController::class, 'update'])->name('company.components.update');
+    Route::post('/company/components/bulk', [App\Http\Controllers\Dashboard\PageComponentController::class, 'bulkUpdate'])->name('company.components.bulk');
     Route::delete('/company/components/{component}', [App\Http\Controllers\Dashboard\PageComponentController::class, 'destroy'])->name('company.components.destroy');
 });
 

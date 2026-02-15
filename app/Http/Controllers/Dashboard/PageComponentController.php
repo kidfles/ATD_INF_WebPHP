@@ -33,37 +33,36 @@ class PageComponentController extends Controller
         return back()->with('status', 'New section added! You can now edit it.');
     }
 
-    public function reorder(Request $request)
+    public function bulkUpdate(Request $request)
     {
         $request->validate([
-            'order' => 'required|array',
-            'order.*' => 'exists:page_components,id',
+            'ordered_ids' => 'present|array',
+            'ordered_ids.*' => 'exists:page_components,id',
+            'components' => 'present|array',
+            'components.*.content' => 'present|array',
         ]);
 
-        foreach ($request->order as $index => $id) {
-            PageComponent::where('id', $id)
-                ->where('company_id', $request->user()->companyProfile->id)
-                ->update(['order' => $index + 1]);
+        foreach ($request->ordered_ids as $index => $id) {
+            $component = PageComponent::find($id);
+
+            // Security check
+            if (!$component || $component->companyProfile->user_id !== $request->user()->id) {
+                continue; 
+            }
+
+            $updateData = [
+                'order' => $index + 1,
+            ];
+
+            // Update content if present in the components array
+            if (isset($request->components[$id]['content'])) {
+                $updateData['content'] = $request->components[$id]['content'];
+            }
+
+            $component->update($updateData);
         }
 
-        return response()->json(['status' => 'Order updated']);
-    }
-
-    public function update(Request $request, PageComponent $component)
-    {
-        // Security: Ensure the user owns this component
-        if ($component->companyProfile->user_id !== $request->user()->id) {
-            abort(403);
-        }
-
-        // Validate content structure based on type
-        $data = $request->validate([
-            'content' => 'required|array',
-        ]);
-
-        $component->update(['content' => $data['content']]);
-
-        return back()->with('status', 'Section updated successfully.');
+        return back()->with('status', 'Page updated successfully!');
     }
 
     public function destroy(PageComponent $component)
