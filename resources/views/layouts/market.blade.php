@@ -17,7 +17,7 @@
 <body class="font-sans antialiased bg-gray-50">
     <div class="min-h-screen">
         <!-- Navigation -->
-        @include('layouts.navigation')
+        <x-global-header />
 
         <!-- Page Content -->
         <main>

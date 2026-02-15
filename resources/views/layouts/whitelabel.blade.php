@@ -3,73 +3,47 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ $company->name ?? 'Company Page' }}</title>
-
-    <!-- Scripts -->
+    <title>{{ $company->user->name ?? 'Company Page' }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <style>
-        :root {
-            /* 1. Inject the color from the database */
-            --brand-color: {{ $company->brand_color ?? '#3b82f6' }};
-            
-            /* 2. Calculate a darker shade for hover effects using CSS color-mix */
-            --brand-dark: color-mix(in srgb, var(--brand-color), black 20%);
-            
-            /* 3. Determine readable text color (simplified) */
-            --brand-text: #ffffff; 
-        }
-
-        /* Utility classes for the brand */
-        .bg-brand { background-color: var(--brand-color); color: var(--brand-text); }
-        .text-brand { color: var(--brand-color); }
-        .border-brand { border-color: var(--brand-color); }
-        
-        .btn-brand {
-            background-color: var(--brand-color);
-            color: var(--brand-text);
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            transition: background-color 0.2s;
-        }
-        .btn-brand:hover {
-            background-color: var(--brand-dark);
-        }
-        
-        body {
-            /* Reset body background to neutral, let sections handle color */
-            background-color: #f9fafb; /* gray-50 */
-            color: #111827; /* gray-900 */
-        }
-    </style>
 </head>
-<body class="font-sans antialiased">
-    
-    <x-public-nav />
-    
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="font-bold text-2xl text-brand">
-                 {{ optional($company->user)->name ?? $company->name }}
+<body class="font-sans antialiased bg-gray-50 flex flex-col min-h-screen">
+
+    <x-global-header />
+
+    <header class="bg-white shadow-sm sticky top-0 z-40 border-t-4" 
+            style="border-color: {{ $company->brand_color ?? '#3b82f6' }}">
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded flex items-center justify-center text-white font-bold text-xl"
+                     style="background-color: {{ $company->brand_color ?? '#3b82f6' }}">
+                    {{ substr($company->user->name ?? 'C', 0, 1) }}
+                </div>
+                <h1 class="font-bold text-2xl text-gray-900 tracking-tight">
+                    {{ $company->user->name ?? 'Company Name' }}
+                </h1>
             </div>
-            <nav class="space-x-4">
-                <a href="#home" class="hover:text-brand transition">Home</a>
-                <a href="#products" class="hover:text-brand transition">Products</a>
-                <a href="{{ route('market.index') }}" class="text-gray-400 text-sm hover:text-gray-600 transition">Back to Market</a>
+
+            <nav class="hidden md:flex space-x-8">
+                <a href="#home" class="text-gray-600 hover:text-gray-900 font-medium">Home</a>
+                <a href="#about" class="text-gray-600 hover:text-gray-900 font-medium">About</a>
+                <a href="#products" class="text-gray-600 hover:text-gray-900 font-medium">Products</a>
             </nav>
+            
+            <button class="md:hidden text-gray-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
         </div>
     </header>
 
-    <main>
+    <main class="flex-grow">
         {{ $slot }}
     </main>
 
-    <footer class="bg-gray-900 text-white py-8 mt-12">
+    <footer class="bg-gray-100 border-t border-gray-200 py-12 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; {{ date('Y') }} {{ optional($company->user)->name ?? $company->name }}. Powered by MarketMashup.</p>
-            <p class="text-gray-500 text-sm mt-2">KvK: {{ $company->kvk_number }}</p>
+            <p class="text-gray-600 font-medium">{{ $company->user->name }}</p>
+            <p class="text-gray-400 text-sm mt-2">KvK: {{ $company->kvk_number }} &bull; Powered by ATDWebshop</p>
         </div>
     </footer>
 

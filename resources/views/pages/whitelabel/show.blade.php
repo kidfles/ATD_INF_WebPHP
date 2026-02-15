@@ -1,78 +1,85 @@
 <x-whitelabel-layout :company="$company">
-    <x-slot name="title">{{ optional($company->user)->name ?? $company->name }}</x-slot>
-
+    
     @if($company->pageComponents->isEmpty())
-        <div class="py-20 text-center">
-            <h1 class="text-4xl font-bold text-brand">Welcome to {{ optional($company->user)->name ?? $company->name }}</h1>
-            <p class="mt-4 text-gray-600">This company hasn't configured their page yet.</p>
+        <div class="py-32 text-center">
+            <h2 class="text-3xl font-bold text-gray-300">Page under construction</h2>
         </div>
     @endif
 
     @foreach($company->pageComponents as $component)
         
-        {{-- HERO COMPONENT --}}
+        {{-- HERO SECTION --}}
         @if($component->component_type === 'hero')
-            <section class="bg-brand py-24 text-center" id="home">
-                <div class="max-w-4xl mx-auto px-4">
-                    <h1 class="text-5xl font-extrabold mb-6">
+            <section id="home" class="relative py-24 md:py-32 bg-gray-900 text-white overflow-hidden">
+                <div class="absolute inset-0 opacity-90" 
+                     style="background-color: {{ $company->brand_color ?? '#111827' }}"></div>
+                
+                @if(isset($component->content['image']))
+                    <img src="{{ asset('storage/'.$component->content['image']) }}" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-50">
+                @endif
+
+                <div class="relative max-w-7xl mx-auto px-4 text-center">
+                    <h2 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
                         {{ $component->content['title'] ?? 'Welcome' }}
-                    </h1>
-                    <p class="text-xl opacity-90 mb-8">
+                    </h2>
+                    <p class="text-xl md:text-2xl opacity-90 max-w-2xl mx-auto mb-10">
                         {{ $component->content['subtitle'] ?? '' }}
                     </p>
-                    @if(isset($component->content['image']))
-                        <img src="{{ asset('storage/'.$component->content['image']) }}" class="mx-auto rounded-lg shadow-xl max-h-96 object-cover">
-                    @endif
+                    <a href="#products" class="inline-block bg-white text-gray-900 font-bold py-3 px-8 rounded-full hover:bg-gray-100 transition transform hover:scale-105">
+                        View Products
+                    </a>
                 </div>
             </section>
 
-        {{-- TEXT / ABOUT COMPONENT --}}
+        {{-- TEXT SECTION --}}
         @elseif($component->component_type === 'text')
-            <section class="py-16 bg-white">
-                <div class="max-w-3xl mx-auto px-4 prose prose-lg">
-                    <h2 class="text-brand text-3xl font-bold mb-4">{{ $component->content['heading'] ?? 'About Us' }}</h2>
-                    <div class="text-gray-600">
+            <section id="about" class="py-20 bg-white">
+                <div class="max-w-4xl mx-auto px-4 text-center">
+                    <h3 class="text-3xl font-bold text-gray-900 mb-8 relative inline-block">
+                        {{ $component->content['heading'] ?? 'About Us' }}
+                        <span class="absolute bottom-0 left-0 w-full h-1 rounded" 
+                              style="background-color: {{ $company->brand_color ?? '#3b82f6' }}"></span>
+                    </h3>
+                    <div class="prose prose-lg mx-auto text-gray-600">
                         {!! nl2br(e($component->content['body'] ?? '')) !!}
                     </div>
                 </div>
             </section>
 
-        {{-- FEATURED ADS COMPONENT --}}
+        {{-- FEATURED PRODUCTS --}}
         @elseif($component->component_type === 'featured_ads')
-            <section class="py-16 bg-gray-50" id="products">
+            <section id="products" class="py-20 bg-gray-50 border-t border-gray-200">
                 <div class="max-w-7xl mx-auto px-4">
-                    <h2 class="text-3xl font-bold text-center mb-12">Featured Products</h2>
+                    <h3 class="text-3xl font-bold text-gray-900 mb-12 text-center">Featured Products</h3>
+                    
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {{-- 
-                            Fetch the company's latest 3 ads dynamically.
-                        --}}
-                        @if($company->user)
-                            @foreach($company->user->advertisements()->latest()->take(3)->get() as $ad)
-                                <div class="bg-white rounded-lg shadow hover:shadow-lg transition overflow-hidden">
-                                    <div class="bg-gray-200 h-48 w-full overflow-hidden">
-                                        @if($ad->image_path)
-                                            <img src="{{ asset('storage/' . $ad->image_path) }}" alt="{{ $ad->title }}" class="w-full h-full object-cover">
-                                        @else
-                                            <div class="w-full h-full flex items-center justify-center text-gray-500">No Image</div>
-                                        @endif
-                                    </div>
-                                    <div class="p-6">
-                                        <h3 class="font-bold text-xl mb-2">{{ $ad->title }}</h3>
-                                        <p class="text-brand font-bold text-lg">€{{ number_format($ad->price, 2) }}</p>
-                                        <a href="{{ route('market.show', $ad) }}" class="mt-4 inline-block btn-brand text-sm">
-                                            View Details
-                                        </a>
-                                    </div>
+                        @foreach($company->user->advertisements()->latest()->take(3)->get() as $ad)
+                            <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition overflow-hidden group">
+                                <div class="bg-gray-200 h-56 w-full overflow-hidden relative">
+                                    @if($ad->image_path)
+                                        <img src="{{ asset('storage/' . $ad->image_path) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center text-gray-400 bg-gray-100">No Image</div>
+                                    @endif
                                 </div>
-                            @endforeach
-                        @else
-                            <p class="text-center text-gray-500 col-span-3">No products available.</p>
-                        @endif
+                                <div class="p-6">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h4 class="font-bold text-lg text-gray-900 line-clamp-1">{{ $ad->title }}</h4>
+                                        <span class="text-xs font-bold uppercase px-2 py-1 bg-gray-100 rounded text-gray-600">{{ $ad->type }}</span>
+                                    </div>
+                                    <p class="text-xl font-bold mb-4" style="color: {{ $company->brand_color ?? '#3b82f6' }}">
+                                        €{{ number_format($ad->price, 2) }}
+                                    </p>
+                                    <a href="{{ route('market.show', $ad) }}" class="block w-full text-center bg-gray-900 text-white font-medium py-2 rounded hover:bg-gray-800 transition">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </section>
-
         @endif
-    @endforeach
 
+    @endforeach
 </x-whitelabel-layout>
