@@ -28,7 +28,7 @@ class MarketController extends Controller
         }
 
         // Public Market Logic: Show all ads, filterable
-        $advertisements = Advertisement::filter($request->only(['search', 'type', 'sort']))
+        $advertisements = Advertisement::filter($request->only(['search', 'type', 'sort', 'seller']))
             ->with('user')
             ->paginate(12)
             ->withQueryString();

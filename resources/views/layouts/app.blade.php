@@ -19,6 +19,15 @@
             {{-- GLOBAL HEADER (Marktplaats Style) --}}
             <x-global-header />
 
+            {{-- Page Heading --}}
+            @isset($header)
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endisset
+
             {{-- Main Content + Sidebar Wrapper --}}
             <main class="py-6">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

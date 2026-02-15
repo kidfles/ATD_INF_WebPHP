@@ -58,6 +58,10 @@ class Advertisement extends Model
             $q->where('type', $type)
         );
 
+        $query->when($filters['seller'] ?? false, fn($q, $sellerId) => 
+            $q->where('user_id', $sellerId)
+        );
+
         $query->when($filters['sort'] ?? false, function($q, $sort) {
             match ($sort) {
                 'price_asc' => $q->orderBy('price', 'asc'),

@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePageComponentRequest;
+use App\Http\Requests\BulkUpdatePageComponentsRequest;
 use App\Models\PageComponent;
 use Illuminate\Http\Request;
 
 class PageComponentController extends Controller
 {
-    public function store(Request $request)
+    public function store(StorePageComponentRequest $request)
     {
-        $request->validate([
-            'type' => 'required|in:hero,text,featured_ads',
-        ]);
+        // Validation handled by Form Request
 
         $company = $request->user()->companyProfile;
 
@@ -33,14 +33,9 @@ class PageComponentController extends Controller
         return back()->with('status', 'New section added! You can now edit it.');
     }
 
-    public function bulkUpdate(Request $request)
+    public function bulkUpdate(BulkUpdatePageComponentsRequest $request)
     {
-        $request->validate([
-            'ordered_ids' => 'present|array',
-            'ordered_ids.*' => 'exists:page_components,id',
-            'components' => 'present|array',
-            'components.*.content' => 'present|array',
-        ]);
+        // Validation handled by Form Request
 
         foreach ($request->ordered_ids as $index => $id) {
             $component = PageComponent::find($id);

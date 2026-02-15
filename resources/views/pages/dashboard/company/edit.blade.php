@@ -18,7 +18,7 @@
                     @csrf
                     @method('patch')
 
-                    <div class="space-y-2" x-data="{ color: '{{ $company->brand_color ?? '#000000' }}' }">
+                    <div class="space-y-2" x-data="{ color: @json($company->brand_color ?? '#000000') }">
                         <x-input-label for="brand_color" value="Brand Color" />
                         <div class="flex items-center gap-4 mt-1">
                             <input type="color" name="brand_color" x-model="color" class="h-10 w-20 p-1 rounded border border-gray-300 cursor-pointer">
@@ -96,7 +96,8 @@
                                     
                                     {{-- Remove Button --}}
                                     <button type="button" 
-                                            onclick="if(confirm('Remove section?')) document.getElementById('delete-form-{{ $component->id }}').submit()" 
+                                            x-data
+                                            @click="if(confirm('Remove section?')) document.getElementById('delete-form-{{ $component->id }}').submit()" 
                                             class="text-red-500 text-sm hover:underline">
                                         Remove
                                     </button>
@@ -140,14 +141,17 @@
     </div>
 </x-app-layout>
 
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var el = document.getElementById('sortable-components');
-        var sortable = Sortable.create(el, {
-            handle: '.drag-handle',
-            animation: 150,
-            // The order is now saved when the form is submitted, so we don't need onEnd fetch call.
-        });
+        if (el) {
+            var sortable = Sortable.create(el, {
+                handle: '.drag-handle',
+                animation: 150,
+            });
+        }
     });
 </script>
+@endpush

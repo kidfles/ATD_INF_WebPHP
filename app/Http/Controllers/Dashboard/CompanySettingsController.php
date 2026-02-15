@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateCompanyProfileRequest;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -21,21 +22,15 @@ class CompanySettingsController extends Controller
         return view('pages.dashboard.company.edit', compact('company'));
     }
 
-    public function update(Request $request)
+    public function update(UpdateCompanyProfileRequest $request)
     {
         $company = $request->user()->companyProfile;
 
-        $validated = $request->validate([
-            'kvk_number' => ['required', 'digits:8'],
-            'brand_color' => ['required', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
-            'custom_url_slug' => [
-                'required', 
-                'alpha_dash', 
-                Rule::unique('company_profiles')->ignore($company->id)
-            ],
-        ]);
-
-        $company->update($validated);
+        // Authorization check is now handled in the Form Request's authorize() method
+        // but explicit check here is also fine for double safety if desired,
+        // though request authorization happens before controller method execution.
+        
+        $company->update($request->validated());
 
         return back()->with('status', 'Company settings updated!');
     }

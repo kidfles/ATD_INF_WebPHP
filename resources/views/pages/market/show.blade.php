@@ -18,14 +18,18 @@
                     &larr; Back to Market
                 </a>
                 
-                @if($advertisement->user->companyProfile)
+                @if($advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
                     <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
-                       class="text-sm font-bold px-4 py-2 rounded-full bg-white border border-gray-200 hover:text-white transition shadow-sm flex items-center gap-2"
-                       style="border-color: {{ $brandColor }}; color: {{ $brandColor }};"
-                       onmouseover="this.style.backgroundColor='{{ $brandColor }}'; this.style.color='white';"
-                       onmouseout="this.style.backgroundColor='white'; this.style.color='{{ $brandColor }}';">
-                        <span>Visit Store</span>
-                        <span>&rarr;</span>
+                       class="text-sm font-bold px-4 py-2 rounded-full bg-white border border-gray-200 hover:text-white transition shadow-sm flex items-center gap-2 group/store"
+                       style="border-color: {{ $brandColor }}; color: {{ $brandColor }};">
+                        <span class="group-hover/store:text-white transition-colors duration-200">Visit Store</span>
+                        <span class="group-hover/store:text-white transition-colors duration-200">&rarr;</span>
+                        <style>
+                            .group\/store:hover {
+                                background-color: {{ $brandColor }} !important;
+                                color: white !important;
+                            }
+                        </style>
                     </a>
                 @endif
             </div>

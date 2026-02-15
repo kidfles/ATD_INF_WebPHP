@@ -59,7 +59,8 @@
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
                     @if($company->user)
-                        @foreach($company->user->advertisements()->latest()->take(3)->get() as $ad)
+                        {{-- Advertisements are eager loaded in CompanyController --}}
+                        @foreach($company->user->advertisements as $ad)
                             <a href="{{ route('market.show', $ad) }}" class="group block">
                                 
                                 <div class="relative h-64 bg-gray-200 rounded-2xl overflow-hidden mb-5">

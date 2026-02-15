@@ -18,7 +18,7 @@
 
     <footer class="bg-gray-100 border-t border-gray-200 py-12 mt-auto">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-gray-600 font-medium">{{ $company->user->name }}</p>
+            <p class="text-gray-600 font-medium">{{ optional($company->user)->name ?? 'Company Name' }}</p>
             <p class="text-gray-400 text-sm mt-2">KvK: {{ $company->kvk_number }} &bull; Powered by ATDWebshop</p>
         </div>
     </footer>
