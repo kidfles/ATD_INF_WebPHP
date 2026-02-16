@@ -1,6 +1,6 @@
 <x-market-layout>
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold mb-6">Marketplace</h1>
+        <h1 class="text-3xl font-bold mb-6">{{ __('Marketplace') }}</h1>
 
         <form action="{{ route('market.index') }}" method="GET" class="mb-8 flex flex-wrap gap-4 items-center bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             
@@ -8,33 +8,33 @@
             @if(request('search'))
                 <input type="hidden" name="search" value="{{ request('search') }}">
                 <div class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium flex items-center gap-2">
-                    Zoekopdracht: "{{ request('search') }}"
+                    {{ __('Search query') }}: "{{ request('search') }}"
                     <a href="{{ route('market.index', request()->except('search')) }}" class="text-indigo-500 hover:text-indigo-900 font-bold ml-1">&times;</a>
                 </div>
             @endif
 
             <select name="type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" onchange="this.form.submit()">
-                <option value="">Alle types</option>
-                <option value="sell" {{ request('type') == 'sell' ? 'selected' : '' }}>Verkoop</option>
-                <option value="rent" {{ request('type') == 'rent' ? 'selected' : '' }}>Verhuur</option>
-                <option value="auction" {{ request('type') == 'auction' ? 'selected' : '' }}>Veiling</option>
+                <option value="">{{ __('All types') }}</option>
+                <option value="sell" {{ request('type') == 'sell' ? 'selected' : '' }}>{{ __('Sale') }}</option>
+                <option value="rent" {{ request('type') == 'rent' ? 'selected' : '' }}>{{ __('Rental') }}</option>
+                <option value="auction" {{ request('type') == 'auction' ? 'selected' : '' }}>{{ __('Auction') }}</option>
             </select>
 
             <select name="sort" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" onchange="this.form.submit()">
-                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Nieuwste eerst</option>
-                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Prijs: Laag naar Hoog</option>
-                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Prijs: Hoog naar Laag</option>
+                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>{{ __('Newest first') }}</option>
+                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Low to High') }}</option>
+                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>{{ __('Price: High to Low') }}</option>
             </select>
 
             {{-- "Filter" button is less necessary with auto-submit, but good for accessibility/clarity if js fails --}}
             <noscript>
-                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Filter</button>
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">{{ __('Filter') }}</button>
             </noscript>
             
             @if(request()->hasAny(['search', 'sort', 'type']))
                 <a href="{{ route('market.index') }}" 
                    class="ml-auto text-sm text-gray-500 hover:text-gray-900 underline">
-                   Wis alle filters
+                   {{ __('Clear all filters') }}
                 </a>
             @endif
         </form>
@@ -47,7 +47,7 @@
                         @if($ad->image_path)
                             <img src="{{ asset('storage/' . $ad->image_path) }}" alt="{{ $ad->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                         @else
-                            <img src="{{ asset('images/placeholder.svg') }}" alt="No image available" class="w-full h-full object-cover text-gray-400">
+                            <img src="{{ asset('images/placeholder.svg') }}" alt="{{ __('No image available') }}" class="w-full h-full object-cover text-gray-400">
                         @endif
                     </div>
                     <a href="{{ route('market.show', $ad) }}">
@@ -56,7 +56,7 @@
                     <p class="text-gray-600 truncate">{{ $ad->description }}</p>
                     <div class="flex justify-between items-center mt-4">
                         <p class="font-bold text-lg">€ {{ number_format($ad->price, 2) }}</p>
-                        <span class="bg-gray-100 px-2 py-1 rounded text-sm text-gray-600">{{ ucfirst($ad->type) }}</span>
+                        <span class="bg-gray-100 px-2 py-1 rounded text-sm text-gray-600">{{ __(ucfirst($ad->type)) }}</span>
                     </div>
                 </div>
             @endforeach

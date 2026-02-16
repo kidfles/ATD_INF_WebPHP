@@ -5,6 +5,14 @@ use App\Http\Controllers\MarketController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\AdvertisementController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+
+Route::get('lang/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'nl'])) {
+        Session::put('locale', $locale);
+    }
+    return back();
+})->name('lang.switch');
 
 // ZONE A: Public Market
 Route::get('/test', function () {

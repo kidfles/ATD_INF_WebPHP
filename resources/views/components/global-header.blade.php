@@ -19,9 +19,20 @@
 
         {{-- RIGHT: MENU --}}
         <div class="flex items-center gap-4 flex-shrink-0">
+
+            <div class="flex items-center space-x-2">
+                <a href="{{ route('lang.switch', 'nl') }}" 
+                   class="px-2 py-1 text-xs rounded {{ app()->getLocale() == 'nl' ? 'bg-indigo-600 text-white font-bold' : 'bg-gray-200 text-gray-600 hover:bg-gray-300' }}">
+                   NL
+                </a>
+                <a href="{{ route('lang.switch', 'en') }}" 
+                   class="px-2 py-1 text-xs rounded {{ app()->getLocale() == 'en' ? 'bg-indigo-600 text-white font-bold' : 'bg-gray-200 text-gray-600 hover:bg-gray-300' }}">
+                   EN
+                </a>
+            </div>
             
             <a href="{{ route('market.index') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900 hidden md:block">
-                Help en info
+                {{ __('Help and info') }}
             </a>
 
             @auth
@@ -33,7 +44,7 @@
                         <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
                             {{ substr(Auth::user()->name, 0, 1) }}
                         </div>
-                        <span class="hidden md:block">Mijn ATD</span>
+                        <span class="hidden md:block">{{ __('My ATD') }}</span>
                         <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
 
@@ -48,45 +59,45 @@
                          style="display: none;">
                         
                         <div class="px-4 py-3 border-b border-gray-100">
-                            <p class="text-sm">Ingelogd als</p>
+                            <p class="text-sm">{{ __('Logged in as') }}</p>
                             <p class="text-sm font-medium text-gray-900 truncate">{{ Auth::user()->name }}</p>
                         </div>
 
                         <a href="{{ route('dashboard.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Dashboard Overzicht
+                            {{ __('Dashboard Overview') }}
                         </a>
                         <a href="{{ route('dashboard.advertisements.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Mijn Advertenties
+                            {{ __('My Advertisements') }}
                         </a>
                         <a href="{{ route('dashboard.bids.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Mijn Biedingen
+                            {{ __('My Bids') }}
                         </a>
                         <a href="{{ route('dashboard.favorites.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Mijn Favorieten
+                            {{ __('My Favorites') }}
                         </a>
                         <a href="{{ route('dashboard.rentals.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Mijn Verhuur
+                            {{ __('My Rentals') }}
                         </a>
                         <a href="{{ route('dashboard.orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Mijn Aankopen
+                            {{ __('My Purchases') }}
                         </a>
                         
                         <div class="border-t border-gray-100 my-1"></div>
 
                         @if(Auth::user()->isBusinessAdvertiser())
                             <a href="{{ route('dashboard.company.settings.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                Bedrijfsinstellingen
+                                {{ __('Company Settings') }}
                             </a>
                         @endif
                         
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                            Profielinstellingen
+                            {{ __('Profile Settings') }}
                         </a>
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50">
-                                Uitloggen
+                                {{ __('Logout') }}
                             </button>
                         </form>
                     </div>
@@ -94,13 +105,13 @@
 
                 {{-- PLACE AD BUTTON --}}
                 <a href="{{ route('dashboard.advertisements.create') }}" class="ml-4 hidden md:inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition">
-                    Plaats advertentie
+                    {{ __('Place advertisement') }}
                 </a>
 
             @else
                 {{-- GUEST --}}
-                <a href="{{ route('login') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">Inloggen</a>
-                <a href="{{ route('register') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">Registreren</a>
+                <a href="{{ route('login') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">{{ __('Log in') }}</a>
+                <a href="{{ route('register') }}" class="text-sm font-medium text-gray-600 hover:text-gray-900">{{ __('Register') }}</a>
             @endauth
 
         </div>
