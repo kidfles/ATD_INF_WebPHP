@@ -31,7 +31,21 @@ class CompanyProfile extends Model
         'custom_url_slug',
         'contract_status',
         'contract_file_path',
+        'wear_and_tear_policy',
+        'wear_and_tear_value',
     ];
+
+    /**
+     * De attributen die gecast moeten worden.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'wear_and_tear_value' => 'decimal:2',
+        ];
+    }
 
     /**
      * De gebruiker (eigenaar) die gekoppeld is aan dit bedrijfsprofiel.

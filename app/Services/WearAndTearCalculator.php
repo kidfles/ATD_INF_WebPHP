@@ -7,33 +7,62 @@ use Carbon\Carbon;
 
 class WearAndTearCalculator
 {
-    public function calculate(Rental $rental): float
+    /**
+     * Bereken de totale kosten inclusief basisprijs, boetes en slijtage.
+     * 
+     * @param Rental $rental
+     * @return array{total: float, breakdown: array{base_cost: float, late_fee: float, wear_and_tear: float}}
+     */
+    public function calculate(Rental $rental): array
     {
-        // 1. Calculate Duration in Days
-        // We use 'start_of_day' to ensure we compare dates accurately
+        // 1. Base Cost (Duration in Days * Price)
+        // Use inclusive calendar days (00:00 to 00:00 + 1 day)
         $start = $rental->start_date->startOfDay();
-        $end = $rental->end_date->endOfDay();
+        $end = $rental->end_date->startOfDay();
         
-        // If they return it early, they still pay for the booked days? 
-        // Let's assume they pay for the *actual* booked duration.
+        // Count inclusive days
         $bookedDays = $start->diffInDays($end) + 1;
-
-        // 2. Base Cost
         $pricePerDay = $rental->advertisement->price;
-        $totalCost = $bookedDays * $pricePerDay;
+        $baseCost = $bookedDays * $pricePerDay;
 
-        // 3. Late Fee Logic
+        // 2. Late Fee Logic
         // "Business Rule: Bij het terugbrengen... slijtage berekend"
-        // Let's add a 25% penalty if returned after the end date.
-        // Penalty calculation (1.5x price per day for late days)
-        if (now()->startOfDay()->gt($end)) {
-            $overdueDays = $end->diffInDays(now());
+        // Return after end date = 50% extra per day
+        $lateFee = 0.00;
+        $returnedDate = now()->startOfDay();
+
+        if ($returnedDate->gt($end)) {
+            $overdueDays = $end->diffInDays($returnedDate);
             if ($overdueDays > 0) {
-                $penalty = ($pricePerDay * 1.5) * $overdueDays; // 150% price for late days
-                $totalCost += $penalty;
+                // 150% price for late days (so 50% penalty on top of day price? 
+                // Logic: ($pricePerDay * 1.5) * overdueDays.
+                $lateFee = ($pricePerDay * 1.5) * $overdueDays;
             }
         }
 
-        return round((float) $totalCost, 2);
+        // 3. Wear & Tear Policy (New)
+        $wearAndTearCost = 0.00;
+        $company = $rental->advertisement->user->companyProfile;
+
+        if ($company) {
+            if ($company->wear_and_tear_policy === 'fixed') {
+                $wearAndTearCost = (float) $company->wear_and_tear_value;
+            } elseif ($company->wear_and_tear_policy === 'percentage') {
+                // Percentage of base rental cost
+                $percentage = (float) $company->wear_and_tear_value;
+                $wearAndTearCost = ($baseCost * ($percentage / 100));
+            }
+        }
+
+        $totalCost = $baseCost + $lateFee + $wearAndTearCost;
+
+        return [
+            'total' => round((float) $totalCost, 2),
+            'breakdown' => [
+                'base_cost' => round((float) $baseCost, 2),
+                'late_fee'  => round((float) $lateFee, 2),
+                'wear_and_tear' => round((float) $wearAndTearCost, 2),
+            ]
+        ];
     }
 }

@@ -35,7 +35,9 @@ class RentalReturnController extends Controller
         $path = $request->file('photo')->store('returns', 'public');
 
         // 2. Kosten berekenen via de WearAndTearCalculator Service
-        $finalCost = $calculator->calculate($rental);
+        $result = $calculator->calculate($rental);
+        $finalCost = $result['total'];
+        $breakdown = $result['breakdown'];
 
         // 3. Database record bijwerken met de resultaten
         $rental->update([
@@ -44,6 +46,14 @@ class RentalReturnController extends Controller
             // Optioneel: status bijwerken naar 'returned'
         ]);
 
-        return redirect()->back()->with('status', "Product ingeleverd. Totale kosten: €" . number_format($finalCost, 2));
+        $message = sprintf(
+            "Product ingeleverd. Totaal: €%s (Basis: €%s, Boete: €%s, Slijtage: €%s)",
+            number_format($finalCost, 2),
+            number_format($breakdown['base_cost'], 2),
+            number_format($breakdown['late_fee'], 2),
+            number_format($breakdown['wear_and_tear'], 2)
+        );
+
+        return redirect()->back()->with('status', $message);
     }
 }

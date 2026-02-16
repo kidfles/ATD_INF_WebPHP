@@ -269,6 +269,42 @@
                     </div>
                 </div>
 
+                {{-- CARD: RETURN POLICY --}}
+                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <header>
+                        <h2 class="text-lg font-medium text-gray-900">{{ __('Return Policy & Wear/Tear') }}</h2>
+                        <p class="mt-1 text-sm text-gray-600">{{ __('Define how costs are calculated when a customer returns a rented item.') }}</p>
+                    </header>
+
+                    <div class="mt-6 space-y-6 max-w-xl" x-data="{ policy: '{{ old('wear_and_tear_policy', $company->wear_and_tear_policy ?? 'none') }}' }">
+                        
+                        {{-- Policy Type --}}
+                        <div class="space-y-2">
+                            <x-input-label for="wear_and_tear_policy" value="{{ __('Wear & Tear Fee Policy') }}" />
+                            <select id="wear_and_tear_policy" name="wear_and_tear_policy" x-model="policy" class="block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                <option value="none">{{ __('None (No extra fee)') }}</option>
+                                <option value="fixed">{{ __('Fixed Fee (e.g. Cleaning Cost)') }}</option>
+                                <option value="percentage">{{ __('Percentage of Total Price') }}</option>
+                            </select>
+                        </div>
+
+                        {{-- Policy Value (Conditional) --}}
+                        <div class="space-y-2" x-show="policy !== 'none'" x-transition>
+                            <x-input-label for="wear_and_tear_value" value="{{ __('Fee Value') }}" />
+                            <div class="relative rounded-md shadow-sm">
+                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                    <span class="text-gray-500 sm:text-sm" x-text="policy === 'fixed' ? '€' : '%'"></span>
+                                </div>
+                                <input type="number" step="0.01" name="wear_and_tear_value" id="wear_and_tear_value" 
+                                       value="{{ old('wear_and_tear_value', $company->wear_and_tear_value) }}"
+                                       class="block w-full rounded-md border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" 
+                                       placeholder="0.00">
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1" x-text="policy === 'fixed' ? '{{ __('Fixed amount added to the return cost.') }}' : '{{ __('Percentage calculated from the base rental price.') }}'"></p>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- CARD: PAGE BUILDER --}}
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <header class="flex justify-between items-center mb-6">
