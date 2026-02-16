@@ -225,5 +225,64 @@ class DatabaseSeeder extends Seeder
                 $regularUser->favorites()->attach($ad->id);
             }
         }
+
+        // ==========================================
+        // 5. AGENDA DATA (Rentals & Expiry Dates)
+        // ==========================================
+
+        // Grab tool rental ads for realistic rental periods
+        $toolAds = Advertisement::where('user_id', $toolBusiness->id)
+            ->where('type', 'rent')
+            ->get();
+
+        if ($toolAds->count() >= 3) {
+            // Active rental — happening right now
+            Rental::factory()->create([
+                'advertisement_id' => $toolAds[0]->id,
+                'renter_id' => $regularUser->id,
+                'start_date' => now()->subDays(2),
+                'end_date' => now()->addDays(5),
+            ]);
+
+            // Upcoming rental — starts next week
+            Rental::factory()->create([
+                'advertisement_id' => $toolAds[1]->id,
+                'renter_id' => $privateUser->id,
+                'start_date' => now()->addDays(7),
+                'end_date' => now()->addDays(14),
+            ]);
+
+            // Completed rental — ended last week
+            Rental::factory()->create([
+                'advertisement_id' => $toolAds[2]->id,
+                'renter_id' => $regularUser->id,
+                'start_date' => now()->subDays(14),
+                'end_date' => now()->subDays(7),
+            ]);
+
+            // Second active rental on same tool (different period)
+            Rental::factory()->create([
+                'advertisement_id' => $toolAds[0]->id,
+                'renter_id' => $techBusiness->id,
+                'start_date' => now()->addDays(10),
+                'end_date' => now()->addDays(17),
+            ]);
+        }
+
+        // Add expiry dates to tech products for calendar visibility
+        $techAds = Advertisement::where('user_id', $techBusiness->id)->get();
+        foreach ($techAds as $i => $ad) {
+            $ad->update(['expires_at' => now()->addDays(($i + 1) * 10)]); // 10, 20, 30, 40 days out
+        }
+
+        // Add expiry dates to tool rental ads
+        foreach ($toolAds as $i => $ad) {
+            $ad->update(['expires_at' => now()->addDays(($i + 1) * 15)]); // 15, 30, 45 days out
+        }
+
+        // Private ads expiry (the mountain bike)
+        Advertisement::where('user_id', $privateUser->id)
+            ->where('type', 'sell')
+            ->update(['expires_at' => now()->addDays(21)]);
     }
 }

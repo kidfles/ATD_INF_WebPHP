@@ -10,7 +10,8 @@
             
             {{-- Dashboard Widgets --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <!-- Beheer Eigen Advertenties -->
+                <!-- Beheer Eigen Advertenties (Alleen voor adverteerders) -->
+                @if(Auth::user()->role !== 'user')
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
                     <div class="p-6">
                         <div class="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mb-4 text-blue-600">
@@ -21,6 +22,7 @@
                         <a href="{{ route('dashboard.advertisements.index') }}" class="text-blue-600 font-semibold hover:text-blue-800">{{ __('Manage') }} &rarr;</a>
                     </div>
                 </div>
+                @endif
 
                 <!-- Nieuwe Advertentie Aanmaken -->
                 @if(Auth::user()->role !== 'user')
@@ -47,6 +49,20 @@
                         <a href="{{ route('market.index') }}" class="text-purple-600 font-semibold hover:text-purple-800">{{ __('Explore') }} &rarr;</a>
                     </div>
                 </div>
+
+                <!-- Agenda (Alleen voor adverteerders) -->
+                @if(in_array(Auth::user()->role, ['business_ad', 'private_ad']))
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
+                    <div class="p-6">
+                        <div class="bg-amber-100 rounded-full w-12 h-12 flex items-center justify-center mb-4 text-amber-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('Agenda') }}</h3>
+                        <p class="text-sm text-gray-500 mb-4">{{ __('View your rental schedule and expiry dates.') }}</p>
+                        <a href="{{ route('dashboard.agenda.index') }}" class="text-amber-600 font-semibold hover:text-amber-800">{{ __('Open Calendar') }} &rarr;</a>
+                    </div>
+                </div>
+                @endif
 
                 <!-- Bedrijfsinstellingen (Alleen voor Zakelijke Adverteerders) -->
                 @if(Auth::user()->role === 'business_ad')
