@@ -33,6 +33,11 @@ class Advertisement extends Model
         return $this->hasMany(Rental::class);
     }
 
+    public function reviews(): MorphMany
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
     // RELATION: Self-referencing Many-to-Many (Upsells)
     public function relatedAds()
     {

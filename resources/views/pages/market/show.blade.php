@@ -140,6 +140,17 @@
                                             </div>
                                         </div>
                                     @endif
+                                    @endif
+
+                                    @if($advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
+                                        <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+                                            <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
+                                               class="text-sm font-bold hover:underline"
+                                               style="color: {{ $brandColor }}">
+                                                Visit {{ $advertisement->user->companyProfile->company_name ?? 'Store' }} &rarr;
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
 
                             @elseif($advertisement->type === 'rent')
@@ -162,6 +173,16 @@
                                             Book Rental
                                         </button>
                                     </form>
+
+                                    @if($advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
+                                        <div class="mt-4 pt-4 border-t border-gray-200 text-center">
+                                            <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
+                                               class="text-sm font-bold hover:underline"
+                                               style="color: {{ $brandColor }}">
+                                                Visit {{ $advertisement->user->companyProfile->company_name ?? 'Store' }} &rarr;
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
 
                             @else
@@ -207,6 +228,70 @@
                         <p class="text-xs text-gray-400 mt-2">Scan to open on mobile</p>
                     </div>
                 </div>
+            </div>
+            </div>
+
+            <div class="mt-12 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                <h2 class="text-xl font-bold mb-6">Reviews</h2>
+
+                {{-- 1. List Existing Reviews --}}
+                @forelse($advertisement->reviews as $review)
+                    <div class="mb-6 border-b border-gray-100 pb-4 last:border-0">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold text-gray-800">{{ $review->reviewer->name ?? 'Gebruiker' }}</span>
+                            <div class="flex text-yellow-400">
+                                {{-- Simple Star Output --}}
+                                @for($i = 0; $i < 5; $i++)
+                                    @if($i < $review->rating) ★ @else ☆ @endif
+                                @endfor
+                            </div>
+                        </div>
+                        <p class="text-gray-600">{{ $review->comment }}</p>
+                        <span class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</span>
+                    </div>
+                @empty
+                    <p class="text-gray-500 italic">Nog geen reviews. Wees de eerste!</p>
+                @endforelse
+
+                {{-- 2. Review Form (Conditional: Only for Renters) --}}
+                @auth
+                    @php
+                        // Check directly in view if user is allowed (or pass via controller)
+                        $hasRented = auth()->user()->rentals()->where('advertisement_id', $advertisement->id)->exists();
+                    @endphp
+
+                    @if($hasRented)
+                        <div class="mt-8 pt-8 border-t border-gray-200">
+                            <h3 class="font-bold text-lg mb-4">Schrijf een review</h3>
+                            
+                            <form action="{{ route('reviews.store', $advertisement) }}" method="POST">
+                                @csrf
+                                
+                                {{-- Rating Input --}}
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Beoordeling</label>
+                                    <select name="rating" class="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:w-1/4">
+                                        <option value="5">5 - Uitstekend</option>
+                                        <option value="4">4 - Goed</option>
+                                        <option value="3">3 - Gemiddeld</option>
+                                        <option value="2">2 - Matig</option>
+                                        <option value="1">1 - Slecht</option>
+                                    </select>
+                                </div>
+
+                                {{-- Comment Input --}}
+                                <div class="mb-4">
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jouw ervaring</label>
+                                    <textarea name="comment" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Vertel ons wat je ervan vond..."></textarea>
+                                </div>
+
+                                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
+                                    Plaats Review
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                @endauth
             </div>
         </div>
     </div>
