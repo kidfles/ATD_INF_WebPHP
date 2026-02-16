@@ -21,6 +21,11 @@ class AdvertisementController extends Controller
 
     public function create()
     {
+        // Enforce No Selling for Regular Users
+        if (auth()->user()->role === 'user') {
+            abort(403, 'Als koper/huurder kun je geen advertenties plaatsen.');
+        }
+
         // Fetch all ads of current user for selection list
         $myAdvertisements = auth()->user()->advertisements()->select('id', 'title', 'type')->get();
 
@@ -29,6 +34,11 @@ class AdvertisementController extends Controller
 
     public function store(StoreAdvertisementRequest $request)
     {
+        // Enforce No Selling for Regular Users
+        if ($request->user()->role === 'user') {
+            abort(403, 'Als koper/huurder kun je geen advertenties plaatsen.');
+        }
+
         // The data is already validated and authorized here!
         $data = $request->validated();
         

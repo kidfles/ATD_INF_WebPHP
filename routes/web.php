@@ -42,6 +42,13 @@ Route::get('/market/{advertisement}', [MarketController::class, 'show'])->name('
 // ZONE C: Whitelabel Company Pages
 Route::get('/company/{company:custom_url_slug}', [CompanyController::class, 'show'])->name('company.show');
 
+// Public Seller Profile (Universal)
+Route::get('/verkoper/{user}', [\App\Http\Controllers\SellerProfileController::class, 'show'])->name('seller.show');
+Route::post('/verkoper/{user}/reviews', [\App\Http\Controllers\ReviewController::class, 'storeSeller'])->name('reviews.storeSeller')->middleware('auth');
+
+// Product Reviews
+Route::post('/advertisements/{advertisement}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.product.store')->middleware('auth');
+
 // ZONE B: Dashboard (Secure)
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', function () {
@@ -71,6 +78,11 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     Route::post('/company/components', [App\Http\Controllers\Dashboard\PageComponentController::class, 'store'])->name('company.components.store');
     Route::post('/company/components/bulk', [App\Http\Controllers\Dashboard\PageComponentController::class, 'bulkUpdate'])->name('company.components.bulk');
     Route::delete('/company/components/{component}', [App\Http\Controllers\Dashboard\PageComponentController::class, 'destroy'])->name('company.components.destroy');
+    
+    // Contract Management
+    Route::get('/company/contract/download', [\App\Http\Controllers\CompanyController::class, 'downloadContract'])->name('company.contract.download');
+    Route::post('/company/contract/upload', [\App\Http\Controllers\CompanyController::class, 'uploadContract'])->name('company.contract.upload');
+    Route::post('/company/contract/approve-test', [\App\Http\Controllers\CompanyController::class, 'approveContractTest'])->name('company.contract.approve_test');
 });
 
 Route::middleware('auth')->group(function () {
@@ -90,6 +102,9 @@ Route::middleware('auth')->group(function () {
     // Favorites
     Route::post('/advertisements/{advertisement}/favorite', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('favorites.toggle');
     Route::get('/dashboard/favorites', [\App\Http\Controllers\FavoriteController::class, 'index'])->name('dashboard.favorites.index');
+    
+    // Reviews
+    Route::post('/advertisements/{advertisement}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
 });
 
 require __DIR__.'/auth.php';

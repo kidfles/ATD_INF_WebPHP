@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class User extends Authenticatable
 {
@@ -105,5 +106,28 @@ class User extends Authenticatable
 
     public function sales(): HasMany {
         return $this->hasMany(Order::class, 'seller_id');
+    }
+
+    public function reviewsWritten(): HasMany
+    {
+        return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    public function reviewsReceived(): MorphMany
+    {
+        return $this->morphMany(Review::class, 'reviewable');
+    }
+
+    public function hasSoldTo(User $buyer): bool
+    {
+        // Check Orders (Sales)
+        $hasSold = $this->sales()->where('buyer_id', $buyer->id)->exists();
+        
+        // Check Rentals (via Advertisements)
+        $hasRented = $this->advertisements()->whereHas('rentals', function($query) use ($buyer) {
+            $query->where('renter_id', $buyer->id);
+        })->exists();
+
+        return $hasSold || $hasRented;
     }
 }
