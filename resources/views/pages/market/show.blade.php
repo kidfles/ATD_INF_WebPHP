@@ -13,16 +13,18 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <div class="mb-6 flex items-center justify-between">
+                {{-- Terug naar Marktplaats link (met behoud van filters indien aanwezig) --}}
                 <a href="{{ session()->has('ad_filters') ? route('market.index', session('ad_filters')) : route('market.index') }}" 
                    class="text-gray-500 hover:text-gray-700 flex items-center transition font-medium">
-                    &larr; Back to Market
+                    &larr; Terug naar de markt
                 </a>
                 
+                {{-- Knop naar de whitelabel bedrijfspagina (indien zakelijke adverteerder) --}}
                 @if($advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
                     <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
                        class="text-sm font-bold px-4 py-2 rounded-full bg-white border border-gray-200 hover:text-white transition shadow-sm flex items-center gap-2 group/store"
                        style="border-color: {{ $brandColor }}; color: {{ $brandColor }};">
-                        <span class="group-hover/store:text-white transition-colors duration-200">Visit Store</span>
+                        <span class="group-hover/store:text-white transition-colors duration-200">Bezoek Winkel</span>
                         <span class="group-hover/store:text-white transition-colors duration-200">&rarr;</span>
                         <style>
                             .group\/store:hover {
@@ -34,9 +36,11 @@
                 @endif
             </div>
 
+            {{-- Hoofdsectie van de Advertentie --}}
             <div class="bg-white overflow-hidden shadow-xl rounded-3xl border-2 grid grid-cols-1 md:grid-cols-2 gap-8 p-6 md:p-8"
                  style="border-color: {{ $brandColor ?? '#e5e7eb' }};">
                 
+                {{-- Afbeelding Sectie --}}
                 <div class="relative bg-gray-50 rounded-2xl overflow-hidden h-96 border-2 shadow-inner group"
                      style="border-color: {{ $brandColor ?? '#e5e7eb' }};">
                     
@@ -46,15 +50,18 @@
                         <img src="{{ asset('images/placeholder.svg') }}" class="object-cover w-full h-full group-hover:scale-105 transition duration-500 bg-gray-50">
                     @endif
 
+                    {{-- Type Label (Huur, Verkoop, Veiling) --}}
                     <span class="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-sm border"
                           style="color: {{ $brandColor }}; border-color: {{ $brandColor }};">
                         {{ $advertisement->type }}
                     </span>
                 </div>
 
+                {{-- Informatie Sectie --}}
                 <div class="flex flex-col justify-center">
                     <div class="flex items-center justify-between mb-2">
                         <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">{{ $advertisement->title }}</h1>
+                        {{-- Favorieten Knop (Ster) --}}
                         @auth
                             <form action="{{ route('favorites.toggle', $advertisement) }}" method="POST">
                                 @csrf
@@ -75,8 +82,9 @@
                         @endauth
                     </div>
                     
+                    {{-- Verkopersinformatie --}}
                     <div class="flex items-center gap-2 mb-6 text-sm">
-                        <span class="text-gray-500">Sold by</span>
+                        <span class="text-gray-500">Verkocht door</span>
                         @if($advertisement->user->isBusinessAdvertiser() && $advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
                             <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
                                class="font-bold text-gray-900 border-b-2 border-transparent transition hover:border-gray-900"
@@ -84,11 +92,6 @@
                                 {{ $advertisement->user->companyProfile->company_name ?? $advertisement->user->name }}
                             </a>
                         @else
-                            {{-- For private sellers, we can link to the simple profile OR just show text if strictly no profile wanted --}}
-                            {{-- User said "no seperate seller profile page", but private users don't have company pages. --}}
-                            {{-- We will keep the link to seller.show for PRIVATE users as a fallback, 
-                                 OR just show text if we want to be strict. 
-                                 Let's keep seller.show for private for now, as it's harmless and better than nothing. --}}
                             <a href="{{ route('seller.show', $advertisement->user) }}" 
                                class="font-bold text-gray-900 border-b-2 border-transparent transition hover:border-gray-900"
                                style="color: {{ $brandColor }}">
@@ -103,25 +106,27 @@
 
                     <div class="border-t border-gray-100 pt-8 mt-auto">
                         <div class="flex items-center justify-between mb-6">
-                            <span class="text-gray-400 font-medium uppercase tracking-wide text-sm">Current Price</span>
+                            <span class="text-gray-400 font-medium uppercase tracking-wide text-sm">Huidige Prijs</span>
                             <span class="text-4xl font-black" style="color: {{ $brandColor }}">
                                 €{{ number_format($advertisement->price, 2) }}
                             </span>
                         </div>
 
+                        {{-- Actie Sectie (Bieden, Huren of Kopen) --}}
                         @if(auth()->id() === $advertisement->user_id)
                             <div class="bg-gray-50 p-4 rounded-xl text-center border border-gray-200">
-                                <span class="text-gray-500">This is your advertisement.</span>
-                                <a href="{{ route('dashboard.advertisements.edit', $advertisement) }}" class="ml-2 font-bold hover:underline" style="color: {{ $brandColor }}">Edit Listing</a>
+                                <span class="text-gray-500">Dit is jouw eigen advertentie.</span>
+                                <a href="{{ route('dashboard.advertisements.edit', $advertisement) }}" class="ml-2 font-bold hover:underline" style="color: {{ $brandColor }}">Advertentie Bewerken</a>
                             </div>
                         
                         @else
                             
+                            {{-- VEILING LOGICA --}}
                             @if($advertisement->type === 'auction')
                                 <div class="bg-gray-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
-                                    <h3 class="font-bold text-lg mb-2 text-gray-900">Place a bid</h3>
+                                    <h3 class="font-bold text-lg mb-2 text-gray-900">Plaats een bod</h3>
                                     <p class="text-sm text-gray-500 mb-4">
-                                        Highest bid: <span class="font-bold text-gray-900">€ {{ number_format($advertisement->bids->max('amount') ?? $advertisement->price, 2) }}</span>
+                                        Hoogste bod: <span class="font-bold text-gray-900">€ {{ number_format($advertisement->bids->max('amount') ?? $advertisement->price, 2) }}</span>
                                     </p>
                                     
                                     <form action="{{ route('bids.store', $advertisement) }}" method="POST" class="flex gap-3">
@@ -131,18 +136,18 @@
                                             <input type="number" name="amount" step="0.01" required 
                                                    class="pl-7 rounded-xl border-gray-300 w-full focus:ring-2"
                                                    style="--tw-ring-color: {{ $brandColor }};" 
-                                                   placeholder="Amount">
+                                                   placeholder="Bedrag">
                                         </div>
                                         <button type="submit" class="text-white font-bold py-3 px-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-0.5"
                                                 style="background-color: {{ $brandColor }}">
-                                            Bid
+                                            Bieden
                                         </button>
                                     </form>
                                     @error('amount') <p class="text-red-500 text-sm mt-2">{{ $message }}</p> @enderror
 
                                     @if($advertisement->bids->count() > 0)
                                         <div class="mt-4 pt-4 border-t border-gray-200">
-                                            <span class="text-xs font-bold text-gray-400 uppercase">Recent Activity</span>
+                                            <span class="text-xs font-bold text-gray-400 uppercase">Recente Biedingen</span>
                                             <div class="mt-2 space-y-1">
                                                 @foreach($advertisement->bids->sortByDesc('amount')->take(3) as $bid)
                                                     <div class="flex justify-between text-sm">
@@ -153,65 +158,40 @@
                                             </div>
                                         </div>
                                     @endif
-
-
-                                    @if($advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
-                                        <div class="mt-4 pt-4 border-t border-gray-200 text-center">
-                                            <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
-                                               class="text-sm font-bold hover:underline"
-                                               style="color: {{ $brandColor }}">
-                                                Visit {{ $advertisement->user->companyProfile->company_name ?? 'Store' }} &rarr;
-                                            </a>
-                                        </div>
-                                    @endif
                                 </div>
 
+                            {{-- HUUR LOGICA --}}
                             @elseif($advertisement->type === 'rent')
                                 <div class="bg-gray-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
-                                    <h3 class="font-bold text-lg mb-4 text-gray-900">Rent this Item</h3>
+                                    <h3 class="font-bold text-lg mb-4 text-gray-900">Huur dit object</h3>
                                     <form action="{{ route('rentals.store', $advertisement) }}" method="POST" class="space-y-4">
                                         @csrf
                                         <div class="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Start</label>
+                                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Startdatum</label>
                                                 <input type="date" name="start_date" min="{{ date('Y-m-d') }}" required class="w-full border-gray-300 rounded-xl text-sm focus:ring-2" style="--tw-ring-color: {{ $brandColor }};">
                                             </div>
                                             <div>
-                                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">End</label>
+                                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Einddatum</label>
                                                 <input type="date" name="end_date" min="{{ date('Y-m-d') }}" required class="w-full border-gray-300 rounded-xl text-sm focus:ring-2" style="--tw-ring-color: {{ $brandColor }};">
                                             </div>
                                         </div>
                                         <button type="submit" class="w-full text-white font-bold py-3 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-0.5"
                                                 style="background-color: {{ $brandColor }}">
-                                            Book Rental
+                                            Reservering Plaatsen
                                         </button>
                                     </form>
-
-                                    @if($advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
-                                        <div class="mt-4 pt-4 border-t border-gray-200 text-center">
-                                            <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
-                                               class="text-sm font-bold hover:underline"
-                                               style="color: {{ $brandColor }}">
-                                                Visit {{ $advertisement->user->companyProfile->company_name ?? 'Store' }} &rarr;
-                                            </a>
-                                        </div>
-                                    @endif
                                 </div>
 
+                            {{-- VERKOOP LOGICA --}}
                             @else
                                 <div class="mt-6">
                                     @if($advertisement->is_sold)
-                                        {{-- Als het verkocht is --}}
                                         <div class="w-full bg-gray-300 text-gray-600 text-center py-3 rounded-lg font-bold cursor-not-allowed">
                                             Verkocht
                                         </div>
-                                    @elseif(Auth::check() && Auth::id() === $advertisement->user_id)
-                                        {{-- Als je de eigenaar bent --}}
-                                        <div class="w-full bg-gray-100 text-gray-500 text-center py-3 rounded-lg text-sm">
-                                            Dit is je eigen advertentie
-                                        </div>
                                     @else
-                                        {{-- Koop Knop Formulier --}}
+                                        {{-- Direct Kopen (Order aanmaken) --}}
                                         <form action="{{ route('orders.store', $advertisement) }}" method="POST">
                                             @csrf
                                             <button type="submit" 

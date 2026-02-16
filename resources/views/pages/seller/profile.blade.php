@@ -27,7 +27,7 @@
 
                 {{-- User Info --}}
                 <div>
-                    <h1 class="text-3xl font-bold text-Black">
+                    <h1 class="text-3xl font-bold text-black">
                         {{ $isBusiness ? ($user->companyProfile->company_name ?? $user->name) : $user->name }}
                     </h1>
                     <div class="flex items-center gap-4 mt-2 text-indigo-100 text-sm">
@@ -107,7 +107,7 @@
                         @forelse($user->reviewsReceived as $review)
                             <div class="border-b border-gray-100 pb-4 last:border-0">
                                 <div class="flex justify-between items-center mb-1">
-                                    <span class="font-bold text-sm text-gray-900">{{ $review->reviewer->name }}</span>
+                                    <span class="font-bold text-sm text-gray-900">{{ $review->reviewer?->name ?? 'Verwijderde gebruiker' }}</span>
                                     <span class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</span>
                                 </div>
                                 <div class="flex text-yellow-400 text-xs mb-2">

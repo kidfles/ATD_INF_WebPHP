@@ -109,7 +109,111 @@
                 </div>
             </div>
 
-            {{-- 3. MAIN FORM: BRANDING & PAGE BUILDER --}}
+            {{-- 3. API ACCESS --}}
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border border-gray-100">
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900">API Toegang</h2>
+                    <p class="mt-1 text-sm text-gray-600">Gebruik deze gegevens om je advertenties in externe applicaties te laden.</p>
+                </header>
+
+                <div class="mt-6">
+                    @if(auth()->user()->companyProfile->contract_status !== 'approved')
+                        <div class="p-4 bg-red-50 text-red-700 rounded-md text-sm border border-red-200">
+                            <strong>Toegang geblokkeerd:</strong> Uw contract moet eerst goedgekeurd zijn voordat u API-sleutels kunt genereren.
+                        </div>
+                    @else
+                        @if (session('api_token'))
+                            <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400">
+                                <p class="text-sm font-bold text-yellow-800">Bewaar dit token goed! Je ziet het maar één keer:</p>
+                                <code class="block mt-2 p-2 bg-white border rounded text-lg font-mono break-all">
+                                    {{ session('api_token') }}
+                                </code>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('dashboard.company.api_token') }}" method="POST">
+                            @csrf
+                            <p class="text-sm text-gray-500 mb-4">
+                                Endpoint: <code class="bg-gray-100 px-2 py-1 rounded italic">{{ url('/api/my-ads') }}</code>
+                            </p>
+                            <x-primary-button>
+                                {{ __('Nieuwe API Sleutel Genereren') }}
+                            </x-primary-button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+
+            {{-- 3.5 CSV BULK IMPORT --}}
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border border-gray-100">
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900">CSV Advertentie Import</h2>
+                    <p class="mt-1 text-sm text-gray-600">Upload een CSV-bestand om meerdere advertenties tegelijk aan te maken. De import wordt op de achtergrond verwerkt.</p>
+                </header>
+
+                <div class="mt-6">
+                    {{-- Upload Formulier --}}
+                    <form action="{{ route('dashboard.company.import_csv') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                        @csrf
+                        <div>
+                            <x-input-label for="csv_file" value="CSV Bestand" />
+                            <div class="mt-1 flex items-center gap-4">
+                                <input type="file" name="csv_file" id="csv_file" accept=".csv" 
+                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" 
+                                       required>
+                                <x-primary-button>
+                                    {{ __('Importeren') }}
+                                </x-primary-button>
+                            </div>
+                            @error('csv_file')
+                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </form>
+
+                    {{-- Verwacht formaat uitleg --}}
+                    <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <h3 class="text-sm font-bold text-gray-700 mb-2">Verwacht CSV-formaat</h3>
+                        <p class="text-xs text-gray-500 mb-3">De eerste rij moet de volgende kolomnamen bevatten:</p>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-xs border border-gray-200 rounded">
+                                <thead class="bg-gray-100">
+                                    <tr>
+                                        <th class="px-3 py-2 text-left font-bold text-gray-600">title</th>
+                                        <th class="px-3 py-2 text-left font-bold text-gray-600">description</th>
+                                        <th class="px-3 py-2 text-left font-bold text-gray-600">price</th>
+                                        <th class="px-3 py-2 text-left font-bold text-gray-600">type</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white">
+                                    <tr class="border-t border-gray-100">
+                                        <td class="px-3 py-2 text-gray-700">Bureaulamp</td>
+                                        <td class="px-3 py-2 text-gray-700">Stijlvolle lamp</td>
+                                        <td class="px-3 py-2 text-gray-700">24.99</td>
+                                        <td class="px-3 py-2"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold">sell</span></td>
+                                    </tr>
+                                    <tr class="border-t border-gray-100">
+                                        <td class="px-3 py-2 text-gray-700">Boormachine</td>
+                                        <td class="px-3 py-2 text-gray-700">Voor huur beschikbaar</td>
+                                        <td class="px-3 py-2 text-gray-700">15.00</td>
+                                        <td class="px-3 py-2"><span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-xs font-bold">rent</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-3">
+                            Toegestane types: <code class="bg-gray-100 px-1 rounded">sell</code>, <code class="bg-gray-100 px-1 rounded">rent</code>, <code class="bg-gray-100 px-1 rounded">auction</code>.
+                            Maximaal 4 advertenties per type.
+                        </p>
+                        <a href="{{ asset('storage/example_ads.csv') }}" download class="inline-flex items-center mt-3 text-sm text-indigo-600 hover:text-indigo-800 font-semibold">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download Voorbeeld CSV
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {{-- 4. MAIN FORM: BRANDING & PAGE BUILDER --}}
             <form method="post" action="{{ route('dashboard.company.settings.update') }}" class="space-y-6">
                 @csrf
                 @method('patch')
