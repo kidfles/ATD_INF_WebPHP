@@ -46,18 +46,18 @@ class BidController extends Controller
 
         // 1. Controleer of de advertentie wel een veiling is
         if ($advertisement->type !== 'auction') {
-            return back()->with('error', 'Bieden is alleen toegestaan op veilingen.');
+            return back()->with('error', __('Bidding is only allowed on auctions.'));
         }
 
         // 2. Voorkom dat gebruikers op hun eigen advertentie bieden
         if ($advertisement->user_id === $user->id) {
-            return back()->with('error', 'Je kunt niet op je eigen advertentie bieden.');
+            return back()->with('error', __('You cannot bid on your own advertisement.'));
         }
 
         // 3. Controleer of het nieuwe bod hoger is dan het huidige hoogste bod
         $highestBid = $advertisement->bids()->max('amount');
         if ($highestBid && $amount <= $highestBid) {
-             return back()->withErrors(['amount' => "Bod moet hoger zijn dan het huidige hoogste bod (€{$highestBid})."]);
+             return back()->withErrors(['amount' => __('Bid must be higher than the current highest bid (€:amount).', ['amount' => $highestBid])]);
         }
 
         // Maak het bod aan gekoppeld aan de advertentie en gebruiker
@@ -66,7 +66,7 @@ class BidController extends Controller
             'amount' => $amount,
         ]);
 
-        return back()->with('status', 'Bod succesvol geplaatst!');
+        return back()->with('status', __('Bid successfully placed!'));
     }
 
     /**
@@ -84,6 +84,6 @@ class BidController extends Controller
 
         $bid->delete();
 
-        return back()->with('status', 'Bod succesvol geannuleerd.');
+        return back()->with('status', __('Bid successfully canceled.'));
     }
 }

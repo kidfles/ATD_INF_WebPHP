@@ -70,7 +70,7 @@ class CompanySettingsController extends Controller
             }
         }
 
-        return back()->with('status', 'Instellingen en pagina succesvol opgeslagen!');
+        return back()->with('status', __('Settings and page saved successfully!'));
     }
 
     /**
@@ -85,7 +85,7 @@ class CompanySettingsController extends Controller
 
         // Beveiligingscheck: Contract moet goedgekeurd zijn voor API-toegang
         if ($user->companyProfile->contract_status !== 'approved') {
-            return back()->with('error', 'Keur eerst uw contract goed om API toegang te krijgen.');
+            return back()->with('error', __('Approve your contract first to get API access.'));
         }
 
         // Verwijder oude tokens voor de veiligheid (slechts één actieve token per keer)
@@ -180,6 +180,6 @@ class CompanySettingsController extends Controller
 
         ProcessAdvertisementImport::dispatch(auth()->id(), $path);
 
-        return back()->with('status', 'Uw CSV-bestand wordt op de achtergrond verwerkt. De advertenties verschijnen binnenkort.');
+        return back()->with('status', __('Your CSV file is being processed in the background. The advertisements will appear soon.'));
     }
 }

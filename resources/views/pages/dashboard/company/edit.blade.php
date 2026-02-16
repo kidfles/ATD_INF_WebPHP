@@ -2,11 +2,11 @@
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Bedrijfspagina & Instellingen') }}
+                {{ __('Company Page & Settings') }}
             </h2>
             <a href="{{ route('company.show', $company->custom_url_slug) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                Bekijk Publieke Pagina
+                {{ __('View Public Page') }}
             </a>
         </div>
     </x-slot>
@@ -28,7 +28,7 @@
             @if (session('status'))
                 <div class="bg-green-50 text-green-600 p-4 rounded mb-6 border border-green-200" 
                      x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
-                    {{ session('status') }}
+                    {{ __(session('status')) }}
                 </div>
             @endif
             
@@ -36,9 +36,9 @@
             {{-- 2. CONTRACT MANAGEMENT (COMPLETELY SEPARATE FROM MAIN FORM) --}}
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border border-indigo-100">
                 <header>
-                    <h2 class="text-lg font-medium text-gray-900">Samenwerkingscontract</h2>
+                    <h2 class="text-lg font-medium text-gray-900">{{ __('Collaboration Contract') }}</h2>
                     <p class="mt-1 text-sm text-gray-600">
-                        Om toegang te krijgen tot de API en de officiële "Verified" status, hebben we een getekend contract nodig.
+                        {{ __('To access the API and get the official \'Verified\' status, you must sign our contract.') }}
                     </p>
                 </header>
 
@@ -46,40 +46,40 @@
                     
                     {{-- Left: Download Section --}}
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 h-full">
-                        <h3 class="font-bold text-gray-800 mb-2">Stap 1: Downloaden</h3>
+                        <h3 class="font-bold text-gray-800 mb-2">{{ __('Step 1: Download') }}</h3>
                         <p class="text-sm text-gray-500 mb-4">
-                            Download het contract, print het uit en zet uw handtekening.
+                            {{ __('Download the contract, print it and sign it.') }}
                         </p>
                         <a href="{{ route('dashboard.company.contract.download') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md font-semibold text-xs uppercase tracking-widest hover:bg-indigo-700 transition">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Download PDF
+                            {{ __('Download PDF') }}
                         </a>
                     </div>
 
                     {{-- Right: Upload & Status Section --}}
                     <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 h-full relative">
-                        <h3 class="font-bold text-gray-800 mb-2">Stap 2: Uploaden</h3>
+                        <h3 class="font-bold text-gray-800 mb-2">{{ __('Step 2: Upload') }}</h3>
                         
                         {{-- Status Logic --}}
                         @if(auth()->user()->companyProfile->contract_status === 'approved')
                             <div class="flex items-center text-green-700 bg-green-100 p-3 rounded mb-4 border border-green-200">
                                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <div>
-                                    <span class="font-bold block">Goedgekeurd!</span>
-                                    <span class="text-xs">U heeft volledige toegang.</span>
+                                    <span class="font-bold block">{{ __('Approved!') }}</span>
+                                    <span class="text-xs">{{ __('You have full access.') }}</span>
                                 </div>
                             </div>
                         @elseif(auth()->user()->companyProfile->contract_file_path)
                             <div class="flex items-center text-yellow-700 bg-yellow-100 p-3 rounded mb-4 border border-yellow-200">
                                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <div>
-                                    <span class="font-bold block">In Behandeling</span>
-                                    <span class="text-xs">We controleren uw document.</span>
+                                    <span class="font-bold block">{{ __('In Review') }}</span>
+                                    <span class="text-xs">{{ __('We are checking your document.') }}</span>
                                 </div>
                             </div>
-                            <p class="text-xs text-gray-500 mb-2">Nieuwe versie uploaden?</p>
+                            <p class="text-xs text-gray-500 mb-2">{{ __('Upload new version?') }}</p>
                         @else
-                            <p class="text-sm text-gray-500 mb-4">Upload hier de gescande versie van het getekende contract.</p>
+                            <p class="text-sm text-gray-500 mb-4">{{ __('Upload the signed contract here.') }}</p>
                         @endif
 
                         {{-- Upload Form --}}
@@ -100,7 +100,7 @@
                                 <form action="{{ route('dashboard.company.contract.approve_test') }}" method="POST">
                                     @csrf
                                     <button type="submit" class="text-xs text-green-600 hover:text-green-800 underline font-bold">
-                                        [TEST] Keur mijn contract direct goed
+                                        {{ __('[TEST] Approve my contract properly') }}
                                     </button>
                                 </form>
                             </div>
@@ -112,19 +112,19 @@
             {{-- 3. API ACCESS --}}
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border border-gray-100">
                 <header>
-                    <h2 class="text-lg font-medium text-gray-900">API Toegang</h2>
-                    <p class="mt-1 text-sm text-gray-600">Gebruik deze gegevens om je advertenties in externe applicaties te laden.</p>
+                    <h2 class="text-lg font-medium text-gray-900">{{ __('API Access') }}</h2>
+                    <p class="mt-1 text-sm text-gray-600">{{ __('Use these credentials to push advertisements automatically from your own CRM.') }}</p>
                 </header>
 
                 <div class="mt-6">
                     @if(auth()->user()->companyProfile->contract_status !== 'approved')
                         <div class="p-4 bg-red-50 text-red-700 rounded-md text-sm border border-red-200">
-                            <strong>Toegang geblokkeerd:</strong> Uw contract moet eerst goedgekeurd zijn voordat u API-sleutels kunt genereren.
+                            <strong>{{ __('Access blocked') }}:</strong> {{ __('Your contract must be approved first before you can use the API.') }}
                         </div>
                     @else
                         @if (session('api_token'))
                             <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400">
-                                <p class="text-sm font-bold text-yellow-800">Bewaar dit token goed! Je ziet het maar één keer:</p>
+                                <p class="text-sm font-bold text-yellow-800">{{ __('Keep this token safe! It will not be shown again.') }}</p>
                                 <code class="block mt-2 p-2 bg-white border rounded text-lg font-mono break-all">
                                     {{ session('api_token') }}
                                 </code>
@@ -137,7 +137,7 @@
                                 Endpoint: <code class="bg-gray-100 px-2 py-1 rounded italic">{{ url('/api/my-ads') }}</code>
                             </p>
                             <x-primary-button>
-                                {{ __('Nieuwe API Sleutel Genereren') }}
+                                {{ __('Generate New API Key') }}
                             </x-primary-button>
                         </form>
                     @endif
@@ -147,8 +147,8 @@
             {{-- 3.5 CSV BULK IMPORT --}}
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border border-gray-100">
                 <header>
-                    <h2 class="text-lg font-medium text-gray-900">CSV Advertentie Import</h2>
-                    <p class="mt-1 text-sm text-gray-600">Upload een CSV-bestand om meerdere advertenties tegelijk aan te maken. De import wordt op de achtergrond verwerkt.</p>
+                    <h2 class="text-lg font-medium text-gray-900">{{ __('CSV Advertisement Import') }}</h2>
+                    <p class="mt-1 text-sm text-gray-600">{{ __('Upload a CSV file to bulk import advertisements.') }}</p>
                 </header>
 
                 <div class="mt-6">
@@ -156,13 +156,13 @@
                     <form action="{{ route('dashboard.company.import_csv') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                         @csrf
                         <div>
-                            <x-input-label for="csv_file" value="CSV Bestand" />
+                            <x-input-label for="csv_file" value="{{ __('CSV File') }}" />
                             <div class="mt-1 flex items-center gap-4">
                                 <input type="file" name="csv_file" id="csv_file" accept=".csv" 
                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" 
                                        required>
                                 <x-primary-button>
-                                    {{ __('Importeren') }}
+                                    {{ __('Import') }}
                                 </x-primary-button>
                             </div>
                             @error('csv_file')
@@ -173,8 +173,8 @@
 
                     {{-- Verwacht formaat uitleg --}}
                     <div class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                        <h3 class="text-sm font-bold text-gray-700 mb-2">Verwacht CSV-formaat</h3>
-                        <p class="text-xs text-gray-500 mb-3">De eerste rij moet de volgende kolomnamen bevatten:</p>
+                        <h3 class="text-sm font-bold text-gray-700 mb-2">{{ __('Expected CSV format') }}</h3>
+                        <p class="text-xs text-gray-500 mb-3">{{ __('The first row must contain headers. Use a comma (,) as separator.') }}</p>
                         <div class="overflow-x-auto">
                             <table class="min-w-full text-xs border border-gray-200 rounded">
                                 <thead class="bg-gray-100">
@@ -202,12 +202,12 @@
                             </table>
                         </div>
                         <p class="text-xs text-gray-400 mt-3">
-                            Toegestane types: <code class="bg-gray-100 px-1 rounded">sell</code>, <code class="bg-gray-100 px-1 rounded">rent</code>, <code class="bg-gray-100 px-1 rounded">auction</code>.
-                            Maximaal 4 advertenties per type.
+                            {{ __('Allowed types') }}: <code class="bg-gray-100 px-1 rounded">sell</code>, <code class="bg-gray-100 px-1 rounded">rent</code>, <code class="bg-gray-100 px-1 rounded">auction</code>.
+                            {{ __('Max 4 ads per type.') }}
                         </p>
                         <a href="{{ asset('storage/example_ads.csv') }}" download class="inline-flex items-center mt-3 text-sm text-indigo-600 hover:text-indigo-800 font-semibold">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            Download Voorbeeld CSV
+                            {{ __('Download Example CSV') }}
                         </a>
                     </div>
                 </div>
@@ -221,15 +221,15 @@
                 {{-- CARD: BRANDING (Fixed Color Picker) --}}
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <header>
-                        <h2 class="text-lg font-medium text-gray-900">Branding & URL</h2>
-                        <p class="mt-1 text-sm text-gray-600">Pas hier je kleuren en webadres aan.</p>
+                        <h2 class="text-lg font-medium text-gray-900">{{ __('Branding & URL') }}</h2>
+                        <p class="mt-1 text-sm text-gray-600">{{ __('Adjust your colors and web address here.') }}</p>
                     </header>
 
                     <div class="mt-6 space-y-6 max-w-xl">
                         
                         {{-- Brand Color Input (Vanilla JS Sync) --}}
                         <div class="space-y-2">
-                            <x-input-label for="brand_color" value="Huisstijl Kleur (Hex Code)" />
+                            <x-input-label for="brand_color" value="{{ __('Brand Color (Hex Code)') }}" />
                             <div class="flex items-center gap-4 mt-1">
                                 {{-- 1. Visual Picker (Updates Text Input) --}}
                                 <input type="color" 
@@ -252,7 +252,7 @@
 
                         {{-- URL Slug --}}
                         <div class="space-y-2">
-                            <x-input-label for="custom_url_slug" value="Publieke URL" />
+                            <x-input-label for="custom_url_slug" value="{{ __('Public URL') }}" />
                             <div class="flex items-center mt-1">
                                 <span class="text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md px-3 py-2">
                                     {{ config('app.url') }}/company/
@@ -263,7 +263,7 @@
 
                         {{-- KVK Number --}}
                         <div class="space-y-2">
-                            <x-input-label for="kvk_number" value="KVK Nummer" />
+                            <x-input-label for="kvk_number" value="{{ __('Chamber of Commerce Number') }}" />
                             <x-text-input name="kvk_number" type="text" class="block w-full mt-1" :value="old('kvk_number', $company->kvk_number)" />
                         </div>
                     </div>
@@ -273,8 +273,8 @@
                 <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                     <header class="flex justify-between items-center mb-6">
                         <div>
-                            <h2 class="text-lg font-medium text-gray-900">Pagina Indeling</h2>
-                            <p class="mt-1 text-sm text-gray-600">Beheer en sorteer de blokken op je bedrijfspagina.</p>
+                            <h2 class="text-lg font-medium text-gray-900">{{ __('Page Layout') }}</h2>
+                            <p class="mt-1 text-sm text-gray-600">{{ __('Manage and sort blocks. Drag & Drop not supported, use arrows.') }}</p>
                         </div>
                     </header>
 
@@ -291,10 +291,10 @@
                                         
                                         {{-- SORT BUTTONS --}}
                                         <div class="flex flex-col gap-1">
-                                            <button type="button" onclick="window.moveUp(this)" class="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-800 transition" title="Omhoog">
+                                            <button type="button" onclick="window.moveUp(this)" class="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-800 transition" title="{{ __('Move Up') }}">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
                                             </button>
-                                            <button type="button" onclick="window.moveDown(this)" class="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-800 transition" title="Omlaag">
+                                            <button type="button" onclick="window.moveDown(this)" class="p-1 hover:bg-gray-200 rounded text-gray-500 hover:text-gray-800 transition" title="{{ __('Move Down') }}">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                                             </button>
                                         </div>
@@ -304,8 +304,8 @@
                                         </span>
                                     </div>
                                     
-                                    <button type="button" onclick="if(confirm('Weet je zeker dat je dit blok wilt verwijderen?')) document.getElementById('delete-component-{{ $component->id }}').submit()" class="text-red-500 text-sm hover:underline font-medium">
-                                        Verwijderen
+                                    <button type="button" onclick="if(confirm('{{ __('Are you sure you want to remove this block?') }}')) document.getElementById('delete-component-{{ $component->id }}').submit()" class="text-red-500 text-sm hover:underline font-medium">
+                                        {{ __('Remove') }}
                                     </button>
                                 </div>
 
@@ -313,21 +313,21 @@
                                 <div class="space-y-3 pl-8">
                                     @if($component->component_type === 'hero')
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Titel</label>
+                                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">{{ __('Title') }}</label>
                                             <input type="text" name="components[{{ $component->id }}][content][title]" value="{{ $component->content['title'] ?? '' }}" class="w-full border-gray-300 rounded text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Subtitel</label>
+                                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">{{ __('Subtitle') }}</label>
                                             <input type="text" name="components[{{ $component->id }}][content][subtitle]" value="{{ $component->content['subtitle'] ?? '' }}" class="w-full border-gray-300 rounded text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         </div>
                                         
                                     @elseif($component->component_type === 'text')
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Koptekst</label>
+                                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">{{ __('Heading') }}</label>
                                             <input type="text" name="components[{{ $component->id }}][content][heading]" value="{{ $component->content['heading'] ?? '' }}" class="w-full border-gray-300 rounded text-sm font-bold shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                         </div>
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Inhoud</label>
+                                            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">{{ __('Content') }}</label>
                                             <textarea name="components[{{ $component->id }}][content][body]" rows="4" class="w-full border-gray-300 rounded text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ $component->content['body'] ?? '' }}</textarea>
                                         </div>
                                         
@@ -335,7 +335,7 @@
                                         <div class="bg-indigo-50 p-3 rounded border border-indigo-100">
                                             <p class="text-sm text-indigo-700 italic flex items-center">
                                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                                Dit blok toont automatisch je 3 nieuwste actieve advertenties.
+                                                {{ __('This block automatically shows your most recent advertisements.') }}
                                             </p>
                                         </div>
                                     @endif
@@ -346,8 +346,8 @@
                                 <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                 </svg>
-                                <h3 class="mt-2 text-sm font-medium text-gray-900">Geen blokken</h3>
-                                <p class="mt-1 text-sm text-gray-500">Begin met het toevoegen van content aan je pagina.</p>
+                                <h3 class="mt-2 text-sm font-medium text-gray-900">{{ __('No blocks added') }}</h3>
+                                <p class="mt-1 text-sm text-gray-500">{{ __('Start adding content blocks below.') }}</p>
                             </div>
                         @endforelse
                     </div>
@@ -355,9 +355,9 @@
 
                 {{-- STICKY SAVE BUTTON BAR --}}
                 <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 flex justify-end items-center gap-4 z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] sm:pl-64">
-                    <span class="text-sm text-gray-500 hidden sm:inline italic">Vergeet niet op te slaan na het wijzigen van de volgorde of tekst.</span>
+                    <span class="text-sm text-gray-500 hidden sm:inline italic">{{ __('Don\'t forget to save your changes!') }}</span>
                     <x-primary-button class="bg-indigo-600 hover:bg-indigo-700 text-lg px-8 py-3 shadow-md">
-                        {{ __('Wijzigingen Opslaan') }}
+                        {{ __('Save Changes') }}
                     </x-primary-button>
                 </div>
 
@@ -365,19 +365,19 @@
 
             {{-- 4. ADD NEW COMPONENT FORM --}}
             <div class="p-4 sm:p-8 bg-gray-50 border border-gray-200 rounded-lg mt-8 mb-24">
-                <h3 class="font-bold text-gray-700 mb-4">Nieuw Blok Toevoegen</h3>
+                <h3 class="font-bold text-gray-700 mb-4">{{ __('Add New Block') }}</h3>
                 <form action="{{ route('dashboard.company.components.store') }}" method="POST" class="flex flex-col sm:flex-row gap-4 items-end">
                     @csrf
                     <div class="w-full max-w-xs">
-                        <label class="block text-sm text-gray-600 mb-1 font-bold">Type Blok</label>
+                        <label class="block text-sm text-gray-600 mb-1 font-bold">{{ __('Block Type') }}</label>
                         <select name="type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm w-full">
-                            <option value="text">Tekstblok (Over ons)</option>
-                            <option value="hero">Hero Banner (Grote titel)</option>
-                            <option value="featured_ads">Advertentie Grid</option>
+                            <option value="text">{{ __('Text Block (About Us)') }}</option>
+                            <option value="hero">{{ __('Hero Banner (Large Title)') }}</option>
+                            <option value="featured_ads">{{ __('Advertisement Grid') }}</option>
                         </select>
                     </div>
                     <x-secondary-button type="submit" class="w-full sm:w-auto justify-center mb-[1px]">
-                        + Toevoegen
+                        + {{ __('Add') }}
                     </x-secondary-button>
                 </form>
             </div>

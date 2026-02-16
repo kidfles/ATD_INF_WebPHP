@@ -45,6 +45,6 @@ class RentalController extends Controller
             'end_date' => $request->validated('end_date'),
         ]);
 
-        return back()->with('status', 'Verhuur succesvol geboekt!');
+        return back()->with('status', __('Rental successfully booked!'));
     }
 }

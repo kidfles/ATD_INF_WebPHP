@@ -31,17 +31,17 @@ class OrderController extends Controller
 
         // 1. Validatie: Je mag je eigen product niet kopen
         if ($advertisement->user_id === $user->id) {
-            return back()->with('error', 'Je kunt je eigen product niet kopen.');
+            return back()->with('error', __('You cannot buy your own product.'));
         }
 
         // 2. Validatie: Is het product al verkocht?
         if ($advertisement->is_sold) {
-            return back()->with('error', 'Dit product is helaas al verkocht.');
+            return back()->with('error', __('Sadly, this product is already sold.'));
         }
 
         // 3. Validatie: Is het een verkoop advertentie? (Geen huur of veiling)
         if ($advertisement->type !== 'sell') {
-            return back()->with('error', 'Dit type advertentie kan niet direct gekocht worden.');
+            return back()->with('error', __('This type of advertisement cannot be bought directly.'));
         }
 
         // 4. Maak de Order aan binnen een Database Transactie voor data-integriteit
@@ -62,7 +62,7 @@ class OrderController extends Controller
 
         // 6. Feedback en redirect naar de bestelhistorie
         return redirect()->route('dashboard.orders.index')
-            ->with('success', 'Gefeliciteerd! Je hebt het product gekocht.');
+            ->with('success', __('Congratulations! You bought the product.'));
     }
     
     /**

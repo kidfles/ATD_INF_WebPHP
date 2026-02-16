@@ -16,9 +16,9 @@
                         <div class="bg-blue-100 rounded-full w-12 h-12 flex items-center justify-center mb-4 text-blue-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Mijn Advertenties</h3>
-                        <p class="text-sm text-gray-500 mb-4">Bekijk en bewerk je huidige aanbod.</p>
-                        <a href="{{ route('dashboard.advertisements.index') }}" class="text-blue-600 font-semibold hover:text-blue-800">Beheer &rarr;</a>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('My Advertisements') }}</h3>
+                        <p class="text-sm text-gray-500 mb-4">{{ __('View and edit your current listings.') }}</p>
+                        <a href="{{ route('dashboard.advertisements.index') }}" class="text-blue-600 font-semibold hover:text-blue-800">{{ __('Manage') }} &rarr;</a>
                     </div>
                 </div>
 
@@ -29,9 +29,9 @@
                         <div class="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mb-4 text-green-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Plaats Advertentie</h3>
-                        <p class="text-sm text-gray-500 mb-4">Verkoop, verhuur of veiling iets nieuws.</p>
-                        <a href="{{ route('dashboard.advertisements.create') }}" class="text-green-600 font-semibold hover:text-green-800">Start Nu &rarr;</a>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('Place Advertisement') }}</h3>
+                        <p class="text-sm text-gray-500 mb-4">{{ __('Sell, rent or auction something new.') }}</p>
+                        <a href="{{ route('dashboard.advertisements.create') }}" class="text-green-600 font-semibold hover:text-green-800">{{ __('Start Now') }} &rarr;</a>
                     </div>
                 </div>
                 @endif
@@ -42,9 +42,9 @@
                         <div class="bg-purple-100 rounded-full w-12 h-12 flex items-center justify-center mb-4 text-purple-600">
                              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">De Markt</h3>
-                        <p class="text-sm text-gray-500 mb-4">Blader door het aanbod van anderen.</p>
-                        <a href="{{ route('market.index') }}" class="text-purple-600 font-semibold hover:text-purple-800">Verkennen &rarr;</a>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('The Market') }}</h3>
+                        <p class="text-sm text-gray-500 mb-4">{{ __('Browse what others are offering.') }}</p>
+                        <a href="{{ route('market.index') }}" class="text-purple-600 font-semibold hover:text-purple-800">{{ __('Explore') }} &rarr;</a>
                     </div>
                 </div>
 
@@ -55,8 +55,8 @@
                         <div class="bg-indigo-100 rounded-full w-12 h-12 flex items-center justify-center mb-4 text-indigo-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-2">Instellingen</h3>
-                        <p class="text-sm text-gray-500 mb-4">Beheer je bedrijfsprofiel en branding.</p>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">{{ __('Settings') }}</h3>
+                        <p class="text-sm text-gray-500 mb-4">{{ __('Manage your company profile and branding.') }}</p>
                         
                         {{-- Waarschuwing indien het contract nog niet geüpload/goedgekeurd is --}}
                         @if(Auth::user()->companyProfile && Auth::user()->companyProfile->contract_status !== 'approved')
@@ -69,14 +69,14 @@
                                     </div>
                                     <div class="ml-3">
                                         <p class="text-xs text-yellow-700">
-                                            <strong>Contract vereist:</strong> Upload je getekende contract voor volledige toegang.
+                                            <strong>{{ __('Contract Required') }}:</strong> {{ __('Upload your signed contract for full access.') }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         @endif
                         
-                        <a href="{{ route('dashboard.company.settings.edit') }}" class="text-indigo-600 font-semibold hover:text-indigo-800">Aanpassen &rarr;</a>
+                        <a href="{{ route('dashboard.company.settings.edit') }}" class="text-indigo-600 font-semibold hover:text-indigo-800">{{ __('Edit') }} &rarr;</a>
                     </div>
                 </div>
                 @endif
@@ -85,19 +85,19 @@
             {{-- Huur Activiteiten Overzicht --}}
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 text-gray-900">
-                    <h3 class="font-bold text-lg mb-4">Huuractiviteiten</h3>
+                    <h3 class="font-bold text-lg mb-4">{{ __('Rental Activities') }}</h3>
                     
                     @if($myRentals->isEmpty() && $incomingRentals->isEmpty())
-                        <p class="text-gray-500 italic">Nog geen huurgeschiedenis beschikbaar.</p>
+                        <p class="text-gray-500 italic">{{ __('No rental history available yet.') }}</p>
                     @else
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-full">Object</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-nowrap">Datums</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-nowrap">Status</th>
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider text-nowrap">Actie</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-full">{{ __('Object') }}</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-nowrap">{{ __('Dates') }}</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-nowrap">{{ __('Status') }}</th>
+                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider text-nowrap">{{ __('Action') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
@@ -113,12 +113,12 @@
                                                 {{ $rental->start_date->format('M d') }} - {{ $rental->end_date->format('M d') }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Hurend</span>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">{{ __('Renting') }}</span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                 <form method="POST" action="{{ route('rentals.return', $rental) }}">
                                                     @csrf
-                                                    <button type="submit" class="text-indigo-600 hover:text-indigo-900">Retourneren</button>
+                                                    <button type="submit" class="text-indigo-600 hover:text-indigo-900">{{ __('Return') }}</button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -136,10 +136,10 @@
                                                 {{ $rental->start_date->format('M d') }} - {{ $rental->end_date->format('M d') }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Inkomend</span>
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ __('Incoming') }}</span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <span class="text-gray-400">Ingepland</span>
+                                                <span class="text-gray-400">{{ __('Scheduled') }}</span>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -156,14 +156,14 @@
                  <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-lg">Mijn Advertenties</h3>
+                            <h3 class="font-bold text-lg">{{ __('My Advertisements') }}</h3>
                             @if(Auth::user()->role !== 'user')
-                            <a href="{{ route('dashboard.advertisements.create') }}" class="text-sm text-blue-600 hover:underline">Nieuwe +</a>
+                            <a href="{{ route('dashboard.advertisements.create') }}" class="text-sm text-blue-600 hover:underline">{{ __('New +') }}</a>
                             @endif
                         </div>
                         
                         @if($myAds->isEmpty())
-                            <p class="text-gray-500 italic">Je hebt nog geen advertenties geplaatst.</p>
+                            <p class="text-gray-500 italic">{{ __('You haven\'t placed any advertisements yet.') }}</p>
                         @else
                             <ul class="divide-y divide-gray-200">
                                 @foreach($myAds as $ad)
@@ -173,13 +173,13 @@
                                             <p class="text-xs text-gray-500">{{ ucfirst($ad->type) }} • €{{ number_format($ad->price, 2) }}</p>
                                         </div>
                                         <div class="flex space-x-2">
-                                            <a href="{{ route('dashboard.advertisements.edit', $ad) }}" class="text-sm text-gray-600 hover:text-gray-900" onclick="event.stopPropagation()">Aanpassen</a>
+                                            <a href="{{ route('dashboard.advertisements.edit', $ad) }}" class="text-sm text-gray-600 hover:text-gray-900" onclick="event.stopPropagation()">{{ __('Edit') }}</a>
                                         </div>
                                     </li>
                                 @endforeach
                             </ul>
                             <div class="mt-4 pt-4 border-t">
-                                <a href="{{ route('dashboard.advertisements.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">Alle advertenties &rarr;</a>
+                                <a href="{{ route('dashboard.advertisements.index') }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">{{ __('All advertisements') }} &rarr;</a>
                             </div>
                         @endif
                     </div>
@@ -188,17 +188,17 @@
                 <!-- Mijn Actieve Biedingen -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900">
-                        <h3 class="font-bold text-lg mb-4">Actieve Biedingen</h3>
+                        <h3 class="font-bold text-lg mb-4">{{ __('Active Bids') }}</h3>
                         
                         @if($myBids->isEmpty())
-                            <p class="text-gray-500 italic">Geen actieve biedingen op dit moment.</p>
+                            <p class="text-gray-500 italic">{{ __('No active bids at the moment.') }}</p>
                         @else
                             <ul class="divide-y divide-gray-200">
                                 @foreach($myBids as $bid)
                                     <li class="py-4 flex justify-between items-center">
                                         <div>
                                             <p class="text-sm font-medium text-gray-900">{{ $bid->advertisement->title }}</p>
-                                            <p class="text-sm text-gray-500">Jouw bod: €{{ number_format($bid->amount, 2) }}</p>
+                                            <p class="text-sm text-gray-500">{{ __('Your bid') }}: €{{ number_format($bid->amount, 2) }}</p>
                                         </div>
                                         <div class="text-sm text-gray-500">
                                             {{ $bid->created_at->diffForHumans() }}
