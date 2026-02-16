@@ -26,8 +26,8 @@
                 </div>
 
                 {{-- User Info --}}
-                <div class="text-white">
-                    <h1 class="text-3xl font-bold">
+                <div>
+                    <h1 class="text-3xl font-bold text-Black">
                         {{ $isBusiness ? ($user->companyProfile->company_name ?? $user->name) : $user->name }}
                     </h1>
                     <div class="flex items-center gap-4 mt-2 text-indigo-100 text-sm">
@@ -43,7 +43,7 @@
 
     {{-- PART 2: MAIN CONTENT (Reviews & Ads) --}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {{-- LEFT COLUMN: Reviews (Sticky) --}}
             <div class="lg:col-span-1">
@@ -94,7 +94,7 @@
                                     <div class="mb-3">
                                         <textarea name="comment" rows="3" class="w-full text-sm border-gray-300 rounded-md" placeholder="Jouw ervaring..."></textarea>
                                     </div>
-                                    <button type="submit" class="text-xs bg-gray-900 text-white px-4 py-2 rounded">Verstuur</button>
+                                    <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-lg font-bold text-sm hover:bg-indigo-700 transition">Verstuur</button>
                                 </form>
                             </div>
                         @elseif(auth()->id() === $user->id)
@@ -132,35 +132,27 @@
                     <span class="text-sm text-gray-500">{{ $user->advertisements->count() }} resultaten</span>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     @forelse($user->advertisements as $ad)
-                        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition group">
-                            <div class="h-48 bg-gray-100 relative overflow-hidden">
-                                {{-- Image Logic --}}
+                        <div class="border rounded p-4 shadow hover:shadow-lg transition bg-white">
+                            <div class="w-full mb-4 overflow-hidden rounded bg-gray-100 relative group" style="height: 360px;">
                                 @if($ad->image_path)
-                                    <img src="{{ asset('storage/'.$ad->image_path) }}" 
-                                         class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                    <img src="{{ asset('storage/' . $ad->image_path) }}" alt="{{ $ad->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                                 @else
-                                    <div class="w-full h-full flex items-center justify-center text-gray-300">
-                                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    </div>
+                                    <img src="{{ asset('images/placeholder.svg') }}" alt="{{ __('No image available') }}" class="w-full h-full object-cover text-gray-400">
                                 @endif
-                                
-                                <div class="absolute top-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-bold uppercase tracking-wider text-gray-900">
-                                    {{ $ad->type }}
-                                </div>
                             </div>
-                            <div class="p-5">
-                                <h4 class="font-bold text-gray-900 truncate mb-1">{{ $ad->title }}</h4>
-                                <p class="text-indigo-600 font-bold text-lg mb-3">€ {{ number_format($ad->price, 2) }}</p>
-                                <a href="{{ route('market.show', $ad) }}" class="inline-flex items-center text-sm font-semibold text-gray-500 hover:text-indigo-600 transition">
-                                    Bekijken 
-                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                                </a>
+                            <a href="{{ route('market.show', $ad) }}">
+                                <h3 class="font-bold text-lg text-blue-600 hover:underline">{{ $ad->title }}</h3>
+                            </a>
+                            <p class="text-gray-600 truncate">{{ $ad->description }}</p>
+                            <div class="flex justify-between items-center mt-4">
+                                <p class="font-bold text-lg">€ {{ number_format($ad->price, 2) }}</p>
+                                <span class="bg-gray-100 px-2 py-1 rounded text-sm text-gray-600">{{ __(ucfirst($ad->type)) }}</span>
                             </div>
                         </div>
                     @empty
-                        <div class="col-span-2 text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+                        <div class="col-span-3 text-center py-12 bg-white rounded border border-dashed border-gray-300">
                             <p class="text-gray-400">Deze verkoper heeft momenteel geen actieve advertenties.</p>
                         </div>
                     @endforelse
