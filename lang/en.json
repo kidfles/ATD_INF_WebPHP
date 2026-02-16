@@ -182,5 +182,11 @@
     "Advertisement successfully created!": "Advertisement successfully created!",
     "Advertisement updated!": "Advertisement updated!",
     "Advertisement deleted!": "Advertisement deleted!",
-    "Bid must be higher than the current highest bid (€:amount).": "Bid must be higher than the current highest bid (€:amount)."
+    "Bid must be higher than the current highest bid (€:amount).": "Bid must be higher than the current highest bid (€:amount).",
+    "Agenda": "Agenda",
+    "Expires": "Expires",
+    "Today": "Today",
+    "Month": "Month",
+    "Week": "Week",
+    "List": "List"
 }

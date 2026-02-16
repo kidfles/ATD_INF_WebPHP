@@ -182,5 +182,11 @@
     "Advertisement successfully created!": "Advertentie succesvol aangemaakt!",
     "Advertisement updated!": "Advertentie bijgewerkt!",
     "Advertisement deleted!": "Advertentie verwijderd!",
-    "Bid must be higher than the current highest bid (€:amount).": "Bod moet hoger zijn dan het huidige hoogste bod (€:amount)."
+    "Bid must be higher than the current highest bid (€:amount).": "Bod moet hoger zijn dan het huidige hoogste bod (€:amount).",
+    "Agenda": "Agenda",
+    "Expires": "Verloopt",
+    "Today": "Vandaag",
+    "Month": "Maand",
+    "Week": "Week",
+    "List": "Lijst"
 }
