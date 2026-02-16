@@ -19,129 +19,211 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Admin User
+        // ==========================================
+        // 1. SYSTEM USERS (Specific Accounts)
+        // ==========================================
+        
+        // Admin
         User::factory()->admin()->create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
         ]);
 
-        // 2. Business Advertisers (10)
-        $businessUsers = User::factory(10)->businessAdvertiser()->create();
-
-        // Specific Test Business for Whitelabel
-        $testBusiness = User::factory()->businessAdvertiser()->create([
-            'name' => 'Test Business',
+        // Business User (Primary)
+        $techBusiness = User::factory()->businessAdvertiser()->create([
+            'name' => 'Tech Solutions BV',
             'email' => 'business@example.com',
-        ]);
-        
-        // Create Company Profile for Test Business
-        $testCompany = CompanyProfile::factory()->create([
-            'user_id' => $testBusiness->id,
-            // 'company_name' removed as it doesn't exist in the model/migration
-            'custom_url_slug' => 'test-company',
-            'brand_color' => '#e11d48', // distinct red/pink
-            'kvk_number' => '12345678',
+            'password' => bcrypt('password'),
         ]);
 
+        // Private User (Primary)
+        $privateUser = User::factory()->privateAdvertiser()->create([
+            'name' => 'John Doe',
+            'email' => 'private@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        // Standard User (Buyer/Renter)
+        $regularUser = User::factory()->create([
+            'name' => 'Jane Buyer',
+            'email' => 'user@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        // ==========================================
+        // 2. COMPANY PROFILES & PAGES
+        // ==========================================
+
+        // -- Tech Solutions BV (Electronics & Gadgets) --
+        $techCompany = CompanyProfile::factory()->create([
+            'user_id' => $techBusiness->id,
+            'company_name' => 'Tech Solutions BV',
+            'custom_url_slug' => 'tech-solutions',
+            'brand_color' => '#3b82f6', // Blue
+            'kvk_number' => '90000001',
+            'contract_status' => 'approved',
+        ]);
+
+        // Hero Component
         PageComponent::factory()->create([
-            'company_id' => $testCompany->id,
+            'company_id' => $techCompany->id,
             'component_type' => 'hero',
             'order' => 1,
             'content' => [
-                'title' => 'Welcome to Test Company',
-                'subtitle' => 'We provide the best services for testing purposes.',
-                'image' => null, // or a placeholder
+                'title' => 'Future Tech Today',
+                'subtitle' => 'Premium electronics for professionals.',
+                'image' => null,
             ],
         ]);
 
+        // Featured Ads Component
         PageComponent::factory()->create([
-            'company_id' => $testCompany->id,
-            'component_type' => 'text',
-            'order' => 2,
-            'content' => [
-                'heading' => 'About Us',
-                'body' => 'This is a test company created by the seeder to demonstrate the whitelabel capabilities.',
-            ],
-        ]);
-
-         PageComponent::factory()->create([
-            'company_id' => $testCompany->id,
+            'company_id' => $techCompany->id,
             'component_type' => 'featured_ads',
-            'order' => 3,
+            'order' => 2,
             'content' => [],
         ]);
 
-        Advertisement::factory(5)->create([
-            'user_id' => $testBusiness->id,
-            'type' => 'sell',
-            'title' => 'Test Product',
-            'price' => 99.99,
+        // Text Component
+        PageComponent::factory()->create([
+            'company_id' => $techCompany->id,
+            'component_type' => 'text',
+            'order' => 3,
+            'content' => [
+                'heading' => 'About Tech Solutions',
+                'body' => 'We are the leading provider of refurbished and high-end electronics in the region. Trusted by over 500 businesses.',
+            ],
         ]);
 
+        // -- Rent-A-Tool (Construction Rental) --
+        $toolBusiness = User::factory()->businessAdvertiser()->create([
+            'name' => 'Rent-A-Tool',
+            'email' => 'tools@example.com',
+            'password' => bcrypt('password'),
+        ]);
 
-        // For each business user, create a Company Profile and Landing Page Components
-        foreach ($businessUsers as $user) {
-            $company = CompanyProfile::factory()->create([
-                'user_id' => $user->id,
-            ]);
+        $toolCompany = CompanyProfile::factory()->create([
+            'user_id' => $toolBusiness->id,
+            'company_name' => 'Rent-A-Tool',
+            'custom_url_slug' => 'rent-a-tool',
+            'brand_color' => '#f59e0b', // Orange
+            'kvk_number' => '90000002',
+            'contract_status' => 'approved',
+        ]);
 
-            PageComponent::factory(3)->create([
-                'company_id' => $company->id,
-            ]);
-            
-            // Create advertisements for this business
-            Advertisement::factory(5)->create([
-                'user_id' => $user->id,
-                'type' => 'sell', // Businesses mostly sell
+        PageComponent::factory()->create([
+            'company_id' => $toolCompany->id,
+            'component_type' => 'hero',
+            'order' => 1,
+            'content' => [
+                'title' => 'Build It Better',
+                'subtitle' => 'Professional tools for every job.',
+            ],
+        ]);
+        
+        PageComponent::factory()->create([
+            'company_id' => $toolCompany->id,
+            'component_type' => 'advertisement_grid',
+            'order' => 2,
+            'content' => [],
+        ]);
+
+        // ==========================================
+        // 3. ADVERTISEMENTS (Realistic Mix)
+        // ==========================================
+
+        // Tech Solutions Ads (Selling)
+        $techProducts = [
+            ['title' => 'MacBook Pro M1 2021', 'price' => 1250.00, 'type' => 'sell'],
+            ['title' => 'Dell XPS 15 9500', 'price' => 950.00, 'type' => 'sell'],
+            ['title' => 'Sony A7III Camera Body', 'price' => 1400.00, 'type' => 'sell'],
+            ['title' => 'iPad Air 5th Gen', 'price' => 550.00, 'type' => 'sell'],
+        ];
+
+        foreach ($techProducts as $prod) {
+            Advertisement::factory()->create([
+                'user_id' => $techBusiness->id,
+                'title' => $prod['title'],
+                'description' => "Condition: Excellent. Includes original packaging and warranty. Perfect for professional use.",
+                'price' => $prod['price'],
+                'type' => $prod['type'],
             ]);
         }
 
-        // 3. Private Advertisers (10)
-        $privateAdvertisers = User::factory(10)->privateAdvertiser()->create();
-        
-        foreach ($privateAdvertisers as $user) {
-            // Create mostly sell/rent ads
-            Advertisement::factory(3)->create([
-                'user_id' => $user->id,
+        // Rent-A-Tool Ads (Renting)
+        $toolProducts = [
+            ['title' => 'Industrial Drill Hilti', 'price' => 25.00, 'type' => 'rent'], // Price per day
+            ['title' => 'Cement Mixer 150L', 'price' => 45.00, 'type' => 'rent'],
+            ['title' => 'Scaffolding Set (Small)', 'price' => 60.00, 'type' => 'rent'],
+        ];
+
+        foreach ($toolProducts as $prod) {
+            Advertisement::factory()->create([
+                'user_id' => $toolBusiness->id,
+                'title' => $prod['title'],
+                'description' => "Available for daily or weekly rental. Deposit required. ID check mandatory upon pickup.",
+                'price' => $prod['price'],
+                'type' => $prod['type'],
             ]);
         }
+
+        // Private User Ads (Auctions & Sell)
+        Advertisement::factory()->create([
+            'user_id' => $privateUser->id,
+            'title' => 'Vintage Gibson Les Paul',
+            'price' => 2500.00, // Starting bid
+            'type' => 'auction',
+            'expires_at' => now()->addDays(7),
+        ]);
+
+        Advertisement::factory()->create([
+            'user_id' => $privateUser->id,
+            'title' => 'Mountain Bike Trek X-Caliber',
+            'price' => 450.00,
+            'type' => 'sell',
+        ]);
+
+        // Random Filler Data (Background noise)
+        User::factory(5)->create()->each(function ($u) {
+            if (rand(0,1)) {
+                Advertisement::factory(rand(1, 2))->create(['user_id' => $u->id]);
+            }
+        });
+
+        // ==========================================
+        // 4. INTERACTIONS (Bids, Reviews, etc.)
+        // ==========================================
         
-        // 4. Regular Users (30) - Potential buyers/renters
-        $users = User::factory(30)->create();
-        
-        // 5. Interactions (Rentals, Bids, Reviews, Favorites)
         $allAds = Advertisement::all();
-        
+        $randomUsers = User::where('role', 'user')->get(); // Regular users + created fillers
+
         foreach ($allAds as $ad) {
-            // Create bids for auction ads
+            // -- Bids (for auctions) --
             if ($ad->type === 'auction') {
-                Bid::factory(rand(0, 5))->create([
-                    'advertisement_id' => $ad->id,
-                    'user_id' => $users->random()->id,
-                ]);
+                $basePrice = $ad->price;
+                // Create 3 bids, increasing
+                Bid::factory()->create(['advertisement_id' => $ad->id, 'user_id' => $regularUser->id, 'amount' => $basePrice + 10]);
+                Bid::factory()->create(['advertisement_id' => $ad->id, 'user_id' => $techBusiness->id, 'amount' => $basePrice + 50]); 
+                // Let admin bid too why not
+                Bid::factory()->create(['advertisement_id' => $ad->id, 'user_id' => User::where('email', 'admin@example.com')->first()->id, 'amount' => $basePrice + 100]);
             }
-            
-            // Create rentals for rent ads
-            if ($ad->type === 'rent') {
-                Rental::factory(rand(0, 3))->create([
-                    'advertisement_id' => $ad->id,
-                    'renter_id' => $users->random()->id,
-                ]);
-            }
-            
-            // Random reviews
-            if (rand(0, 1)) {
-                 Review::factory()->create([
-                    'reviewer_id' => $users->random()->id,
+
+            // -- Reviews (Product) --
+            if (rand(0, 100) < 30) { // 30% chance of review
+                Review::factory()->create([
+                    'reviewer_id' => $regularUser->id,
                     'reviewable_id' => $ad->id,
                     'reviewable_type' => Advertisement::class,
-                 ]);
+                    'rating' => rand(3, 5),
+                    'comment' => 'Great product, exactly as described!',
+                ]);
             }
 
-            // Favorites
-            $users->random(rand(0, 3))->each(function ($user) use ($ad) {
-                $user->favorites()->attach($ad->id);
-            });
+            // -- Favorites --
+            if (rand(0, 1)) {
+                $regularUser->favorites()->attach($ad->id);
+            }
         }
     }
 }

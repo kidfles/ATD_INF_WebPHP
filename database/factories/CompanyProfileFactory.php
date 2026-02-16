@@ -20,6 +20,7 @@ class CompanyProfileFactory extends Factory
         $companyName = $this->faker->company();
         return [
             'user_id' => User::factory(),
+            'company_name' => $companyName,
             'kvk_number' => $this->faker->numerify('########'),
             'brand_color' => $this->faker->hexColor(),
             'custom_url_slug' => STR($companyName)->slug(),

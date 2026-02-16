@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('page_components', function (Blueprint $table) {
             $table->id();
             $table->foreignId('company_id')->constrained('company_profiles')->cascadeOnDelete();
-            $table->enum('component_type', ['hero', 'text', 'featured_ads']);
+            $table->enum('component_type', ['hero', 'text', 'featured_ads', 'advertisement_grid']);
             $table->json('content');
             $table->integer('order')->default(0);
             $table->timestamps();
