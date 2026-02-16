@@ -147,11 +147,31 @@
                                 </div>
 
                             @else
-                                <button class="w-full text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 text-xl flex items-center justify-center gap-3"
-                                        style="background-color: {{ $brandColor }}">
-                                    <span>Buy Now</span>
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                </button>
+                                <div class="mt-6">
+                                    @if($advertisement->is_sold)
+                                        {{-- Als het verkocht is --}}
+                                        <div class="w-full bg-gray-300 text-gray-600 text-center py-3 rounded-lg font-bold cursor-not-allowed">
+                                            Verkocht
+                                        </div>
+                                    @elseif(Auth::check() && Auth::id() === $advertisement->user_id)
+                                        {{-- Als je de eigenaar bent --}}
+                                        <div class="w-full bg-gray-100 text-gray-500 text-center py-3 rounded-lg text-sm">
+                                            Dit is je eigen advertentie
+                                        </div>
+                                    @else
+                                        {{-- Koop Knop Formulier --}}
+                                        <form action="{{ route('orders.store', $advertisement) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" 
+                                                    onclick="return confirm('Weet je zeker dat je dit wilt kopen voor €{{ $advertisement->price }}?')"
+                                                    class="w-full text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 text-xl flex items-center justify-center gap-3"
+                                                    style="background-color: {{ $brandColor }}">
+                                                <span>Koop direct voor €{{ number_format($advertisement->price, 2) }}</span>
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             @endif
 
                         @endif
