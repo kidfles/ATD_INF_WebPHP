@@ -30,6 +30,9 @@
                         <x-nav-link :href="route('dashboard.rentals.index')" :active="request()->routeIs('dashboard.rentals.*')">
                             {{ __('My Rentals') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('dashboard.orders.index')" :active="request()->routeIs('dashboard.orders.*')">
+                            {{ __('My Purchases') }}
+                        </x-nav-link>
                     @endauth
                 </div>
             </div>
@@ -109,6 +112,9 @@
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('dashboard.rentals.index')" :active="request()->routeIs('dashboard.rentals.*')">
                     {{ __('My Rentals') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('dashboard.orders.index')" :active="request()->routeIs('dashboard.orders.*')">
+                    {{ __('My Purchases') }}
                 </x-responsive-nav-link>
             @endauth
         </div>

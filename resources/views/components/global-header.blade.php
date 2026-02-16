@@ -64,6 +64,9 @@
                         <a href="{{ route('dashboard.rentals.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Mijn Verhuur
                         </a>
+                        <a href="{{ route('dashboard.orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            Mijn Aankopen
+                        </a>
                         
                         <div class="border-t border-gray-100 my-1"></div>
 
