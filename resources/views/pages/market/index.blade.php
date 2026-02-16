@@ -43,13 +43,13 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @foreach($advertisements as $ad)
                 <div class="border rounded p-4 shadow hover:shadow-lg transition bg-white">
-                    @if($ad->image_path)
-                        <img src="{{ asset('storage/' . $ad->image_path) }}" alt="{{ $ad->title }}" class="w-full h-48 object-cover mb-4 rounded">
-                    @else
-                        <div class="w-full h-48 bg-gray-200 rounded flex items-center justify-center text-gray-500 mb-4">
-                            Geen afbeelding
-                        </div>
-                    @endif
+                    <div class="w-full mb-4 overflow-hidden rounded bg-gray-100 relative group" style="height: 360px;">
+                        @if($ad->image_path)
+                            <img src="{{ asset('storage/' . $ad->image_path) }}" alt="{{ $ad->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        @else
+                            <img src="{{ asset('images/placeholder.svg') }}" alt="No image available" class="w-full h-full object-cover text-gray-400">
+                        @endif
+                    </div>
                     <a href="{{ route('market.show', $ad) }}">
                         <h3 class="font-bold text-lg text-blue-600 hover:underline">{{ $ad->title }}</h3>
                     </a>

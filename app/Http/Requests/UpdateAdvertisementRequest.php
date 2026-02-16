@@ -21,7 +21,7 @@ class UpdateAdvertisementRequest extends FormRequest
             'description' => ['required', 'string', 'min:20'],
             'price'       => ['required', 'numeric', 'min:0'],
             'type'        => ['required', 'in:sell,rent,auction'],
-            'image'       => ['nullable', 'image', 'max:2048'], // Max 2MB
+            'image'       => ['nullable', 'image', 'max:2048', 'dimensions:height=600'], // Max 2MB, Exact 600px height
         ];
     }
 }
