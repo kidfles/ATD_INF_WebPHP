@@ -38,6 +38,13 @@ class Advertisement extends Model
         return $this->morphMany(Review::class, 'reviewable');
     }
 
+    // Helper to check if a specific user can review this ad (must have rented it)
+    public function canBeReviewedBy(User $user): bool
+    {
+        // Check if user has a rental record for this ad
+        return $this->rentals()->where('renter_id', $user->id)->exists();
+    }
+
     // RELATION: Self-referencing Many-to-Many (Upsells)
     public function relatedAds()
     {

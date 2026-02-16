@@ -46,13 +46,38 @@ class RegisteredUserController extends Controller
         ]);
 
         if ($request->role === 'business_ad') {
-            \App\Models\CompanyProfile::create([
+            $company = \App\Models\CompanyProfile::create([
                 'user_id' => $user->id,
                 'company_name' => $request->company_name,
                 'kvk_number' => $request->kvk_number,
                 // Defaults
                 'custom_url_slug' => \Illuminate\Support\Str::slug($request->company_name) . '-' . rand(100,999),
                 'brand_color' => '#000000', // Default color
+            ]);
+
+            // Direct defaults aanmaken
+            \App\Models\PageComponent::create([
+                'company_id' => $company->id,
+                'component_type' => 'hero',
+                'order' => 1,
+                'content' => ['title' => $request->company_name, 'subtitle' => 'Welkom!']
+            ]);
+            
+            \App\Models\PageComponent::create([
+                'component_type' => 'text',
+                'order' => 2,
+                'company_id' => $company->id,
+                'content' => [
+                    'heading' => 'Over Ons',
+                    'body' => 'Wij zijn net begonnen! Meer informatie volgt snel.'
+                ]
+            ]);
+
+            \App\Models\PageComponent::create([
+                'component_type' => 'featured_ads',
+                'order' => 3,
+                'company_id' => $company->id,
+                'content' => []
             ]);
         }
 

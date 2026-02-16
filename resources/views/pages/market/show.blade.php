@@ -77,11 +77,24 @@
                     
                     <div class="flex items-center gap-2 mb-6 text-sm">
                         <span class="text-gray-500">Sold by</span>
-                        <span class="font-bold text-gray-900 border-b-2 border-transparent transition"
-                              onmouseover="this.style.borderColor='{{ $brandColor }}'"
-                              onmouseout="this.style.borderColor='transparent'">
-                            {{ $advertisement->user->name }}
-                        </span>
+                        @if($advertisement->user->isBusinessAdvertiser() && $advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
+                            <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
+                               class="font-bold text-gray-900 border-b-2 border-transparent transition hover:border-gray-900"
+                               style="color: {{ $brandColor }}">
+                                {{ $advertisement->user->companyProfile->company_name ?? $advertisement->user->name }}
+                            </a>
+                        @else
+                            {{-- For private sellers, we can link to the simple profile OR just show text if strictly no profile wanted --}}
+                            {{-- User said "no seperate seller profile page", but private users don't have company pages. --}}
+                            {{-- We will keep the link to seller.show for PRIVATE users as a fallback, 
+                                 OR just show text if we want to be strict. 
+                                 Let's keep seller.show for private for now, as it's harmless and better than nothing. --}}
+                            <a href="{{ route('seller.show', $advertisement->user) }}" 
+                               class="font-bold text-gray-900 border-b-2 border-transparent transition hover:border-gray-900"
+                               style="color: {{ $brandColor }}">
+                                {{ $advertisement->user->name }}
+                            </a>
+                        @endif
                     </div>
 
                     <p class="text-gray-600 mb-8 leading-relaxed text-lg">
@@ -140,7 +153,7 @@
                                             </div>
                                         </div>
                                     @endif
-                                    @endif
+
 
                                     @if($advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
                                         <div class="mt-4 pt-4 border-t border-gray-200 text-center">

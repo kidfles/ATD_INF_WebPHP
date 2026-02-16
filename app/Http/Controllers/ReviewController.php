@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Advertisement;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,5 +47,42 @@ class ReviewController extends Controller
         ]);
 
         return back()->with('success', 'Review succesvol geplaatst!');
+    }
+
+    public function storeSeller(Request $request, User $user)
+    {
+        // 1. Validate Input
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:1000',
+        ]);
+
+        // 2. Business Rule: Can only review if you have bought/rented from them
+        if (!$user->hasSoldTo(Auth::user()) && Auth::id() !== $user->id) { // Allow self-review for testing? No, block it.
+             return back()->withErrors(['msg' => 'Je mag alleen een verkoper reviewen als je iets bij hen hebt gekocht of gehuurd.']);
+        }
+        
+        if (Auth::id() === $user->id) {
+             return back()->withErrors(['msg' => 'Je kunt jezelf niet reviewen.']);
+        }
+
+        // 3. Check Duplicate
+        $existingReview = Review::where('reviewer_id', Auth::id())
+            ->where('reviewable_id', $user->id)
+            ->where('reviewable_type', User::class)
+            ->exists();
+
+        if ($existingReview) {
+            return back()->withErrors(['msg' => 'Je hebt deze verkoper al beoordeeld.']);
+        }
+
+        // 4. Create Review
+        $user->reviewsReceived()->create([
+            'reviewer_id' => Auth::id(),
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return back()->with('success', 'Review op verkopersprofiel geplaatst!');
     }
 }
