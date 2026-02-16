@@ -77,6 +77,9 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     
     // API Toegang (Alleen als contract is goedgekeurd)
     Route::post('/company/api-token', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'generateToken'])->name('company.api_token')->middleware('contract.approved');
+    
+    // CSV Bulk Import (Advertenties inladen via bestand)
+    Route::post('/company/import-csv', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'importCsv'])->name('company.import_csv');
 });
 
 // Algemene Beveiligde Routes (Auth middleware)

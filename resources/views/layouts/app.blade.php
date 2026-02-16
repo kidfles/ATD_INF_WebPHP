@@ -16,10 +16,10 @@
     </head>
     <body class="font-sans antialiased bg-gray-100">
         <div class="min-h-screen bg-gray-100">
-            {{-- GLOBAL HEADER (Marktplaats Style) --}}
+            {{-- GLOBALE HEADER (Marktplaats Stijl met zoeken en navigatie) --}}
             <x-global-header />
 
-            {{-- Page Heading --}}
+            {{-- Pagina Titel Sectie (Optioneel) --}}
             @isset($header)
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -28,11 +28,11 @@
                 </header>
             @endisset
 
-            {{-- Main Content + Sidebar Wrapper --}}
+            {{-- Hoofdinhoud + Sidebar Wrapper --}}
             <main class="py-6">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     
-                    {{-- Alert Messages --}}
+                    {{-- Systeemmeldingen (Succes en Foutmeldingen) --}}
                     @if(session('success'))
                         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mx-4 sm:mx-0">
                             {{ session('success') }}
@@ -45,12 +45,12 @@
                     @endif
 
                     <div class="flex flex-col md:flex-row gap-6 px-4 sm:px-0">
-                        {{-- SIDEBAR --}}
+                        {{-- ZIJB BALK (Alleen zichtbaar op desktop) --}}
                         <div class="hidden md:block">
                             <x-dashboard-sidebar />
                         </div>
                         
-                        {{-- MAIN CONTENT --}}
+                        {{-- HOOFDINHOUD (Dynamisch gevuld via $slot) --}}
                         <div class="flex-1 w-full">
                             {{ $slot }}
                         </div>
