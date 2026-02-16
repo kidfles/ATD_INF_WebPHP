@@ -19,6 +19,7 @@ class CompanyProfile extends Model
         'brand_color',
         'custom_url_slug',
         'contract_status',
+        'contract_file_path',
     ];
 
     public function user(): BelongsTo

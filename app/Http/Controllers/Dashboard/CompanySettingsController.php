@@ -5,16 +5,13 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCompanyProfileRequest;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use App\Models\PageComponent;
 
 class CompanySettingsController extends Controller
 {
     public function edit(Request $request)
     {
-        // Get the authenticated user's company profile
         $company = $request->user()->companyProfile;
-        
-        // If they don't have one (e.g., they are a regular user), redirect or error
         if (!$company) {
              abort(403, 'You do not have a company profile.');
         }
@@ -26,12 +23,33 @@ class CompanySettingsController extends Controller
     {
         $company = $request->user()->companyProfile;
 
-        // Authorization check is now handled in the Form Request's authorize() method
-        // but explicit check here is also fine for double safety if desired,
-        // though request authorization happens before controller method execution.
-        
+        // 1. Update Profile Settings (Branding, URL, KVK)
         $company->update($request->validated());
 
-        return back()->with('status', 'Company settings updated!');
+        // 2. Update Page Components (Hero texts, Body texts, etc.)
+        if ($request->has('components')) {
+            foreach ($request->input('components') as $id => $data) {
+                $component = PageComponent::find($id);
+                
+                // Security check: ensure this component belongs to the user's company
+                if ($component && $component->company_id === $company->id && isset($data['content'])) {
+                    $component->update([
+                        'content' => $data['content']
+                    ]);
+                }
+            }
+        }
+
+        // 3. Update Order (if sorting was changed)
+        if ($request->has('ordered_ids')) {
+            foreach ($request->input('ordered_ids') as $order => $id) {
+                $component = PageComponent::find($id);
+                if ($component && $component->company_id === $company->id) {
+                    $component->update(['order' => $order + 1]);
+                }
+            }
+        }
+
+        return back()->with('status', 'Instellingen en pagina succesvol opgeslagen!');
     }
 }

@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+            'contract.approved' => \App\Http\Middleware\EnsureContractApproved::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -49,6 +49,12 @@ Route::post('/verkoper/{user}/reviews', [\App\Http\Controllers\ReviewController:
 // Product Reviews
 Route::post('/advertisements/{advertisement}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.product.store')->middleware('auth');
 
+// Contract Management
+Route::middleware(['auth'])->group(function () {
+    Route::get('/company/contract/download', [\App\Http\Controllers\CompanyController::class, 'downloadContract'])->name('company.contract.download');
+    Route::post('/company/contract/upload', [\App\Http\Controllers\CompanyController::class, 'uploadContract'])->name('company.contract.upload');
+});
+
 // ZONE B: Dashboard (Secure)
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
     Route::get('/', function () {
