@@ -78,6 +78,10 @@ Route::middleware('auth')->group(function () {
     // Orders
     Route::post('/advertisements/{advertisement}/buy', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
     Route::get('/dashboard/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('dashboard.orders.index');
+
+    // Favorites
+    Route::post('/advertisements/{advertisement}/favorite', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('favorites.toggle');
+    Route::get('/dashboard/favorites', [\App\Http\Controllers\FavoriteController::class, 'index'])->name('dashboard.favorites.index');
 });
 
 require __DIR__.'/auth.php';

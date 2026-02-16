@@ -21,6 +21,12 @@
             <svg class="{{ request()->routeIs('dashboard.bids.*') ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500' }} flex-shrink-0 -ml-1 mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
             Mijn Biedingen
         </a>
+        
+        <a href="{{ route('dashboard.favorites.index') }}" 
+           class="{{ request()->routeIs('dashboard.favorites.index') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+            <svg class="{{ request()->routeIs('dashboard.favorites.index') ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500' }} flex-shrink-0 -ml-1 mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.486 4.486 0 000 6.364L10 17.657l5.682-5.682a4.486 4.486 0 000-6.364 4.486 4.486 0 00-6.364 0z"></path></svg>
+            Mijn Favorieten
+        </a>
 
         <a href="{{ route('dashboard.rentals.index') }}" 
            class="{{ request()->routeIs('dashboard.rentals.*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md">

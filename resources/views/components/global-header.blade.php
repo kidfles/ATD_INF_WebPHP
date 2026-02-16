@@ -61,6 +61,9 @@
                         <a href="{{ route('dashboard.bids.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Mijn Biedingen
                         </a>
+                        <a href="{{ route('dashboard.favorites.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            Mijn Favorieten
+                        </a>
                         <a href="{{ route('dashboard.rentals.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                             Mijn Verhuur
                         </a>

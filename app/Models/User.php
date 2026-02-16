@@ -91,7 +91,7 @@ class User extends Authenticatable
 
     public function favorites(): BelongsToMany
     {
-        return $this->belongsToMany(Advertisement::class, 'favorites');
+        return $this->belongsToMany(Advertisement::class, 'favorites')->withTimestamps();
     }
 
     public function reviewsGiven(): HasMany
