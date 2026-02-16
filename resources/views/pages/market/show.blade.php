@@ -194,6 +194,18 @@
 
                         @endif
                     </div>
+
+                    {{-- QR Code Section --}}
+                    <div class="mt-8 pt-8 border-t border-gray-100 flex flex-col items-center">
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-4">Share this Ad</h3>
+
+                        <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100">
+                            {{-- Generate QR Code linking to the current ad's route --}}
+                            {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(120)->color(79, 70, 229)->generate(route('market.show', $advertisement)) !!}
+                        </div>
+
+                        <p class="text-xs text-gray-400 mt-2">Scan to open on mobile</p>
+                    </div>
                 </div>
             </div>
         </div>
