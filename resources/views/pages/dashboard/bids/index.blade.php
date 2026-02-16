@@ -69,12 +69,12 @@
                                                 {{ $bid->created_at->format('d-m-Y H:i') }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end gap-3">
-                                                <a href="{{ route('market.show', $bid->advertisement) }}" class="text-indigo-600 hover:text-indigo-900">Bekijk</a>
+                                                <a href="{{ route('market.show', $bid->advertisement) }}" class="bg-blue-500 text-white font-bold px-4 py-2 rounded">Bekijk</a>
                                                 
                                                 <form action="{{ route('bids.destroy', $bid) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je dit bod wilt intrekken?');">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900">Annuleren</button>
+                                                    <button type="submit" class="bg-red-600 hover:bg-red-600 text-white font-bold px-4 py-2 rounded">Annuleren</button>
                                                 </form>
                                             </td>
                                         </tr>

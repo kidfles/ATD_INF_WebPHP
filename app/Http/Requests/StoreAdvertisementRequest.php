@@ -45,7 +45,7 @@ class StoreAdvertisementRequest extends FormRequest
                     }
                 }
             ],
-            'image'       => ['nullable', 'image', 'max:2048'], // Max 2MB
+            'image'       => ['nullable', 'image', 'max:2048', 'dimensions:height=600'], // Max 2MB, Exact 600px height
             'related_ads' => ['nullable', 'array'],
             'related_ads.*' => ['exists:advertisements,id'],
         ];

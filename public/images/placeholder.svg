@@ -1,0 +1,10 @@
+<svg width="800" height="600" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Layer 1</title>
+  <rect fill="#e0e0e0" id="svg_1" height="600" width="800" y="0" x="0"/>
+  <text fill="#a0a0a0" stroke="#000" stroke-width="0" stroke-opacity="null" x="400" y="300" id="svg_2" font-size="40" font-family="sans-serif" text-anchor="middle" xml:space="preserve">No Image Available</text>
+  <path fill="#a0a0a0" stroke="#000" stroke-width="0" d="m350,250 l100,0 l0,100 l-100,0 l0,-100 z" id="svg_3" opacity="0.2"/>
+  <rect x="375" y="200" width="50" height="50" stroke="#a0a0a0" stroke-width="2" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="225" r="15" fill="#a0a0a0" opacity="0.5"/>
+ </g>
+</svg>

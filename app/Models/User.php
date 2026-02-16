@@ -91,11 +91,19 @@ class User extends Authenticatable
 
     public function favorites(): BelongsToMany
     {
-        return $this->belongsToMany(Advertisement::class, 'favorites');
+        return $this->belongsToMany(Advertisement::class, 'favorites')->withTimestamps();
     }
 
     public function reviewsGiven(): HasMany
     {
         return $this->hasMany(Review::class, 'reviewer_id');
+    }
+
+    public function orders(): HasMany {
+        return $this->hasMany(Order::class, 'buyer_id');
+    }
+
+    public function sales(): HasMany {
+        return $this->hasMany(Order::class, 'seller_id');
     }
 }
