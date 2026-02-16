@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('buyer_id')->constrained('users');
-            $table->foreignId('seller_id')->constrained('users');
-            $table->foreignId('advertisement_id')->constrained();
+            $table->foreignId('buyer_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('seller_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('advertisement_id')->nullable()->constrained()->nullOnDelete();
+            
+            // Prevent duplicate orders for the same ad
+            $table->unique('advertisement_id');
             $table->decimal('amount', 10, 2);
             $table->string('status')->default('completed');
             $table->timestamps();

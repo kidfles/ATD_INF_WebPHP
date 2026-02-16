@@ -7,6 +7,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\DB;
+
 class OrderController extends Controller
 {
     public function store(Request $request, Advertisement $advertisement)
@@ -23,21 +25,28 @@ class OrderController extends Controller
             return back()->with('error', 'Dit product is helaas al verkocht.');
         }
 
-        // 3. Maak de Order aan (Transactie)
-        Order::create([
-            'buyer_id' => $user->id,
-            'seller_id' => $advertisement->user_id,
-            'advertisement_id' => $advertisement->id,
-            'amount' => $advertisement->price,
-            'status' => 'completed', // In een echte app zou hier de betaalstatus komen
-        ]);
+        // 3. Validatie: Is het een verkoop advertentie?
+        if ($advertisement->type !== 'sell') {
+            return back()->with('error', 'Dit type advertentie kan niet direct gekocht worden.');
+        }
 
-        // 4. Update de advertentie status
-        $advertisement->update([
-            'is_sold' => true
-        ]);
+        // 4. Maak de Order aan (Transactie)
+        DB::transaction(function () use ($user, $advertisement) {
+            Order::create([
+                'buyer_id' => $user->id,
+                'seller_id' => $advertisement->user_id,
+                'advertisement_id' => $advertisement->id,
+                'amount' => $advertisement->price,
+                'status' => 'completed',
+            ]);
 
-        // 5. Feedback en redirect (bijv. naar de order historie)
+            // 5. Update de advertentie status
+            $advertisement->update([
+                'is_sold' => true
+            ]);
+        });
+
+        // 6. Feedback en redirect
         return redirect()->route('dashboard.orders.index')
             ->with('success', 'Gefeliciteerd! Je hebt het product gekocht.');
     }
@@ -45,7 +54,7 @@ class OrderController extends Controller
     // Voor de User Story: "Als gebruiker wil ik een historie kunnen zien van gekochte producten"
     public function index()
     {
-        $orders = Auth::user()->orders()->with('advertisement.user')->latest()->get();
+        $orders = Auth::user()->orders()->with(['advertisement.user', 'seller'])->latest()->get();
         return view('pages.dashboard.orders.index', compact('orders'));
     }
 }

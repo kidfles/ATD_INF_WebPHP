@@ -41,7 +41,7 @@
                                                 <div class="flex items-center">
                                                     <div class="flex-shrink-0 h-10 w-10">
                                                         @if($order->advertisement->image_path)
-                                                            <img class="h-10 w-10 rounded-full object-cover" src="{{ asset('storage/' . $order->advertisement->image_path) }}" alt="">
+                                                            <img class="h-10 w-10 rounded-full object-cover" src="{{ asset('storage/' . $order->advertisement->image_path) }}" alt="{{ $order->advertisement->title }}">
                                                         @else
                                                             <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-400">
                                                                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
