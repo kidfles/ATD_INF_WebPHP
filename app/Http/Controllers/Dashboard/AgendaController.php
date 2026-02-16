@@ -14,7 +14,17 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard.agenda');
+        $user = auth()->user();
+        
+        // "Mijn Activiteit" - zaken die ik heb gekocht/gehuurd
+        $myRentals = $user->rentals()->with('advertisement')->latest()->get();
+
+        // "Mijn Verkoop" - zaken die anderen bij mij hebben gekocht/gehuurd
+        $incomingRentals = \App\Models\Rental::whereHas('advertisement', function($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->with(['advertisement', 'renter'])->get();
+
+        return view('pages.dashboard.agenda', compact('myRentals', 'incomingRentals'));
     }
 
     /**

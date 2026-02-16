@@ -37,8 +37,12 @@
                                             <span class="font-semibold">Periode:</span> 
                                             {{ $rental->start_date->format('d-m-Y') }} t/m {{ $rental->end_date->format('d-m-Y') }}
                                         </p>
-                                        <p class="text-gray-600 text-sm mb-4">
+                                        <p class="text-gray-600 text-sm mb-1">
                                             <span class="font-semibold">Prijs per dag:</span> € {{ number_format($rental->advertisement->price, 2) }}
+                                        </p>
+                                        <p class="text-gray-900 font-bold text-lg mb-4">
+                                            Totaal: € {{ number_format($rental->total_price, 2) }}
+                                            <span class="text-xs font-normal text-gray-500">({{ $rental->start_date->diffInDays($rental->end_date) + 1 }} dagen)</span>
                                         </p>
 
                                         @if($rental->return_photo_path)
