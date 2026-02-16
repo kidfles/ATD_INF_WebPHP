@@ -28,6 +28,12 @@
             Mijn Verhuur
         </a>
 
+        <a href="{{ route('dashboard.orders.index') }}" 
+           class="{{ request()->routeIs('dashboard.orders.*') ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900' }} group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+             <svg class="{{ request()->routeIs('dashboard.orders.*') ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500' }} flex-shrink-0 -ml-1 mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+            Mijn Aankopen
+        </a>
+
         <div class="border-t border-gray-100 my-2"></div>
 
         @if(Auth::user()->isBusinessAdvertiser())
