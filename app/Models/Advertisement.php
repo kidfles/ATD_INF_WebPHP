@@ -15,7 +15,7 @@ class Advertisement extends Model
     /** @use HasFactory<\Database\Factories\AdvertisementFactory> */
     use HasFactory;
 
-    protected $fillable = ['user_id', 'title', 'description', 'price', 'type', 'image_path'];
+    protected $fillable = ['user_id', 'title', 'description', 'price', 'type', 'image_path', 'is_sold'];
 
     // RELATION: An ad belongs to a user
     public function user()
