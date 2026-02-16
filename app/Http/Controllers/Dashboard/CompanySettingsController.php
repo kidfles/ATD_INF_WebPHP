@@ -52,4 +52,26 @@ class CompanySettingsController extends Controller
 
         return back()->with('status', 'Instellingen en pagina succesvol opgeslagen!');
     }
+
+    /**
+     * Generate API token for company
+     */
+    public function generateToken(Request $request)
+    {
+        $user = $request->user();
+
+        // Security check: Contract must be approved
+        if ($user->companyProfile->contract_status !== 'approved') {
+            return back()->with('error', 'Keur eerst uw contract goed om API toegang te krijgen.');
+        }
+
+        // Delete old tokens for security
+        $user->tokens()->delete();
+
+        // Create new token
+        $token = $user->createToken('company-api')->plainTextToken;
+
+        // Store token temporarily in session to show it once
+        return back()->with('api_token', $token);
+    }
 }

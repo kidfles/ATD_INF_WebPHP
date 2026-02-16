@@ -79,11 +79,6 @@
                 </div>
                 @endif
             </div>
-
-            <!-- Smart Dashboard: Activity Overview -->
-            <!-- Smart Dashboard: Activity Overview -->
-            
-            <!-- 1. Rental Activity (Full Width) -->
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-6">
                 <div class="p-6 text-gray-900">
                     <h3 class="font-bold text-lg mb-4">Rental Activity</h3>

@@ -83,6 +83,9 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     Route::get('/company/contract/download', [\App\Http\Controllers\CompanyController::class, 'downloadContract'])->name('company.contract.download');
     Route::post('/company/contract/upload', [\App\Http\Controllers\CompanyController::class, 'uploadContract'])->name('company.contract.upload');
     Route::post('/company/contract/approve-test', [\App\Http\Controllers\CompanyController::class, 'approveContractTest'])->name('company.contract.approve_test');
+    
+    // API Token Generation
+    Route::post('/company/api-token', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'generateToken'])->name('company.api_token')->middleware('contract.approved');
 });
 
 Route::middleware('auth')->group(function () {

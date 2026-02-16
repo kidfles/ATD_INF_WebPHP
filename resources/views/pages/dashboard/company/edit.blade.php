@@ -109,7 +109,42 @@
                 </div>
             </div>
 
-            {{-- 3. MAIN FORM: BRANDING & PAGE BUILDER --}}
+            {{-- 3. API ACCESS --}}
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg border border-gray-100">
+                <header>
+                    <h2 class="text-lg font-medium text-gray-900">API Toegang</h2>
+                    <p class="mt-1 text-sm text-gray-600">Gebruik deze gegevens om je advertenties in externe applicaties te laden.</p>
+                </header>
+
+                <div class="mt-6">
+                    @if(auth()->user()->companyProfile->contract_status !== 'approved')
+                        <div class="p-4 bg-red-50 text-red-700 rounded-md text-sm border border-red-200">
+                            <strong>Toegang geblokkeerd:</strong> Uw contract moet eerst goedgekeurd zijn voordat u API-sleutels kunt genereren.
+                        </div>
+                    @else
+                        @if (session('api_token'))
+                            <div class="mb-6 p-4 bg-yellow-50 border-l-4 border-yellow-400">
+                                <p class="text-sm font-bold text-yellow-800">Bewaar dit token goed! Je ziet het maar één keer:</p>
+                                <code class="block mt-2 p-2 bg-white border rounded text-lg font-mono break-all">
+                                    {{ session('api_token') }}
+                                </code>
+                            </div>
+                        @endif
+
+                        <form action="{{ route('dashboard.company.api_token') }}" method="POST">
+                            @csrf
+                            <p class="text-sm text-gray-500 mb-4">
+                                Endpoint: <code class="bg-gray-100 px-2 py-1 rounded italic">{{ url('/api/my-ads') }}</code>
+                            </p>
+                            <x-primary-button>
+                                {{ __('Nieuwe API Sleutel Genereren') }}
+                            </x-primary-button>
+                        </form>
+                    @endif
+                </div>
+            </div>
+
+            {{-- 4. MAIN FORM: BRANDING & PAGE BUILDER --}}
             <form method="post" action="{{ route('dashboard.company.settings.update') }}" class="space-y-6">
                 @csrf
                 @method('patch')
