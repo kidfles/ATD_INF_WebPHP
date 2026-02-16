@@ -4,9 +4,11 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Advertenties') }}
             </h2>
+            @if(Auth::user()->role !== 'user')
             <a href="{{ route('dashboard.advertisements.create') }}" class="bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150 px-4 py-2">
                 {{ __('Nieuwe Advertentie') }}
             </a>
+            @endif
         </div>
     </x-slot>
 

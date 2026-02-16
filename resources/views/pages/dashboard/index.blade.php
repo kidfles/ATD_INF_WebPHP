@@ -22,6 +22,7 @@
                 </div>
 
                 <!-- Create New Ad -->
+                @if(Auth::user()->role !== 'user')
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
                     <div class="p-6">
                         <div class="bg-green-100 rounded-full w-12 h-12 flex items-center justify-center mb-4 text-green-600">
@@ -32,6 +33,7 @@
                         <a href="{{ route('dashboard.advertisements.create') }}" class="text-green-600 font-semibold hover:text-green-800">Create Now &rarr;</a>
                     </div>
                 </div>
+                @endif
 
                 <!-- Browse Market -->
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition">
@@ -138,7 +140,9 @@
                     <div class="p-6 text-gray-900">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-bold text-lg">My Advertisements</h3>
+                            @if(Auth::user()->role !== 'user')
                             <a href="{{ route('dashboard.advertisements.create') }}" class="text-sm text-blue-600 hover:underline">New Ad +</a>
+                            @endif
                         </div>
                         
                         @if($myAds->isEmpty())
