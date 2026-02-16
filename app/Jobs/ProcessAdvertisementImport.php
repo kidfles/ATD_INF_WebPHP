@@ -8,6 +8,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Csv\Reader;
 
@@ -51,56 +52,98 @@ class ProcessAdvertisementImport implements ShouldQueue
      */
     public function handle(): void
     {
+        Log::info('[CSV Import] Job gestart', [
+            'user_id' => $this->userId,
+            'file_path' => $this->filePath,
+        ]);
+
         // CSV-bestand openen vanuit de private storage
         $fullPath = Storage::disk('local')->path($this->filePath);
 
+        Log::info('[CSV Import] Volledig pad', ['full_path' => $fullPath, 'exists' => file_exists($fullPath)]);
+
         if (!file_exists($fullPath)) {
+            Log::error('[CSV Import] Bestand niet gevonden!', ['path' => $fullPath]);
             return;
         }
 
-        $reader = Reader::createFromPath($fullPath, 'r');
-        $reader->setHeaderOffset(0); // Eerste rij bevat kolomnamen
+        try {
+            $reader = Reader::createFromPath($fullPath, 'r');
+            $reader->setHeaderOffset(0); // Eerste rij bevat kolomnamen
 
-        $skipped = 0;
-        $imported = 0;
+            $headers = $reader->getHeader();
+            Log::info('[CSV Import] Headers gelezen', ['headers' => $headers]);
 
-        foreach ($reader->getRecords() as $record) {
-            // Controleer of de vereiste velden aanwezig zijn
-            if (empty($record['title']) || empty($record['price']) || empty($record['type'])) {
-                $skipped++;
-                continue;
+            $skipped = 0;
+            $imported = 0;
+
+            foreach ($reader->getRecords() as $index => $record) {
+                Log::info("[CSV Import] Rij {$index} verwerken", ['data' => $record]);
+
+                // Controleer of de vereiste velden aanwezig zijn
+                if (empty($record['title']) || empty($record['price']) || empty($record['type'])) {
+                    Log::warning("[CSV Import] Rij {$index} overgeslagen: verplichte velden ontbreken");
+                    $skipped++;
+                    continue;
+                }
+
+                // Valideer het type (alleen 'sell', 'rent', 'auction' toegestaan)
+                $type = strtolower(trim($record['type']));
+                if (!in_array($type, ['sell', 'rent', 'auction'])) {
+                    Log::warning("[CSV Import] Rij {$index} overgeslagen: ongeldig type '{$type}'");
+                    $skipped++;
+                    continue;
+                }
+
+                // Bedrijfsregel: maximaal 4 advertenties per type per gebruiker
+                $currentCount = Advertisement::where('user_id', $this->userId)
+                    ->where('type', $type)
+                    ->count();
+
+                Log::info("[CSV Import] Type '{$type}' teller: {$currentCount}/4");
+
+                if ($currentCount >= 4) {
+                    Log::warning("[CSV Import] Rij {$index} overgeslagen: max 4 bereikt voor type '{$type}'");
+                    $skipped++;
+                    continue;
+                }
+
+                // Advertentie aanmaken
+                try {
+                    $ad = Advertisement::create([
+                        'user_id'     => $this->userId,
+                        'title'       => trim($record['title']),
+                        'description' => trim($record['description'] ?? ''),
+                        'price'       => (float) $record['price'],
+                        'type'        => $type,
+                    ]);
+                    Log::info("[CSV Import] Advertentie aangemaakt!", ['ad_id' => $ad->id, 'title' => $ad->title]);
+                    $imported++;
+                } catch (\Exception $e) {
+                    Log::error("[CSV Import] FOUT bij aanmaken rij {$index}", [
+                        'error' => $e->getMessage(),
+                        'record' => $record,
+                    ]);
+                    $skipped++;
+                }
             }
 
-            // Valideer het type (alleen 'sale', 'rent', 'auction' toegestaan)
-            $type = strtolower(trim($record['type']));
-            if (!in_array($type, ['sale', 'rent', 'auction'])) {
-                $skipped++;
-                continue;
-            }
-
-            // Bedrijfsregel: maximaal 4 advertenties per type per gebruiker
-            $currentCount = Advertisement::where('user_id', $this->userId)
-                ->where('type', $type)
-                ->count();
-
-            if ($currentCount >= 4) {
-                $skipped++;
-                continue;
-            }
-
-            // Advertentie aanmaken
-            Advertisement::create([
-                'user_id'     => $this->userId,
-                'title'       => trim($record['title']),
-                'description' => trim($record['description'] ?? ''),
-                'price'       => (float) $record['price'],
-                'type'        => $type,
+            Log::info('[CSV Import] Klaar!', [
+                'imported' => $imported,
+                'skipped' => $skipped,
+                'user_id' => $this->userId,
             ]);
 
-            $imported++;
+        } catch (\Exception $e) {
+            Log::error('[CSV Import] FATALE FOUT', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            throw $e;
         }
 
         // Opruimen: CSV-bestand verwijderen na verwerking
         Storage::disk('local')->delete($this->filePath);
+        Log::info('[CSV Import] Bestand opgeruimd', ['path' => $this->filePath]);
     }
 }

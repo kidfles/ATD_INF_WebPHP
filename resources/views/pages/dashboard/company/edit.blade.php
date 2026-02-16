@@ -190,7 +190,7 @@
                                         <td class="px-3 py-2 text-gray-700">Bureaulamp</td>
                                         <td class="px-3 py-2 text-gray-700">Stijlvolle lamp</td>
                                         <td class="px-3 py-2 text-gray-700">24.99</td>
-                                        <td class="px-3 py-2"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold">sale</span></td>
+                                        <td class="px-3 py-2"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs font-bold">sell</span></td>
                                     </tr>
                                     <tr class="border-t border-gray-100">
                                         <td class="px-3 py-2 text-gray-700">Boormachine</td>
@@ -202,7 +202,7 @@
                             </table>
                         </div>
                         <p class="text-xs text-gray-400 mt-3">
-                            Toegestane types: <code class="bg-gray-100 px-1 rounded">sale</code>, <code class="bg-gray-100 px-1 rounded">rent</code>, <code class="bg-gray-100 px-1 rounded">auction</code>.
+                            Toegestane types: <code class="bg-gray-100 px-1 rounded">sell</code>, <code class="bg-gray-100 px-1 rounded">rent</code>, <code class="bg-gray-100 px-1 rounded">auction</code>.
                             Maximaal 4 advertenties per type.
                         </p>
                         <a href="{{ asset('storage/example_ads.csv') }}" download class="inline-flex items-center mt-3 text-sm text-indigo-600 hover:text-indigo-800 font-semibold">

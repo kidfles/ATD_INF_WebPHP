@@ -101,6 +101,9 @@ class CompanySettingsController extends Controller
     /**
      * Verwerk een CSV-upload met advertenties en start de achtergrond-import.
      * 
+     * Valideert het bestand en de inhoud vooraf. Alleen als alle rijen geldig zijn
+     * wordt de achtergrond-job gestart. Anders krijgt de gebruiker direct feedback.
+     * 
      * @param Request $request Het HTTP request met het CSV-bestand.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met statusmelding.
      */
@@ -110,10 +113,54 @@ class CompanySettingsController extends Controller
             'csv_file' => 'required|file|mimes:csv,txt|max:2048',
         ]);
 
-        // Bestand opslaan in private storage (niet publiek toegankelijk)
-        $path = $request->file('csv_file')->store('imports', 'local');
+        // === PRE-VALIDATIE: CSV inhoud controleren voordat de job wordt gestart ===
+        $file = $request->file('csv_file');
+        $reader = \League\Csv\Reader::createFromPath($file->getPathname(), 'r');
+        $reader->setHeaderOffset(0);
 
-        // Job dispatchen voor verwerking op de achtergrond
+        // 1. Check: bevat het CSV de vereiste kolommen?
+        $headers = $reader->getHeader();
+        $requiredHeaders = ['title', 'description', 'price', 'type'];
+        $missingHeaders = array_diff($requiredHeaders, $headers);
+
+        if (!empty($missingHeaders)) {
+            return back()->withErrors([
+                'csv_file' => 'De CSV mist de volgende kolommen: ' . implode(', ', $missingHeaders) . '. Verwacht: title, description, price, type.',
+            ]);
+        }
+
+        // 2. Check: zijn alle type-waarden geldig?
+        $allowedTypes = ['sell', 'rent', 'auction'];
+        $invalidRows = [];
+
+        foreach ($reader->getRecords() as $index => $record) {
+            $type = strtolower(trim($record['type'] ?? ''));
+
+            if (empty($type)) {
+                $invalidRows[] = "Rij {$index}: type is leeg";
+            } elseif (!in_array($type, $allowedTypes)) {
+                $invalidRows[] = "Rij {$index}: ongeldig type '{$record['type']}' (toegestaan: sell, rent, auction)";
+            }
+
+            if (empty(trim($record['title'] ?? ''))) {
+                $invalidRows[] = "Rij {$index}: titel is leeg";
+            }
+
+            if (empty(trim($record['price'] ?? '')) || !is_numeric($record['price'])) {
+                $invalidRows[] = "Rij {$index}: prijs ontbreekt of is geen getal";
+            }
+        }
+
+        if (!empty($invalidRows)) {
+            return back()->withErrors([
+                'csv_file' => 'Het CSV-bestand bevat fouten: ' . implode('; ', array_slice($invalidRows, 0, 5))
+                    . (count($invalidRows) > 5 ? ' (en ' . (count($invalidRows) - 5) . ' meer)' : ''),
+            ]);
+        }
+
+        // === VALIDATIE GESLAAGD: bestand opslaan en job starten ===
+        $path = $file->store('imports', 'local');
+
         ProcessAdvertisementImport::dispatch(auth()->id(), $path);
 
         return back()->with('status', 'Uw CSV-bestand wordt op de achtergrond verwerkt. De advertenties verschijnen binnenkort.');
