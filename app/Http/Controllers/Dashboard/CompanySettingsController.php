@@ -132,6 +132,7 @@ class CompanySettingsController extends Controller
         // 2. Check: zijn alle type-waarden geldig?
         $allowedTypes = ['sell', 'rent', 'auction'];
         $invalidRows = [];
+        $csvTypeCounts = []; // Telt hoeveel ads per type in de CSV staan
 
         foreach ($reader->getRecords() as $index => $record) {
             $type = strtolower(trim($record['type'] ?? ''));
@@ -140,6 +141,8 @@ class CompanySettingsController extends Controller
                 $invalidRows[] = "Rij {$index}: type is leeg";
             } elseif (!in_array($type, $allowedTypes)) {
                 $invalidRows[] = "Rij {$index}: ongeldig type '{$record['type']}' (toegestaan: sell, rent, auction)";
+            } else {
+                $csvTypeCounts[$type] = ($csvTypeCounts[$type] ?? 0) + 1;
             }
 
             if (empty(trim($record['title'] ?? ''))) {
@@ -148,6 +151,20 @@ class CompanySettingsController extends Controller
 
             if (empty(trim($record['price'] ?? '')) || !is_numeric($record['price'])) {
                 $invalidRows[] = "Rij {$index}: prijs ontbreekt of is geen getal";
+            }
+        }
+
+        // 3. Check: zou de import het maximum van 4 per type overschrijden?
+        $userId = auth()->id();
+        foreach ($csvTypeCounts as $type => $csvCount) {
+            $existingCount = \App\Models\Advertisement::where('user_id', $userId)
+                ->where('type', $type)
+                ->count();
+            $total = $existingCount + $csvCount;
+
+            if ($total > 4) {
+                $remaining = max(0, 4 - $existingCount);
+                $invalidRows[] = "Type '{$type}': u heeft al {$existingCount} advertentie(s), de CSV bevat {$csvCount} extra. Maximaal {$remaining} kunnen nog worden toegevoegd.";
             }
         }
 
