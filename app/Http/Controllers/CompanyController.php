@@ -99,4 +99,25 @@ class CompanyController extends Controller
 
         return back()->with('success', 'Contract succesvol geüpload. We gaan het controleren.');
     }
+
+    /**
+     * TEST ONLY: Instantly approve contract for development/testing
+     */
+    public function approveContractTest()
+    {
+        $user = auth()->user();
+        
+        if ($user->role !== 'business_ad' || !$user->companyProfile) {
+            abort(403, 'Alleen zakelijke gebruikers kunnen deze actie uitvoeren.');
+        }
+        
+        $company = $user->companyProfile;
+        
+        // Instantly approve the contract
+        $company->update([
+            'contract_status' => 'approved'
+        ]);
+
+        return back()->with('status', '✅ [TEST] Contract is nu goedgekeurd! API toegang is actief.');
+    }
 }
