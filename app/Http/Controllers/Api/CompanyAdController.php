@@ -8,11 +8,14 @@ use Illuminate\Http\Request;
 class CompanyAdController extends Controller
 {
     /**
-     * Get all advertisements for the authenticated user's company
+     * Haal alle advertenties op van het bedrijf van de geauthenticeerde gebruiker.
+     * 
+     * @param Request $request Het huidige HTTP request.
+     * @return \Illuminate\Http\JsonResponse Een JSON response met de advertenties.
      */
     public function index(Request $request)
     {
-        // Return only advertisements belonging to the authenticated user
+        // Retourneer alleen advertenties die eigendom zijn van de ingelogde gebruiker
         $ads = $request->user()->advertisements()->latest()->paginate(20);
 
         return response()->json($ads);

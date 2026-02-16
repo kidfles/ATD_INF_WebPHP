@@ -6,32 +6,52 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateCompanyProfileRequest;
 use Illuminate\Http\Request;
 use App\Models\PageComponent;
+use App\Jobs\ProcessAdvertisementImport;
 
+/**
+ * CompanySettingsController
+ * 
+ * Beheert de instellingen van het bedrijfsprofiel en de whitelabel pagina's.
+ * Bevat logica voor het bewerken van merk-instellingen, paginacomponenten, API-toegang
+ * en het bulk-importeren van advertenties via CSV.
+ */
 class CompanySettingsController extends Controller
 {
+    /**
+     * Toon het formulier om de bedrijfsinstellingen te bewerken.
+     * 
+     * @param Request $request Het huidige HTTP request.
+     * @return \Illuminate\View\View De weergave met het instellingenformulier.
+     */
     public function edit(Request $request)
     {
         $company = $request->user()->companyProfile;
         if (!$company) {
-             abort(403, 'You do not have a company profile.');
+             abort(403, 'U heeft geen bedrijfsprofiel.');
         }
 
         return view('pages.dashboard.company.edit', compact('company'));
     }
 
+    /**
+     * Werk de bedrijfsinstellingen en de whitelabel pagina-indeling bij.
+     * 
+     * @param UpdateCompanyProfileRequest $request Het gevalideerde request met instellingen en componenten.
+     * @return \Illuminate\Http\RedirectResponse Redirect terug met succesmelding.
+     */
     public function update(UpdateCompanyProfileRequest $request)
     {
         $company = $request->user()->companyProfile;
 
-        // 1. Update Profile Settings (Branding, URL, KVK)
+        // 1. Algemene instellingen bijwerken (Branding, URL, KVK)
         $company->update($request->validated());
 
-        // 2. Update Page Components (Hero texts, Body texts, etc.)
+        // 2. Pagina-componenten bijwerken (Hero teksten, Body teksten, etc.)
         if ($request->has('components')) {
             foreach ($request->input('components') as $id => $data) {
                 $component = PageComponent::find($id);
                 
-                // Security check: ensure this component belongs to the user's company
+                // Beveiligingscheck: zorg dat de component bij dit bedrijf hoort
                 if ($component && $component->company_id === $company->id && isset($data['content'])) {
                     $component->update([
                         'content' => $data['content']
@@ -40,7 +60,7 @@ class CompanySettingsController extends Controller
             }
         }
 
-        // 3. Update Order (if sorting was changed)
+        // 3. Volgorde van componenten bijwerken (indien gesorteerd in de UI)
         if ($request->has('ordered_ids')) {
             foreach ($request->input('ordered_ids') as $order => $id) {
                 $component = PageComponent::find($id);
@@ -54,24 +74,48 @@ class CompanySettingsController extends Controller
     }
 
     /**
-     * Generate API token for company
+     * Genereer een nieuwe API-token voor de bedrijfstoegang.
+     * 
+     * @param Request $request Het huidige HTTP request.
+     * @return \Illuminate\Http\RedirectResponse Redirect terug met de nieuwe token (eenmalig zichtbaar).
      */
     public function generateToken(Request $request)
     {
         $user = $request->user();
 
-        // Security check: Contract must be approved
+        // Beveiligingscheck: Contract moet goedgekeurd zijn voor API-toegang
         if ($user->companyProfile->contract_status !== 'approved') {
             return back()->with('error', 'Keur eerst uw contract goed om API toegang te krijgen.');
         }
 
-        // Delete old tokens for security
+        // Verwijder oude tokens voor de veiligheid (slechts één actieve token per keer)
         $user->tokens()->delete();
 
-        // Create new token
+        // Nieuwe token aanmaken
         $token = $user->createToken('company-api')->plainTextToken;
 
-        // Store token temporarily in session to show it once
+        // Token tijdelijk in de sessie opslaan zodat deze één keer getoond kan worden
         return back()->with('api_token', $token);
+    }
+
+    /**
+     * Verwerk een CSV-upload met advertenties en start de achtergrond-import.
+     * 
+     * @param Request $request Het HTTP request met het CSV-bestand.
+     * @return \Illuminate\Http\RedirectResponse Redirect terug met statusmelding.
+     */
+    public function importCsv(Request $request)
+    {
+        $request->validate([
+            'csv_file' => 'required|file|mimes:csv,txt|max:2048',
+        ]);
+
+        // Bestand opslaan in private storage (niet publiek toegankelijk)
+        $path = $request->file('csv_file')->store('imports', 'local');
+
+        // Job dispatchen voor verwerking op de achtergrond
+        ProcessAdvertisementImport::dispatch(auth()->id(), $path);
+
+        return back()->with('status', 'Uw CSV-bestand wordt op de achtergrond verwerkt. De advertenties verschijnen binnenkort.');
     }
 }

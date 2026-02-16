@@ -8,15 +8,26 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * CompanyController
+ * 
+ * Beheert de publieke bedrijfspagina's (whitelabeling) en de contractafhandeling 
+ * voor zakelijke adverteerders.
+ */
 class CompanyController extends Controller
 {
+    /**
+     * Toon de publieke profielpagina van een bedrijf.
+     * Maakt automatisch standaardcomponenten aan als deze nog niet bestaan.
+     * 
+     * @param CompanyProfile $company Het bedrijfsprofiel dat getoond moet worden.
+     * @return \Illuminate\View\View De whitelabel weergave.
+     */
     public function show(CompanyProfile $company)
     {
         // 1. Check: Heeft dit bedrijf nog geen componenten? Maak dan defaults aan.
         if ($company->pageComponents()->count() === 0) {
             
-
-
             // Default 2: Tekst Sectie
             $company->pageComponents()->create([
                 'component_type' => 'text',
@@ -31,7 +42,7 @@ class CompanyController extends Controller
             $company->pageComponents()->create([
                 'component_type' => 'featured_ads',
                 'order' => 3,
-                'content' => [] // Logica pakt automatisch de nieuwste ads
+                'content' => [] // Logica pakt automatisch de nieuwste advertenties
             ]);
             
             // Ververs de relatie zodat de nieuwe componenten direct geladen worden
@@ -39,10 +50,9 @@ class CompanyController extends Controller
         }
 
         // 2. Laad de data (nu gegarandeerd aanwezig)
-        // 2. Laad de data (nu gegarandeerd aanwezig)
         // We laden ook de reviews van de USER die bij dit bedrijf hoort.
         $company->load(['user.advertisements' => function ($query) {
-            $query->latest()->limit(3); // Fix N+1 and limit ads
+            $query->latest()->limit(3); // Fix N+1 en beperk het aantal advertenties
         }, 'user.reviewsReceived.reviewer', 'pageComponents' => function ($query) {
             $query->orderBy('order');
         }]);
@@ -55,25 +65,35 @@ class CompanyController extends Controller
         return view('pages.whitelabel.show', compact('company', 'averageRating', 'reviewCount', 'user'));
     }
 
-    // Download Contract as PDF
+    /**
+     * Genereer en download het contract als PDF.
+     * 
+     * @return \Illuminate\Http\Response De PDF-download.
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException Als de gebruiker geen zakelijke adverteerder is.
+     */
     public function downloadContract()
     {
         $user = auth()->user();
         
-        // Check: Is this a business user?
+        // Controleer of de gebruiker een zakelijke adverteerder is
         if ($user->role !== 'business_ad' || !$user->companyProfile) {
             abort(403, 'Alleen zakelijke gebruikers kunnen een contract downloaden.');
         }
 
         $company = $user->companyProfile;
         
-        // Generate PDF
+        // Genereer PDF op basis van een Blade template
         $pdf = Pdf::loadView('pdf.contract', compact('company', 'user'));
         
         return $pdf->download('contract-' . $company->kvk_number . '.pdf');
     }
 
-    // Upload Signed Contract
+    /**
+     * Upload een ondertekend contract (PDF).
+     * 
+     * @param Request $request Het HTTP request met het PDF bestand.
+     * @return \Illuminate\Http\RedirectResponse Redirect terug met succesmelding.
+     */
     public function uploadContract(Request $request)
     {
         $request->validate([
@@ -88,20 +108,22 @@ class CompanyController extends Controller
         
         $company = $user->companyProfile;
 
-        // Store on the 'local' disk (private, not publicly accessible)
+        // Opslaan op de 'local' disk (beveiligd, niet direct via URL toegankelijk)
         $path = $request->file('contract_pdf')->store('contracts', 'local');
 
-        // Update profile
+        // Werk profiel bij: status gaat naar 'pending' voor handmatige controle
         $company->update([
             'contract_file_path' => $path,
-            'contract_status' => 'pending' // Set status to 'pending review'
+            'contract_status' => 'pending' 
         ]);
 
         return back()->with('success', 'Contract succesvol geüpload. We gaan het controleren.');
     }
 
     /**
-     * TEST ONLY: Instantly approve contract for development/testing
+     * TEST ONLY: Keur het contract direct goed voor ontwikkelings-/testdoeleinden.
+     * 
+     * @return \Illuminate\Http\RedirectResponse Redirect terug met statusmelding.
      */
     public function approveContractTest()
     {
@@ -113,7 +135,7 @@ class CompanyController extends Controller
         
         $company = $user->companyProfile;
         
-        // Instantly approve the contract
+        // Keur het contract direct goed
         $company->update([
             'contract_status' => 'approved'
         ]);
