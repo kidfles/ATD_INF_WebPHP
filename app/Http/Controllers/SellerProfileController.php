@@ -31,8 +31,8 @@ class SellerProfileController extends Controller
             : null;
 
         // Calculate stats (re-using existing stats logic)
-        $averageRating = $user->reviewsReceived()->avg('rating') ?? 0;
-        $reviewCount = $user->reviewsReceived()->count();
+        $averageRating = $user->reviewsReceived->avg('rating') ?? 0;
+        $reviewCount = $user->reviewsReceived->count();
 
         return view('pages.seller.profile', compact(
             'user', 

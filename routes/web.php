@@ -46,8 +46,8 @@ Route::get('/company/{company:custom_url_slug}', [CompanyController::class, 'sho
 Route::get('/verkoper/{user}', [\App\Http\Controllers\SellerProfileController::class, 'show'])->name('seller.show');
 Route::post('/verkoper/{user}/reviews', [\App\Http\Controllers\ReviewController::class, 'storeSeller'])->name('reviews.storeSeller')->middleware('auth');
 
-// Product Reviews
-Route::post('/advertisements/{advertisement}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.product.store')->middleware('auth');
+// Seller Reviews
+Route::post('/seller/{user}/review', [\App\Http\Controllers\ReviewController::class, 'storeSellerReview'])->name('reviews.seller.store')->middleware('auth');
 
 // ZONE B: Dashboard (Secure)
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {

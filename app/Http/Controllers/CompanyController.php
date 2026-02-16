@@ -49,8 +49,8 @@ class CompanyController extends Controller
 
         // Bereken stats (op basis van de User, want daar hangen de reviews aan)
         $user = $company->user;
-        $averageRating = $user->reviewsReceived()->avg('rating') ?? 0;
-        $reviewCount = $user->reviewsReceived()->count();
+        $averageRating = $user->reviewsReceived->avg('rating') ?? 0;
+        $reviewCount = $user->reviewsReceived->count();
         
         return view('pages.whitelabel.show', compact('company', 'averageRating', 'reviewCount', 'user'));
     }
