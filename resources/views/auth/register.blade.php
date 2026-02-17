@@ -6,23 +6,23 @@
             <x-input-label for="role" :value="__('Ik wil mij registreren als:')" />
             <div class="mt-2 flex flex-col sm:flex-row gap-3">
                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="radio" name="role" value="user" x-model="accountType" class="rounded-full bg-space-950 border-white/10 text-neon-violet shadow-sm focus:ring-neon-violet/30" checked>
-                    <span class="ml-2 text-sm text-slate-400">Koper / Huurder</span>
+                    <input type="radio" name="role" value="user" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30" checked>
+                    <span class="ml-2 text-sm text-slate-600 font-medium">Koper / Huurder</span>
                 </label>
                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="radio" name="role" value="private_ad" x-model="accountType" class="rounded-full bg-space-950 border-white/10 text-neon-violet shadow-sm focus:ring-neon-violet/30">
-                    <span class="ml-2 text-sm text-slate-400">Particulier</span>
+                    <input type="radio" name="role" value="private_ad" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30">
+                    <span class="ml-2 text-sm text-slate-600 font-medium">Particulier</span>
                 </label>
                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="radio" name="role" value="business_ad" x-model="accountType" class="rounded-full bg-space-950 border-white/10 text-neon-violet shadow-sm focus:ring-neon-violet/30">
-                    <span class="ml-2 text-sm text-slate-400">Zakelijk (Adverteerder)</span>
+                    <input type="radio" name="role" value="business_ad" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30">
+                    <span class="ml-2 text-sm text-slate-600 font-medium">Zakelijk (Adverteerder)</span>
                 </label>
             </div>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
 
-        <div x-show="accountType === 'business_ad'" style="display: none;" class="mt-4 border-l-2 border-neon-violet/30 pl-4 bg-white/5 p-3 rounded-xl">
-            <h3 class="font-bold text-white mb-2">{{ __('Bedrijfsgegevens') }}</h3>
+        <div x-show="accountType === 'business_ad'" style="display: none;" class="mt-4 border-l-2 border-emerald-300 pl-4 bg-emerald-50/50 p-3 rounded-2xl">
+            <h3 class="font-bold text-slate-700 mb-2">{{ __('Bedrijfsgegevens') }}</h3>
             
             <div class="mt-2">
                 <x-input-label for="company_name" :value="__('Bedrijfsnaam')" />
@@ -75,7 +75,7 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <a class="text-sm text-slate-400 hover:text-neon-cyan rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neon-violet/30 focus:ring-offset-space-950 transition" href="{{ route('login') }}">
+            <a class="text-sm text-slate-400 hover:text-emerald-500 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-400/30 transition font-medium" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
 
