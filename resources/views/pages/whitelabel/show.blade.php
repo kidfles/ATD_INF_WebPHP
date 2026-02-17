@@ -168,9 +168,9 @@
                         <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center font-bold text-emerald-600">
-                                    {{ substr($review->reviewer->name, 0, 1) }}
+                                    {{ substr($review->reviewer->name ?? 'D', 0, 1) }}
                                 </div>
-                                <span class="font-bold text-slate-700">{{ $review->reviewer->name }}</span>
+                                <span class="font-bold text-slate-700">{{ $review->reviewer->name ?? 'Deleted user' }}</span>
                             </div>
                             <div class="flex text-yellow-400 text-sm">
                                 @for($i=0; $i<$review->rating; $i++) 
