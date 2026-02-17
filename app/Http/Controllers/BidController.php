@@ -44,6 +44,11 @@ class BidController extends Controller
         $user = $request->user();
         $amount = $request->validated('amount');
 
+        // Check if user has reached the maximum number of bids
+        if ($user->bids()->count() >= 4) {
+            return back()->with('error', __('You can place a maximum of 4 bids.'));
+        }
+
         // 1. Controleer of de advertentie wel een veiling is
         if ($advertisement->type !== 'auction') {
             return back()->with('error', __('Bidding is only allowed on auctions.'));

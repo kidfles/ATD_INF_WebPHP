@@ -30,7 +30,8 @@
                                         <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Mijn Bod') }}</th>
                                         <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Hoogste Bod') }}</th>
                                         <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Status') }}</th>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Datum') }}</th>
+                                    <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Datum') }}</th>
+                                        <th class="text-right text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Action') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-100">
@@ -55,6 +56,15 @@
                                                 @endif
                                             </td>
                                             <td class="py-4 text-sm text-slate-400">{{ $bid->created_at->diffForHumans() }}</td>
+                                            <td class="py-4 text-right">
+                                                <form action="{{ route('bids.destroy', $bid) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this bid?') }}');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-xs font-bold text-red-500 hover:text-red-600 hover:underline transition-colors">
+                                                        {{ __('Cancel') }}
+                                                    </button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
