@@ -53,7 +53,7 @@
                                                 @elseif($rental->status === 'pending')
                                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">{{ __('In afwachting') }}</span>
                                                 @else
-                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-500 border border-red-200">{{ ucfirst($rental->status) }}</span>
+                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-500 border border-red-200">{{ ucfirst(__($rental->status)) }}</span>
                                                 @endif
                                             </td>
                                                 <td class="py-4 text-sm">

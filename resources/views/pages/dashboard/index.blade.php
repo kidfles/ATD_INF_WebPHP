@@ -201,7 +201,7 @@
                                     @foreach($myBids as $bid)
                                         <li class="px-6 py-3.5 flex justify-between items-center hover:bg-slate-50 transition">
                                             <div>
-                                                <p class="text-sm font-bold text-slate-700">{{ $bid->advertisement->title }}</p>
+                                                <p class="text-sm font-bold text-slate-700">{{ $bid->advertisement ? $bid->advertisement->title : __('Unknown Advertisement') }}</p>
                                                 <p class="text-xs text-slate-400">{{ __('Your bid') }}: <span class="text-emerald-500 font-bold">€{{ number_format($bid->amount, 2) }}</span></p>
                                             </div>
                                             <div class="text-xs text-slate-400">

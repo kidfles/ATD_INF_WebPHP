@@ -16,7 +16,7 @@
         {{-- CENTER: SEARCH BAR --}}
         <div class="flex-1 max-w-2xl mx-4 mr-8">
             <form action="{{ route('market.index') }}" method="GET" class="relative">
-                <input type="text" name="search" placeholder="Wat zoek je?" 
+                <input type="text" name="search" placeholder="{{ __('Search marketplace...') }}" 
                        class="w-full bg-slate-50 text-slate-700 border border-transparent rounded-full py-2.5 pl-5 pr-12 shadow-sm focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 placeholder-slate-400 transition-all duration-200"
                        value="{{ request('search') }}">
                 <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-emerald-500 transition-colors">

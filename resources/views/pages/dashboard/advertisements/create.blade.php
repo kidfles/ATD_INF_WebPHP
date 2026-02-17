@@ -79,7 +79,7 @@
                           file:text-sm file:font-bold
                           file:bg-emerald-50 file:text-emerald-600
                           hover:file:bg-emerald-100 file:transition-all file:cursor-pointer"
-                          @change="imageUrl = URL.createObjectURL($event.target.files[0])" 
+                          @change="$event.target.files.length > 0 ? imageUrl = URL.createObjectURL($event.target.files[0]) : imageUrl = null" 
                         />
 
                         <div x-show="imageUrl" class="mt-4">

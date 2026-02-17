@@ -62,7 +62,7 @@ class AgendaController extends Controller
             // 2. Verloopdatums van advertenties (All types with expiry)
             $expiries = $user->advertisements()
                 ->whereNotNull('expires_at')
-                ->whereBetween('expires_at', [$request->start, $request->end])
+                ->whereBetween('expires_at', [$request->start, \Carbon\Carbon::parse($request->end)->endOfDay()])
                 ->get();
 
             foreach ($expiries as $ad) {

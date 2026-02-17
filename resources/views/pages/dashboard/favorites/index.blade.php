@@ -48,6 +48,9 @@
                                 </div>
                             @endforeach
                         </div>
+                        <div class="mt-6">
+                            {{ $favorites->links() }}
+                        </div>
                     @endif
                 </div>
             </div>

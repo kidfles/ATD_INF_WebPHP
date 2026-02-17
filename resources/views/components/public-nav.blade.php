@@ -14,14 +14,14 @@
 
                 <div class="hidden space-x-1 sm:-my-px sm:ms-8 sm:flex">
                     <a href="{{ route('market.index') }}" class="inline-flex items-center px-4 py-2 my-auto rounded-full text-sm font-bold text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-all duration-200">
-                        Marketplace
+                        {{ __('Marketplace') }}
                     </a>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
                 @auth
-                    <a href="{{ route('dashboard.index') }}" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-all duration-200">Dashboard</a>
+                    <a href="{{ route('dashboard.index') }}" class="inline-flex items-center px-4 py-2 rounded-full text-sm font-bold text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-all duration-200">{{ __('Dashboard') }}</a>
                 @else
                     <a href="{{ route('login') }}" class="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">{{ __('Log in') }}</a>
                     <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full text-sm font-bold text-white shadow-sm hover:shadow-emerald-500/30 transition-all duration-200">{{ __('Register') }}</a>

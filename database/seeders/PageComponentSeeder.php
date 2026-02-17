@@ -20,11 +20,11 @@ class PageComponentSeeder extends Seeder
                 'company_id' => $profile->id,
                 'component_type' => 'hero',
                 'order' => 1,
-                'content' => json_encode([
+                'content' => [
                     'title' => 'Welkom bij ' . $profile->company_name,
                     'subtitle' => 'De beste plek voor al uw behoeften.',
                     'image' => 'images/placeholders/hero.jpg',
-                ]),
+                ],
             ]);
 
             // 2. Text Component
@@ -33,9 +33,9 @@ class PageComponentSeeder extends Seeder
                 'company_id' => $profile->id,
                 'component_type' => 'text',
                 'order' => 2,
-                'content' => json_encode([
+                'content' => [
                     'body' => 'Wij zijn toegewijd aan het leveren van topkwaliteit service en producten. Bekijk ons aanbod hieronder.',
-                ]),
+                ],
             ]);
 
             // 3. Featured Ads Component
@@ -45,10 +45,10 @@ class PageComponentSeeder extends Seeder
                 'company_id' => $profile->id,
                 'component_type' => 'featured_ads',
                 'order' => 3,
-                'content' => json_encode([
+                'content' => [
                     'limit' => 3,
                     'title' => 'Onze Toppers',
-                ]),
+                ],
             ]);
         }
     }
