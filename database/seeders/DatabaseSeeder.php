@@ -275,6 +275,22 @@ class DatabaseSeeder extends Seeder
             $ad->update(['expires_at' => now()->addDays(($i + 1) * 10)]); // 10, 20, 30, 40 days out
         }
 
+        // ==========================================
+        // 6. LINKED ADVERTISEMENTS (Cross-Sell / Upsell)
+        // ==========================================
+
+        // Link tool rentals together (drill + cement mixer)
+        if ($toolAds->count() >= 2) {
+            $toolAds[0]->relatedAds()->sync([$toolAds[1]->id, $toolAds[2]->id ?? $toolAds[1]->id]);
+            $toolAds[1]->relatedAds()->sync([$toolAds[0]->id]);
+        }
+
+        // Link tech products together (MacBook + iPad)
+        if ($techAds->count() >= 2) {
+            $techAds[0]->relatedAds()->sync([$techAds[1]->id, $techAds[3]->id ?? $techAds[1]->id]);
+            $techAds[1]->relatedAds()->sync([$techAds[0]->id]);
+        }
+
         // Add expiry dates to tool rental ads
         foreach ($toolAds as $i => $ad) {
             $ad->update(['expires_at' => now()->addDays(($i + 1) * 15)]); // 15, 30, 45 days out

@@ -59,7 +59,7 @@ class MarketController extends Controller
     public function show(Advertisement $advertisement)
     {
         // Eager load het bedrijfsprofiel van de verkoper voor branding
-        $advertisement->load(['user.companyProfile', 'bids.user']);
+        $advertisement->load(['user.companyProfile', 'bids.user', 'relatedAds']);
         
         // Bepaal de merkkleur (Standaard naar Indigo als er geen bedrijfsprofiel is)
         $brandColor = $advertisement->user->companyProfile->brand_color ?? '#4f46e5'; 

@@ -224,8 +224,40 @@
             </div>
             </div>
 
+            {{-- Gerelateerde Producten (Cross-Sell / Upsell) --}}
+            @if($advertisement->relatedAds->count() > 0)
+                <div class="mt-12">
+                    <h2 class="text-2xl font-bold mb-6">{{ __('Related Products') }}</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        @foreach($advertisement->relatedAds as $related)
+                            <div class="border rounded p-4 shadow hover:shadow-lg transition bg-white">
+                                {{-- Afbeelding --}}
+                                <div class="w-full mb-4 overflow-hidden rounded bg-gray-100 relative group" style="height: 360px;">
+                                    @if($related->image_path)
+                                        <img src="{{ asset('storage/' . $related->image_path) }}" alt="{{ $related->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                    @else
+                                        <img src="{{ asset('images/placeholder.svg') }}" alt="{{ __('No image available') }}" class="w-full h-full object-cover text-gray-400">
+                                    @endif
+                                </div>
+                                {{-- Titel --}}
+                                <a href="{{ route('market.show', $related) }}">
+                                    <h3 class="font-bold text-lg text-blue-600 hover:underline">{{ $related->title }}</h3>
+                                </a>
+                                <p class="text-gray-600 truncate">{{ $related->description }}</p>
+                                {{-- Prijs en type label --}}
+                                <div class="flex justify-between items-center mt-4">
+                                    <p class="font-bold text-lg">€ {{ number_format($related->price, 2) }}</p>
+                                    <span class="bg-gray-100 px-2 py-1 rounded text-sm text-gray-600">{{ __(ucfirst($related->type)) }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             <div class="mt-12 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h2 class="text-xl font-bold mb-6">{{ __('Reviews') }}</h2>
+                <h2 class="text-2xl font-bold mb-6">{{ __('Reviews') }}</h2>
 
                 {{-- 1. List Existing Reviews --}}
                 @forelse($advertisement->reviews as $review)
