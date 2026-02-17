@@ -46,7 +46,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
         return view('pages.dashboard.index', [
             // "Mijn Activiteit" - zaken die ik heb gekocht/gehuurd
             'myRentals' => $user->rentals()->with('advertisement')->latest()->get(),
-            'myBids'    => $user->bids()->with('advertisement')->latest()->get(),
+            'myBids'    => $user->bids()->with('advertisement')->latest()->take(5)->get(),
+            'myBidsCount' => $user->bids()->count(),
             'myAds'     => $user->advertisements()->latest()->take(5)->get(),
             
             // "Mijn Verkoop" - zaken die anderen bij mij hebben gekocht/gehuurd

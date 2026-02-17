@@ -28,7 +28,7 @@
                                 <div class="text-xs font-bold text-slate-400 mt-1">{{ __('My Rentals') }}</div>
                             </div>
                             <div class="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-4 text-center hover:shadow-sm transition-all duration-200">
-                                <div class="text-2xl font-extrabold text-slate-800">{{ $myBids->count() }}</div>
+                                <div class="text-2xl font-extrabold text-slate-800">{{ $myBidsCount }}</div>
                                 <div class="text-xs font-bold text-slate-400 mt-1">{{ __('Active Bids') }}</div>
                             </div>
                             <div class="bg-teal-50/50 border border-teal-100 rounded-2xl p-4 text-center hover:shadow-sm transition-all duration-200">
@@ -202,6 +202,9 @@
                                         </li>
                                     @endforeach
                                 </ul>
+                                <div class="mt-4 pt-4 border-t border-slate-100">
+                                    <a href="{{ route('dashboard.bids.index') }}" class="text-sm font-bold text-sky-500 hover:text-sky-600 transition-colors">{{ __('View all bids') }} &rarr;</a>
+                                </div>
                             @endif
                         </div>
                     </div>
