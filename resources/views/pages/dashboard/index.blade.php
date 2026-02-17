@@ -60,20 +60,6 @@
                 </div>
                 @endif
 
-                {{-- Place New Ad (Advertiser only) --}}
-                @if(Auth::user()->role !== 'user')
-                <div class="opacity-0 animate-pop-in" style="animation-delay: 200ms;">
-                    <a href="{{ route('dashboard.advertisements.create') }}" 
-                       class="group block h-full flex flex-col bg-white rounded-[2rem] shadow-soft border border-slate-100 p-6 hover:-translate-y-1 hover:shadow-soft-lg transition-all duration-300">
-                        <div class="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-teal-100 transition-colors">
-                            <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        </div>
-                        <h3 class="text-lg font-extrabold text-slate-800 mb-1">{{ __('Place Advertisement') }}</h3>
-                        <p class="text-sm text-slate-400 mb-3 flex-grow">{{ __('Sell, rent or auction something new.') }}</p>
-                        <span class="text-teal-500 text-sm font-bold group-hover:text-teal-600 transition-colors mt-auto">{{ __('Start Now') }} &rarr;</span>
-                    </a>
-                </div>
-                @endif
 
                 {{-- Marketplace Explorer --}}
                 <div class="opacity-0 animate-pop-in" style="animation-delay: 300ms;">
