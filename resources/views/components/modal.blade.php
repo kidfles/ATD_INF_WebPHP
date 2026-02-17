@@ -58,13 +58,13 @@ $maxWidth = [
         x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0"
     >
-        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+        <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-sm"></div>
     </div>
 
     <div
         x-show="show"
-        class="mb-6 bg-space-900 backdrop-blur-2xl border border-white/10 rounded-2xl overflow-hidden shadow-2xl shadow-violet-500/10 transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto"
-        x-transition:enter="ease-out duration-300"
+        class="mb-6 bg-white rounded-[2rem] overflow-hidden shadow-soft-xl transform transition-all sm:w-full {{ $maxWidth }} sm:mx-auto"
+        x-transition:enter="ease-[cubic-bezier(0.34,1.56,0.64,1)] duration-500"
         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
         x-transition:leave="ease-in duration-200"

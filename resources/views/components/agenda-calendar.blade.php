@@ -1,7 +1,9 @@
-<div class="bg-slate-800/40 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden mb-6">
+<div class="bg-white rounded-[2rem] shadow-soft border border-slate-100 overflow-hidden mb-6">
     <div class="p-6">
-        <h3 class="font-bold text-lg text-white mb-4 flex items-center gap-2">
-            <svg class="w-5 h-5 text-amber-400 drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <h3 class="font-extrabold text-lg text-slate-800 mb-4 flex items-center gap-2.5">
+            <div class="bg-amber-50 p-2 rounded-xl">
+                <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
             {{ __('Agenda') }}
         </h3>
         <div id="calendar"></div>
@@ -11,61 +13,63 @@
 {{-- FullCalendar CDN --}}
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 
-{{-- Dark Theme Override for FullCalendar --}}
+{{-- Light Theme Override for FullCalendar --}}
 <style>
-    /* FullCalendar Deep Space Theme */
+    /* FullCalendar Friendly Island Theme */
     .fc {
-        --fc-border-color: rgba(255, 255, 255, 0.08);
-        --fc-button-bg-color: rgba(139, 92, 246, 0.15);
-        --fc-button-border-color: rgba(139, 92, 246, 0.3);
-        --fc-button-text-color: #c4b5fd;
-        --fc-button-hover-bg-color: rgba(139, 92, 246, 0.3);
-        --fc-button-hover-border-color: rgba(139, 92, 246, 0.5);
-        --fc-button-active-bg-color: rgba(139, 92, 246, 0.4);
-        --fc-button-active-border-color: rgba(139, 92, 246, 0.6);
+        --fc-border-color: #e2e8f0;
+        --fc-button-bg-color: #ecfdf5;
+        --fc-button-border-color: #a7f3d0;
+        --fc-button-text-color: #059669;
+        --fc-button-hover-bg-color: #d1fae5;
+        --fc-button-hover-border-color: #6ee7b7;
+        --fc-button-active-bg-color: #a7f3d0;
+        --fc-button-active-border-color: #34d399;
         --fc-page-bg-color: transparent;
-        --fc-neutral-bg-color: rgba(255, 255, 255, 0.03);
-        --fc-list-event-hover-bg-color: rgba(255, 255, 255, 0.05);
-        --fc-today-bg-color: rgba(139, 92, 246, 0.08);
-        --fc-event-bg-color: rgba(6, 182, 212, 0.2);
-        --fc-event-border-color: rgba(6, 182, 212, 0.4);
-        --fc-event-text-color: #67e8f9;
+        --fc-neutral-bg-color: #f8fafc;
+        --fc-list-event-hover-bg-color: #f1f5f9;
+        --fc-today-bg-color: #ecfdf5;
+        --fc-event-bg-color: #d1fae5;
+        --fc-event-border-color: #6ee7b7;
+        --fc-event-text-color: #065f46;
     }
     .fc .fc-col-header-cell-cushion,
     .fc .fc-daygrid-day-number,
     .fc .fc-list-day-text,
     .fc .fc-list-day-side-text {
-        color: #d1d5db;
+        color: #475569;
+        font-weight: 600;
     }
     .fc .fc-toolbar-title {
-        color: #f3f4f6;
-        font-weight: 700;
+        color: #1e293b;
+        font-weight: 800;
     }
     .fc .fc-button {
-        border-radius: 8px !important;
+        border-radius: 9999px !important;
         font-size: 0.75rem;
-        font-weight: 600;
-        padding: 4px 12px;
+        font-weight: 700;
+        padding: 6px 14px;
+        box-shadow: none;
     }
     .fc .fc-button-group > .fc-button {
         border-radius: 0 !important;
     }
     .fc .fc-button-group > .fc-button:first-child {
-        border-radius: 8px 0 0 8px !important;
+        border-radius: 9999px 0 0 9999px !important;
     }
     .fc .fc-button-group > .fc-button:last-child {
-        border-radius: 0 8px 8px 0 !important;
+        border-radius: 0 9999px 9999px 0 !important;
     }
     .fc-theme-standard td, .fc-theme-standard th {
-        border-color: rgba(255, 255, 255, 0.05);
+        border-color: #f1f5f9;
     }
     .fc .fc-daygrid-day.fc-day-today {
-        background: rgba(139, 92, 246, 0.08);
+        background: #ecfdf5;
     }
     .fc .fc-scrollgrid {
-        border-radius: 12px;
+        border-radius: 16px;
         overflow: hidden;
-        border-color: rgba(255, 255, 255, 0.05);
+        border-color: #e2e8f0;
     }
 </style>
 

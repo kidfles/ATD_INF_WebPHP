@@ -7,14 +7,13 @@
 
     <title>{{ config('app.name', 'Laravel') }} - Market</title>
 
-    <!-- Fonts -->
+    {{-- Nunito Font --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=nunito:400,500,600,700,800&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-gray-50 flex flex-col min-h-screen">
+<body class="font-sans antialiased bg-slate-50 text-slate-700 flex flex-col min-h-screen">
     
     <x-global-header />
 
@@ -22,8 +21,8 @@
         {{ $slot }}
     </main>
     
-    <footer class="bg-white border-t border-gray-200 py-8 mt-12">
-        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+    <footer class="bg-white border-t border-slate-100 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-400 text-sm font-medium">
             &copy; {{ date('Y') }} ATD Webshop. All rights reserved.
         </div>
     </footer>
