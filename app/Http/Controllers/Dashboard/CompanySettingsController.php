@@ -44,7 +44,14 @@ class CompanySettingsController extends Controller
         $company = $request->user()->companyProfile;
 
         // 1. Algemene instellingen bijwerken (Branding, URL, KVK)
-        $company->update($request->validated());
+        $data = $request->validated();
+        
+        // Data cleaning: Ensure value is null if policy is 'none' to prevent stale data
+        if (($data['wear_and_tear_policy'] ?? '') === 'none') {
+            $data['wear_and_tear_value'] = null;
+        }
+
+        $company->update($data);
 
         // 2. Pagina-componenten bijwerken (Hero teksten, Body teksten, etc.)
         if ($request->has('components')) {

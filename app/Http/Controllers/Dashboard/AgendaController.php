@@ -36,7 +36,7 @@ class AgendaController extends Controller
             $user = $request->user();
             $request->validate([
                 'start' => 'required|date',
-                'end'   => 'required|date|after_or_equal:start',
+                'end'   => 'required|date|after_or_equal:start|before:' . now()->addYears(5)->toDateString(),
             ]);
 
             $events = [];

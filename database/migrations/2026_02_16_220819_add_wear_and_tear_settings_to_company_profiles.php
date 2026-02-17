@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('company_profiles', function (Blueprint $table) {
-            $table->enum('wear_and_tear_policy', ['none', 'fixed', 'percentage'])->default('none')->after('id'); // After ID or wherever suitable
+            $table->enum('wear_and_tear_policy', ['none', 'fixed', 'percentage'])->default('none')->after('kvk_number');
             $table->decimal('wear_and_tear_value', 10, 2)->default(0.00)->after('wear_and_tear_policy');
         });
     }

@@ -27,9 +27,9 @@ class RentalReturnController extends Controller
      */
     public function store(Request $request, Rental $rental, WearAndTearCalculator $calculator): RedirectResponse
     {
-        // 0. Security: Ensure user is authorized
+        // 0. Security: Ensure user is authorized (Strict: Only renter can submit return proof)
         abort_unless(
-            $rental->renter_id === auth()->id() || $rental->advertisement->user_id === auth()->id(),
+            $rental->renter_id === auth()->id(),
             403
         );
 

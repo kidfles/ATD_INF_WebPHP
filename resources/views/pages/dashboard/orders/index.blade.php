@@ -98,9 +98,15 @@
 
                                         {{-- Actions --}}
                                         <div class="mt-4 pt-4 border-t border-gray-100 flex justify-end gap-3">
-                                            <a href="{{ route('market.show', $order->advertisement) }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
-                                                {{ __('View Product') }}
-                                            </a>
+                                            @if($order->advertisement)
+                                                <a href="{{ route('market.show', $order->advertisement) }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-25 transition ease-in-out duration-150">
+                                                    {{ __('View Product') }}
+                                                </a>
+                                            @else
+                                                <span class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-xs text-gray-400 uppercase tracking-widest cursor-not-allowed">
+                                                    {{ __('Product Unavailable') }}
+                                                </span>
+                                            @endif
                                             {{-- Future: Invoice Download --}}
                                         </div>
                                     </div>

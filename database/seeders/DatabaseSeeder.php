@@ -281,13 +281,21 @@ class DatabaseSeeder extends Seeder
 
         // Link tool rentals together (drill + cement mixer)
         if ($toolAds->count() >= 2) {
-            $toolAds[0]->relatedAds()->sync([$toolAds[1]->id, $toolAds[2]->id ?? $toolAds[1]->id]);
+            $toolRelatedToFirst = [$toolAds[1]->id];
+            if ($toolAds->count() >= 3) {
+                $toolRelatedToFirst[] = $toolAds[2]->id;
+            }
+            $toolAds[0]->relatedAds()->sync($toolRelatedToFirst);
             $toolAds[1]->relatedAds()->sync([$toolAds[0]->id]);
         }
 
         // Link tech products together (MacBook + iPad)
         if ($techAds->count() >= 2) {
-            $techAds[0]->relatedAds()->sync([$techAds[1]->id, $techAds[3]->id ?? $techAds[1]->id]);
+            $techRelatedToFirst = [$techAds[1]->id];
+            if ($techAds->count() >= 4) {
+                 $techRelatedToFirst[] = $techAds[3]->id;
+            }
+            $techAds[0]->relatedAds()->sync($techRelatedToFirst);
             $techAds[1]->relatedAds()->sync([$techAds[0]->id]);
         }
 
