@@ -86,6 +86,6 @@ De applicatie is nu bereikbaar op `http://localhost:8000`.
 
 Na het uitvoeren van de seeders kun je inloggen met de volgende accounts (wachtwoord is standaard `password`):
 
-*   **Prive Verkoper:** `prive@example.com`
-*   **Zakelijke Verkoper:** `zakelijk@example.com`
-*   **Admin:** `admin@example.com`
+*   **Prive Verkoper:** `john@example.com`
+*   **Zakelijke Verkoper:** `info@techhub.nl`
+*   **Standaard User:** `user@example.com`
