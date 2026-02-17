@@ -28,6 +28,16 @@ class CompanyController extends Controller
         // 1. Check: Heeft dit bedrijf nog geen componenten? Maak dan defaults aan.
         if ($company->pageComponents()->count() === 0) {
             
+            // Default 1: Hero Sectie (Grote titel)
+            $company->pageComponents()->create([
+                'component_type' => 'hero',
+                'order' => 1,
+                'content' => [
+                    'title' => $company->company_name,
+                    'subtitle' => 'Welkom op onze bedrijfspagina',
+                    'image_url' => null
+                ]
+            ]);
             // Default 2: Tekst Sectie
             $company->pageComponents()->create([
                 'component_type' => 'text',
