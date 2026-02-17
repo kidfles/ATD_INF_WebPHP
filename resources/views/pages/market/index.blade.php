@@ -41,7 +41,7 @@
             
             {{-- Knop om alle actieve filters in één keer te wissen --}}
             @if(request()->hasAny(['search', 'sort', 'type']))
-                <a href="{{ route('market.index') }}" 
+                <a href="{{ route('market.index', ['clear' => 1]) }}" 
                    class="ml-auto text-sm text-slate-400 hover:text-emerald-500 font-medium transition-colors">
                    {{ __('Clear all filters') }}
                 </a>
