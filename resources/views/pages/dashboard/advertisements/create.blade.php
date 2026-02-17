@@ -17,7 +17,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('dashboard.advertisements.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+                <form action="{{ route('dashboard.advertisements.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5" x-data="{ type: '{{ old('type', 'sell') }}' }">
                     @csrf
                     
                     <div>
@@ -37,15 +37,15 @@
 
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-1.5">{{ __('Type') }}</label>
-                        <select name="type" class="w-full bg-slate-50 border-transparent rounded-2xl px-4 py-3 text-sm text-slate-600 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50">
+                        <select name="type" x-model="type" class="w-full bg-slate-50 border-transparent rounded-2xl px-4 py-3 text-sm text-slate-600 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50">
                             <option value="sell">{{ __('Verkoop') }}</option>
                             <option value="rent">{{ __('Verhuur') }}</option>
                             <option value="auction">{{ __('Veiling') }}</option>
                         </select>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-bold text-slate-700 mb-1.5">{{ __('Einddatum (Optioneel voor Veiling/Verkoop)') }}</label>
+                    <div x-show="type === 'auction'" style="display: none;">
+                        <label class="block text-sm font-bold text-slate-700 mb-1.5">{{ __('Einddatum (Verplicht voor Veiling)') }}</label>
                         <input type="date" name="expires_at" value="{{ old('expires_at') }}" class="w-full bg-slate-50 border-transparent rounded-2xl px-4 py-3 text-sm text-slate-700 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
                     </div>
 
