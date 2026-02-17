@@ -13,14 +13,17 @@ class AdvertisementSeeder extends Seeder
         // Helper to get user by email
         $getUserId = fn($email) => User::where('email', $email)->value('id');
 
-        // Mega Store (Bulk Data for Pagination)
+        // Mega Store (Bulk Data for Pagination) - Generated FIRST to be "oldest"
         $megaId = $getUserId('bulk@example.com');
         if ($megaId) {
             Advertisement::factory(50)->create([
                 'user_id' => $megaId,
                 'image_path' => 'images/placeholders/default.jpg', // Default image
+                'created_at' => now()->subDays(30), // Ensure they are definitely older
             ]);
         }
+
+
 
         // TechHub (Sell - Electronics)
         $techId = $getUserId('info@techhub.nl');

@@ -52,6 +52,7 @@ class UserSeeder extends Seeder
             ['name' => 'BouwGigant Verhuur', 'email' => 'verhuur@bouwgigant.nl'],
             ['name' => 'Vintage Veiling Huis', 'email' => 'info@vintageveiling.nl'],
             ['name' => 'Mega Store Outlet', 'email' => 'bulk@example.com'], // For pagination testing
+
         ];
 
         foreach ($businesses as $business) {
