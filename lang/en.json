@@ -190,5 +190,19 @@
     "Week": "Week",
     "List": "List",
     "View your rental schedule and expiry dates.": "View your rental schedule and expiry dates.",
-    "Open Calendar": "Open Calendar"
+    "Open Calendar": "Open Calendar",
+    "Order Date": "Order Date",
+    "Seller": "Seller",
+    "Total Price": "Total Price",
+    "View Order Details": "View Order Details",
+    "Order ID": "Order ID",
+    "Completed": "Completed",
+    "Paid": "Paid",
+    "Pending": "Pending",
+    "Cancelled": "Cancelled",
+    "Total Orders": "Total Orders",
+    "Total Spent": "Total Spent",
+    "No orders found": "No orders found",
+    "You haven't purchased anything yet.": "You haven't purchased anything yet.",
+    "Browse Marketplace": "Browse Marketplace"
 }

@@ -190,5 +190,19 @@
     "Week": "Week",
     "List": "Lijst",
     "View your rental schedule and expiry dates.": "Bekijk je verhuurschema en verloopdatums.",
-    "Open Calendar": "Open Kalender"
+    "Open Calendar": "Open Kalender",
+    "Order Date": "Besteldatum",
+    "Seller": "Verkoper",
+    "Total Price": "Totaalprijs",
+    "View Order Details": "Bekijk Bestelling",
+    "Order ID": "Bestelnummer",
+    "Completed": "Voltooid",
+    "Paid": "Betaald",
+    "Pending": "In afwachting",
+    "Cancelled": "Geannuleerd",
+    "Total Orders": "Totaal Bestellingen",
+    "Total Spent": "Totaal Uitgegeven",
+    "No orders found": "Geen bestellingen gevonden",
+    "You haven't purchased anything yet.": "Je hebt nog niets gekocht.",
+    "Browse Marketplace": "Marktplaats Bekijken"
 }
