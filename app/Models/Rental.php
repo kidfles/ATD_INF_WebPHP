@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -16,6 +17,44 @@ class Rental extends Model
 {
     /** @use HasFactory<\Database\Factories\RentalFactory> */
     use HasFactory;
+
+    /**
+     * Scope voor het filteren van verhuringen.
+     */
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        $query->when($filters['search'] ?? false, function($q, $search) {
+            $q->whereHas('advertisement', function($sub) use ($search) {
+                $sub->where('title', 'like', "%$search%");
+            });
+        });
+
+        $query->when($filters['status'] ?? false, function($q, $status) {
+            $now = now()->startOfDay();
+            match ($status) {
+                'active' => $q->whereNull('return_photo_path')
+                             ->where('start_date', '<=', $now)
+                             ->where('end_date', '>=', $now),
+                'returned' => $q->whereNotNull('return_photo_path'),
+                'pending' => $q->whereNull('return_photo_path')
+                              ->where('start_date', '>', $now),
+                'overdue' => $q->whereNull('return_photo_path')
+                              ->where('end_date', '<', $now),
+                default => null,
+            };
+        });
+
+        $query->when($filters['sort'] ?? false, function($q, $sort) {
+            match ($sort) {
+                'newest' => $q->orderBy('created_at', 'desc'),
+                'oldest' => $q->orderBy('created_at', 'asc'),
+                'start_asc' => $q->orderBy('start_date', 'asc'),
+                'start_desc' => $q->orderBy('start_date', 'desc'),
+                default => $q->orderBy('created_at', 'desc'),
+            };
+        });
+    }
+
 
     /**
      * De attributen die massaal toegewezen kunnen worden.

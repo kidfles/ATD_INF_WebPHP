@@ -22,9 +22,14 @@ class RentalController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met de verhuurhistorie.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rentals = auth()->user()->rentals()->with('advertisement')->latest()->get();
+        $rentals = auth()->user()->rentals()
+            ->filter($request->only(['search', 'status', 'sort']))
+            ->with('advertisement')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('pages.dashboard.rentals.index', compact('rentals'));
     }
 

@@ -23,12 +23,14 @@ class BidController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met de lijst van biedingen.
      */
-    public function index()
+    public function index(Request $request)
     {
         $bids = auth()->user()->bids()
+            ->filter($request->only(['search', 'sort']))
             ->with(['advertisement.user', 'advertisement.bids']) // Eager loading voor betere prestaties (N+1 voorkomen)
-            ->latest()
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
+            
         return view('pages.dashboard.bids.index', compact('bids'));
     }
 

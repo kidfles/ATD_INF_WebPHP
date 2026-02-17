@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Order Model
@@ -12,6 +14,28 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Order extends Model
 {
+    /**
+     * Scope voor het filteren van bestellingen.
+     */
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        $query->when($filters['search'] ?? false, function($q, $search) {
+            $q->whereHas('advertisement', function($sub) use ($search) {
+                $sub->where('title', 'like', "%$search%");
+            });
+        });
+
+        $query->when($filters['sort'] ?? false, function($q, $sort) {
+            match ($sort) {
+                'price_asc' => $q->orderBy('amount', 'asc'),
+                'price_desc' => $q->orderBy('amount', 'desc'),
+                'newest' => $q->orderBy('created_at', 'desc'),
+                'oldest' => $q->orderBy('created_at', 'asc'),
+                default => $q->orderBy('created_at', 'desc'),
+            };
+        });
+    }
+
     /**
      * De attributen die niet massaal toegewezen kunnen worden.
      * Gebruik een lege array om alles toe te staan (guarded aanpak).

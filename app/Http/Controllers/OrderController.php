@@ -70,9 +70,14 @@ class OrderController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met alle geplaatste bestellingen.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Auth::user()->orders()->with(['advertisement.user', 'seller'])->latest()->get();
+        $orders = Auth::user()->orders()
+            ->filter($request->only(['search', 'sort']))
+            ->with(['advertisement.user', 'seller'])
+            ->paginate(10)
+            ->withQueryString();
+
         return view('pages.dashboard.orders.index', compact('orders'));
     }
 }

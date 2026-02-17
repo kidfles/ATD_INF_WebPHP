@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
@@ -15,6 +16,29 @@ class Bid extends Model
 {
     /** @use HasFactory<\Database\Factories\BidFactory> */
     use HasFactory;
+
+    /**
+     * Scope voor het filteren van biedingen.
+     */
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        $query->when($filters['search'] ?? false, function($q, $search) {
+            $q->whereHas('advertisement', function($sub) use ($search) {
+                $sub->where('title', 'like', "%$search%");
+            });
+        });
+
+        $query->when($filters['sort'] ?? false, function($q, $sort) {
+            match ($sort) {
+                'amount_asc' => $q->orderBy('amount', 'asc'),
+                'amount_desc' => $q->orderBy('amount', 'desc'),
+                'newest' => $q->orderBy('created_at', 'desc'),
+                'oldest' => $q->orderBy('created_at', 'asc'),
+                default => $q->orderBy('created_at', 'desc'),
+            };
+        });
+    }
+
 
     /**
      * De attributen die massaal toegewezen kunnen worden.

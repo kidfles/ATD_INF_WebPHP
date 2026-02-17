@@ -1,4 +1,10 @@
 {
+    "Clear": "Clear",
+    "Search by product name...": "Search by product name...",
+    "Showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "results": "results",
     "Dashboard": "Dashboard",
     "Log in": "Log in",
     "Register": "Register",
@@ -248,7 +254,6 @@
     "Deleted user": "Deleted user",
     "No reviews yet.": "No reviews yet.",
     "Current Offerings": "Current Offerings",
-    "results": "results",
     "This seller currently has no active advertisements.": "This seller currently has no active advertisements.",
     "Cancel": "Cancel",
     "Are you sure you want to delete this bid?": "Are you sure you want to delete this bid?",
