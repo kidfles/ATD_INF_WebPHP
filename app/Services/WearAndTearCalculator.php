@@ -39,18 +39,25 @@ class WearAndTearCalculator
             }
         }
 
-        // 3. Wear & Tear Policy (New)
-        $wearAndTearCost = 0.00;
-        $company = $rental->advertisement->user->companyProfile;
+        // 3. Wear & Tear Policy
+        // Default to 'none' for private advertisers (no company profile)
+        $policy = 'none';
+        $value = 0.00;
 
+        $company = $rental->advertisement->user->companyProfile;
         if ($company) {
-            if ($company->wear_and_tear_policy === 'fixed') {
-                $wearAndTearCost = (float) $company->wear_and_tear_value;
-            } elseif ($company->wear_and_tear_policy === 'percentage') {
-                // Percentage of base rental cost
-                $percentage = (float) $company->wear_and_tear_value;
-                $wearAndTearCost = ($baseCost * ($percentage / 100));
-            }
+            $policy = $company->wear_and_tear_policy ?? 'none';
+            $value = $company->wear_and_tear_value ?? 0.00;
+        }
+
+        $wearAndTearCost = 0.00;
+
+        if ($policy === 'fixed') {
+            $wearAndTearCost = (float) $value;
+        } elseif ($policy === 'percentage') {
+            // Percentage of base rental cost
+            $percentage = (float) $value;
+            $wearAndTearCost = ($baseCost * ($percentage / 100));
         }
 
         $totalCost = $baseCost + $lateFee + $wearAndTearCost;
