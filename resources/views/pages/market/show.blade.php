@@ -225,7 +225,7 @@
             </div>
 
             {{-- Gerelateerde Producten (Cross-Sell / Upsell) --}}
-            @if($advertisement->relatedAds->count() > 0)
+            @if($advertisement->relatedAds->isNotEmpty())
                 <div class="mt-12">
                     <h2 class="text-2xl font-bold mb-6">{{ __('Related Products') }}</h2>
 
@@ -233,7 +233,7 @@
                         @foreach($advertisement->relatedAds as $related)
                             <div class="border rounded p-4 shadow hover:shadow-lg transition bg-white">
                                 {{-- Afbeelding --}}
-                                <div class="w-full mb-4 overflow-hidden rounded bg-gray-100 relative group" style="height: 360px;">
+                                <div class="w-full mb-4 overflow-hidden rounded bg-gray-100 relative group aspect-video">
                                     @if($related->image_path)
                                         <img src="{{ asset('storage/' . $related->image_path) }}" alt="{{ $related->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                                     @else

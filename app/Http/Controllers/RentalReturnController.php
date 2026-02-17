@@ -53,7 +53,7 @@ class RentalReturnController extends Controller
         ]);
 
         // 4. Feedback geven aan de gebruiker
-        $message = __('rental.returned_cost_breakdown', [
+        $message = __('rental_returned_cost_breakdown', [
             'total' => number_format($finalCost, 2),
             'base' => number_format($breakdown['base_cost'], 2),
             'late_fee' => number_format($breakdown['late_fee'], 2),

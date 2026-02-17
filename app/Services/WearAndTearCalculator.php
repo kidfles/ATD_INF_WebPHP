@@ -33,9 +33,15 @@ class WearAndTearCalculator
         if ($returnedDate->gt($end)) {
             $overdueDays = $end->diffInDays($returnedDate);
             if ($overdueDays > 0) {
-                // 150% price for late days (so 50% penalty on top of day price? 
-                // Logic: ($pricePerDay * 1.5) * overdueDays.
-                $lateFee = ($pricePerDay * 1.5) * $overdueDays;
+                // 150% price for late days
+                // Logic: Normal daily price adds to base cost + 50% penalty as late fee
+                
+                // Add the normal rental cost for overdue days to the base cost
+                $additionalBaseCost = $pricePerDay * $overdueDays;
+                $baseCost += $additionalBaseCost;
+
+                // ... and only record the 50% penalty portion as late fee
+                $lateFee = ($pricePerDay * 0.5) * $overdueDays;
             }
         }
 

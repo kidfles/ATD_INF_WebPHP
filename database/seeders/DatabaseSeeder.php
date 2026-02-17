@@ -299,10 +299,8 @@ class DatabaseSeeder extends Seeder
             $techAds[1]->relatedAds()->sync([$techAds[0]->id]);
         }
 
-        // Add expiry dates to tool rental ads
-        foreach ($toolAds as $i => $ad) {
-            $ad->update(['expires_at' => now()->addDays(($i + 1) * 15)]); // 15, 30, 45 days out
-        }
+        // Note: Private sell-type advertisements (e.g. the mountain bike) intentionally
+        // do not receive an expires_at value here coverage as per business rules.
 
         // Private ads expiry (the mountain bike)
         Advertisement::where('user_id', $privateUser->id)

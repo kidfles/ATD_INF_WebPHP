@@ -23,7 +23,18 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach($rentals as $rental)
                                 <div class="border rounded-lg overflow-hidden {{ $rental->return_photo_path ? 'bg-gray-50' : 'bg-white' }} shadow-sm hover:shadow-md transition">
-                                    <div class="w-full aspect-video">
+                                    <div class="w-full aspect-video relative">
+                                        {{-- Status Badge --}}
+                                        <div class="absolute top-2 right-2 z-10">
+                                            @if($rental->return_photo_path)
+                                                <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded shadow">{{ __('Returned') }}</span>
+                                            @elseif(now()->gt($rental->end_date))
+                                                <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded shadow">{{ __('Overdue') }}</span>
+                                            @else
+                                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded shadow">{{ __('Active') }}</span>
+                                            @endif
+                                        </div>
+
                                         @if($rental->advertisement->image_path)
                                             <img src="{{ asset('storage/' . $rental->advertisement->image_path) }}" alt="{{ $rental->advertisement->title }}" class="w-full h-full object-cover">
                                         @else
