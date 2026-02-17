@@ -31,13 +31,19 @@ class ReviewController extends Controller
             'comment' => 'required|string|max:1000',
         ]);
 
-        // 2. Bedrijfsregel: Heeft de gebruiker dit item daadwerkelijk gehuurd?
-        $hasRented = $request->user()->rentals()
+        // 2. Bedrijfsregel: Heeft de gebruiker dit item daadwerkelijk gehuurd of gekocht?
+        $user = $request->user();
+
+        $hasRented = $user->rentals()
             ->where('advertisement_id', $advertisement->id)
             ->exists();
 
-        if (!$hasRented) {
-            return back()->withErrors(['msg' => 'Je mag alleen een review plaatsen als je dit product gehuurd hebt.']);
+        $hasBought = $user->orders()
+            ->where('advertisement_id', $advertisement->id)
+            ->exists();
+
+        if (!$hasRented && !$hasBought) {
+            return back()->withErrors(['msg' => 'Je mag alleen een review plaatsen als je dit product gekocht of gehuurd hebt.']);
         }
 
         // 3. Controleer op dubbele reviews (één review per gebruiker per product)
