@@ -33,8 +33,23 @@ class Advertisement extends Model
         'price', 
         'type', 
         'image_path', 
-        'is_sold'
+        'is_sold',
+        'expires_at',
     ];
+
+    /**
+     * De attributen die gecast moeten worden.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'expires_at' => 'datetime',
+            'is_sold' => 'boolean',
+            'price' => 'decimal:2',
+        ];
+    }
 
     /**
      * De eigenaar van de advertentie.

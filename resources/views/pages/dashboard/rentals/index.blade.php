@@ -20,42 +20,57 @@
                         <p class="text-gray-500">Je hebt nog geen items gehuurd.</p>
                         <a href="{{ route('market.index', ['type' => 'rent']) }}" class="text-blue-600 hover:underline mt-2 inline-block">Bekijk huur aanbod &rarr;</a>
                     @else
-                        <div class="grid grid-cols-1 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach($rentals as $rental)
-                                <div class="border rounded p-4 flex flex-col md:flex-row gap-6 {{ $rental->return_photo_path ? 'bg-gray-50' : 'bg-white' }}">
-                                    <div class="w-full md:w-1/4">
+                                <div class="border rounded-lg overflow-hidden {{ $rental->return_photo_path ? 'bg-gray-50' : 'bg-white' }} shadow-sm hover:shadow-md transition">
+                                    <div class="w-full aspect-video relative">
+                                        {{-- Status Badge --}}
+                                        <div class="absolute top-2 right-2 z-10">
+                                            @if($rental->return_photo_path)
+                                                <span class="bg-green-100 text-green-800 text-xs font-bold px-2 py-1 rounded shadow">{{ __('Returned') }}</span>
+                                            @elseif(now()->gt($rental->end_date))
+                                                <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded shadow">{{ __('Overdue') }}</span>
+                                            @else
+                                                <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded shadow">{{ __('Active') }}</span>
+                                            @endif
+                                        </div>
+
                                         @if($rental->advertisement->image_path)
-                                            <img src="{{ asset('storage/' . $rental->advertisement->image_path) }}" alt="{{ $rental->advertisement->title }}" class="w-full rounded shadow object-cover h-32">
+                                            <img src="{{ asset('storage/' . $rental->advertisement->image_path) }}" alt="{{ $rental->advertisement->title }}" class="w-full h-full object-cover">
                                         @else
-                                            <div class="w-full h-32 bg-gray-200 rounded flex items-center justify-center text-gray-500">Geen foto</div>
+                                            <img src="{{ asset('images/placeholder.svg') }}" alt="Placeholder" class="w-full h-full object-cover opacity-50">
                                         @endif
                                     </div>
                                     
-                                    <div class="flex-1">
+                                    <div class="p-4">
                                         <h3 class="font-bold text-lg mb-2">{{ $rental->advertisement->title }}</h3>
-                                        <p class="text-gray-600 mb-2">
+                                        <p class="text-gray-600 text-sm mb-1">
                                             <span class="font-semibold">Periode:</span> 
                                             {{ $rental->start_date->format('d-m-Y') }} t/m {{ $rental->end_date->format('d-m-Y') }}
                                         </p>
-                                        <p class="text-gray-600 mb-4">
+                                        <p class="text-gray-600 text-sm mb-1">
                                             <span class="font-semibold">Prijs per dag:</span> € {{ number_format($rental->advertisement->price, 2) }}
+                                        </p>
+                                        <p class="text-gray-900 font-bold text-lg mb-4">
+                                            Totaal: € {{ number_format($rental->total_price, 2) }}
+                                            <span class="text-xs font-normal text-gray-500">({{ $rental->start_date->diffInDays($rental->end_date) + 1 }} dagen)</span>
                                         </p>
 
                                         @if($rental->return_photo_path)
                                             <div class="bg-green-50 border border-green-200 rounded p-3">
-                                                <p class="text-green-800 font-bold mb-1">Item is geretourneerd</p>
-                                                <p class="text-green-700">Totale kosten: € {{ number_format($rental->wear_and_tear_cost, 2) }}</p>
+                                                <p class="text-green-800 font-bold text-sm mb-1">Item is geretourneerd</p>
+                                                <p class="text-green-700 text-sm">Totale kosten: € {{ number_format($rental->wear_and_tear_cost, 2) }}</p>
                                             </div>
                                         @else
-                                            <div class="bg-yellow-50 border border-yellow-200 rounded p-4">
-                                                <h4 class="font-bold text-yellow-800 mb-2">Item Retourneren</h4>
+                                            <div class="bg-yellow-50 border border-yellow-200 rounded p-3">
+                                                <h4 class="font-bold text-yellow-800 text-sm mb-2">Item Retourneren</h4>
                                                 <form action="{{ route('rentals.return', $rental) }}" method="POST" enctype="multipart/form-data">
                                                     @csrf
                                                     <div class="mb-3">
-                                                        <label class="block text-sm font-medium text-gray-700 mb-1">Upload foto van item staat</label>
-                                                        <input type="file" name="photo" required class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                                                        <label class="block text-xs font-medium text-gray-700 mb-1">Upload foto van item staat</label>
+                                                        <input type="file" name="photo" required class="block w-full text-xs text-gray-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                                     </div>
-                                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">Retourneren & Kosten Berekenen</button>
+                                                    <button type="submit" class="w-full bg-blue-600 text-white px-3 py-2 rounded text-sm hover:bg-blue-700">Retourneren</button>
                                                 </form>
                                             </div>
                                         @endif

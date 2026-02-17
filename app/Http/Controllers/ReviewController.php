@@ -57,7 +57,7 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return back()->with('success', 'Review succesvol geplaatst!');
+        return back()->with('success', __('Review successfully posted!'));
     }
 
     /**
@@ -102,6 +102,6 @@ class ReviewController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return back()->with('success', 'Review op verkopersprofiel geplaatst!');
+        return back()->with('success', __('Review posted on seller profile!'));
     }
 }

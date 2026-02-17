@@ -16,7 +16,7 @@
                 {{-- Terug naar Marktplaats link (met behoud van filters indien aanwezig) --}}
                 <a href="{{ session()->has('ad_filters') ? route('market.index', session('ad_filters')) : route('market.index') }}" 
                    class="text-gray-500 hover:text-gray-700 flex items-center transition font-medium">
-                    &larr; Terug naar de markt
+                    &larr; {{ __('Back to market') }}
                 </a>
                 
                 {{-- Knop naar de whitelabel bedrijfspagina (indien zakelijke adverteerder) --}}
@@ -24,7 +24,7 @@
                     <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
                        class="text-sm font-bold px-4 py-2 rounded-full bg-white border border-gray-200 hover:text-white transition shadow-sm flex items-center gap-2 group/store"
                        style="border-color: {{ $brandColor }}; color: {{ $brandColor }};">
-                        <span class="group-hover/store:text-white transition-colors duration-200">Bezoek Winkel</span>
+                        <span class="group-hover/store:text-white transition-colors duration-200">{{ __('Visit Store') }}</span>
                         <span class="group-hover/store:text-white transition-colors duration-200">&rarr;</span>
                         <style>
                             .group\/store:hover {
@@ -53,7 +53,7 @@
                     {{-- Type Label (Huur, Verkoop, Veiling) --}}
                     <span class="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-sm border"
                           style="color: {{ $brandColor }}; border-color: {{ $brandColor }};">
-                        {{ $advertisement->type }}
+                        {{ __(ucfirst($advertisement->type)) }}
                     </span>
                 </div>
 
@@ -84,7 +84,7 @@
                     
                     {{-- Verkopersinformatie --}}
                     <div class="flex items-center gap-2 mb-6 text-sm">
-                        <span class="text-gray-500">Verkocht door</span>
+                        <span class="text-gray-500">{{ __('Sold by') }}</span>
                         @if($advertisement->user->isBusinessAdvertiser() && $advertisement->user->companyProfile && $advertisement->user->companyProfile->custom_url_slug)
                             <a href="{{ route('company.show', $advertisement->user->companyProfile->custom_url_slug) }}" 
                                class="font-bold text-gray-900 border-b-2 border-transparent transition hover:border-gray-900"
@@ -106,7 +106,7 @@
 
                     <div class="border-t border-gray-100 pt-8 mt-auto">
                         <div class="flex items-center justify-between mb-6">
-                            <span class="text-gray-400 font-medium uppercase tracking-wide text-sm">Huidige Prijs</span>
+                            <span class="text-gray-400 font-medium uppercase tracking-wide text-sm">{{ __('Current Price') }}</span>
                             <span class="text-4xl font-black" style="color: {{ $brandColor }}">
                                 €{{ number_format($advertisement->price, 2) }}
                             </span>
@@ -115,8 +115,8 @@
                         {{-- Actie Sectie (Bieden, Huren of Kopen) --}}
                         @if(auth()->id() === $advertisement->user_id)
                             <div class="bg-gray-50 p-4 rounded-xl text-center border border-gray-200">
-                                <span class="text-gray-500">Dit is jouw eigen advertentie.</span>
-                                <a href="{{ route('dashboard.advertisements.edit', $advertisement) }}" class="ml-2 font-bold hover:underline" style="color: {{ $brandColor }}">Advertentie Bewerken</a>
+                                <span class="text-gray-500">{{ __('This is your own advertisement.') }}</span>
+                                <a href="{{ route('dashboard.advertisements.edit', $advertisement) }}" class="ml-2 font-bold hover:underline" style="color: {{ $brandColor }}">{{ __('Edit Advertisement') }}</a>
                             </div>
                         
                         @else
@@ -124,9 +124,9 @@
                             {{-- VEILING LOGICA --}}
                             @if($advertisement->type === 'auction')
                                 <div class="bg-gray-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
-                                    <h3 class="font-bold text-lg mb-2 text-gray-900">Plaats een bod</h3>
+                                    <h3 class="font-bold text-lg mb-2 text-gray-900">{{ __('Place a bid') }}</h3>
                                     <p class="text-sm text-gray-500 mb-4">
-                                        Hoogste bod: <span class="font-bold text-gray-900">€ {{ number_format($advertisement->bids->max('amount') ?? $advertisement->price, 2) }}</span>
+                                        {{ __('Highest bid') }}: <span class="font-bold text-gray-900">€ {{ number_format($advertisement->bids->max('amount') ?? $advertisement->price, 2) }}</span>
                                     </p>
                                     
                                     <form action="{{ route('bids.store', $advertisement) }}" method="POST" class="flex gap-3">
@@ -136,18 +136,18 @@
                                             <input type="number" name="amount" step="0.01" required 
                                                    class="pl-7 rounded-xl border-gray-300 w-full focus:ring-2"
                                                    style="--tw-ring-color: {{ $brandColor }};" 
-                                                   placeholder="Bedrag">
+                                                   placeholder="{{ __('Amount') }}">
                                         </div>
                                         <button type="submit" class="text-white font-bold py-3 px-6 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-0.5"
                                                 style="background-color: {{ $brandColor }}">
-                                            Bieden
+                                            {{ __('Bid') }}
                                         </button>
                                     </form>
                                     @error('amount') <p class="text-red-500 text-sm mt-2">{{ $message }}</p> @enderror
 
                                     @if($advertisement->bids->count() > 0)
                                         <div class="mt-4 pt-4 border-t border-gray-200">
-                                            <span class="text-xs font-bold text-gray-400 uppercase">Recente Biedingen</span>
+                                            <span class="text-xs font-bold text-gray-400 uppercase">{{ __('Recent Bids') }}</span>
                                             <div class="mt-2 space-y-1">
                                                 @foreach($advertisement->bids->sortByDesc('amount')->take(3) as $bid)
                                                     <div class="flex justify-between text-sm">
@@ -163,22 +163,22 @@
                             {{-- HUUR LOGICA --}}
                             @elseif($advertisement->type === 'rent')
                                 <div class="bg-gray-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
-                                    <h3 class="font-bold text-lg mb-4 text-gray-900">Huur dit object</h3>
+                                    <h3 class="font-bold text-lg mb-4 text-gray-900">{{ __('Rent this item') }}</h3>
                                     <form action="{{ route('rentals.store', $advertisement) }}" method="POST" class="space-y-4">
                                         @csrf
                                         <div class="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Startdatum</label>
+                                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">{{ __('Start Date') }}</label>
                                                 <input type="date" name="start_date" min="{{ date('Y-m-d') }}" required class="w-full border-gray-300 rounded-xl text-sm focus:ring-2" style="--tw-ring-color: {{ $brandColor }};">
                                             </div>
                                             <div>
-                                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Einddatum</label>
+                                                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">{{ __('End Date') }}</label>
                                                 <input type="date" name="end_date" min="{{ date('Y-m-d') }}" required class="w-full border-gray-300 rounded-xl text-sm focus:ring-2" style="--tw-ring-color: {{ $brandColor }};">
                                             </div>
                                         </div>
                                         <button type="submit" class="w-full text-white font-bold py-3 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-0.5"
                                                 style="background-color: {{ $brandColor }}">
-                                            Reservering Plaatsen
+                                            {{ __('Place Reservation') }}
                                         </button>
                                     </form>
                                 </div>
@@ -188,17 +188,17 @@
                                 <div class="mt-6">
                                     @if($advertisement->is_sold)
                                         <div class="w-full bg-gray-300 text-gray-600 text-center py-3 rounded-lg font-bold cursor-not-allowed">
-                                            Verkocht
+                                            {{ __('Sold') }}
                                         </div>
                                     @else
                                         {{-- Direct Kopen (Order aanmaken) --}}
                                         <form action="{{ route('orders.store', $advertisement) }}" method="POST">
                                             @csrf
                                             <button type="submit" 
-                                                    onclick="return confirm('Weet je zeker dat je dit wilt kopen voor €{{ $advertisement->price }}?')"
+                                                    onclick="return confirm('{{ __('Are you sure you want to buy this for') }} €{{ $advertisement->price }}?')"
                                                     class="w-full text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5 text-xl flex items-center justify-center gap-3"
                                                     style="background-color: {{ $brandColor }}">
-                                                <span>Koop direct voor €{{ number_format($advertisement->price, 2) }}</span>
+                                                <span>{{ __('Buy now for') }} €{{ number_format($advertisement->price, 2) }}</span>
                                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                                             </button>
                                         </form>
@@ -211,21 +211,53 @@
 
                     {{-- QR Code Section --}}
                     <div class="mt-8 pt-8 border-t border-gray-100 flex flex-col items-center">
-                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-4">Share this Ad</h3>
+                        <h3 class="text-sm font-bold text-gray-400 uppercase tracking-wide mb-4">{{ __('Share this Ad') }}</h3>
 
                         <div class="bg-white p-2 rounded-lg shadow-sm border border-gray-100">
                             {{-- Generate QR Code linking to the current ad's route --}}
                             {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(120)->color(79, 70, 229)->generate(route('market.show', $advertisement)) !!}
                         </div>
 
-                        <p class="text-xs text-gray-400 mt-2">Scan to open on mobile</p>
+                        <p class="text-xs text-gray-400 mt-2">{{ __('Scan to open on mobile') }}</p>
                     </div>
                 </div>
             </div>
             </div>
 
+            {{-- Gerelateerde Producten (Cross-Sell / Upsell) --}}
+            @if($advertisement->relatedAds->isNotEmpty())
+                <div class="mt-12">
+                    <h2 class="text-2xl font-bold mb-6">{{ __('Related Products') }}</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        @foreach($advertisement->relatedAds as $related)
+                            <div class="border rounded p-4 shadow hover:shadow-lg transition bg-white">
+                                {{-- Afbeelding --}}
+                                <div class="w-full mb-4 overflow-hidden rounded bg-gray-100 relative group aspect-video">
+                                    @if($related->image_path)
+                                        <img src="{{ asset('storage/' . $related->image_path) }}" alt="{{ $related->title }}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                    @else
+                                        <img src="{{ asset('images/placeholder.svg') }}" alt="{{ __('No image available') }}" class="w-full h-full object-cover text-gray-400">
+                                    @endif
+                                </div>
+                                {{-- Titel --}}
+                                <a href="{{ route('market.show', $related) }}">
+                                    <h3 class="font-bold text-lg text-blue-600 hover:underline">{{ $related->title }}</h3>
+                                </a>
+                                <p class="text-gray-600 truncate">{{ $related->description }}</p>
+                                {{-- Prijs en type label --}}
+                                <div class="flex justify-between items-center mt-4">
+                                    <p class="font-bold text-lg">€ {{ number_format($related->price, 2) }}</p>
+                                    <span class="bg-gray-100 px-2 py-1 rounded text-sm text-gray-600">{{ __(ucfirst($related->type)) }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             <div class="mt-12 bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h2 class="text-xl font-bold mb-6">Reviews</h2>
+                <h2 class="text-2xl font-bold mb-6">{{ __('Reviews') }}</h2>
 
                 {{-- 1. List Existing Reviews --}}
                 @forelse($advertisement->reviews as $review)
@@ -243,7 +275,7 @@
                         <span class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</span>
                     </div>
                 @empty
-                    <p class="text-gray-500 italic">Nog geen reviews. Wees de eerste!</p>
+                    <p class="text-gray-500 italic">{{ __('No reviews yet. Be the first!') }}</p>
                 @endforelse
 
                 {{-- 2. Review Form (Conditional: Only for Renters) --}}
@@ -255,31 +287,31 @@
 
                     @if($hasRented)
                         <div class="mt-8 pt-8 border-t border-gray-200">
-                            <h3 class="font-bold text-lg mb-4">Schrijf een review</h3>
+                            <h3 class="font-bold text-lg mb-4">{{ __('Write a review') }}</h3>
                             
                             <form action="{{ route('reviews.store', $advertisement) }}" method="POST">
                                 @csrf
                                 
                                 {{-- Rating Input --}}
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Beoordeling</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Rating') }}</label>
                                     <select name="rating" class="border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:w-1/4">
-                                        <option value="5">5 - Uitstekend</option>
-                                        <option value="4">4 - Goed</option>
-                                        <option value="3">3 - Gemiddeld</option>
-                                        <option value="2">2 - Matig</option>
-                                        <option value="1">1 - Slecht</option>
+                                        <option value="5">5 - {{ __('Excellent') }}</option>
+                                        <option value="4">4 - {{ __('Good') }}</option>
+                                        <option value="3">3 - {{ __('Average') }}</option>
+                                        <option value="2">2 - {{ __('Fair') }}</option>
+                                        <option value="1">1 - {{ __('Poor') }}</option>
                                     </select>
                                 </div>
 
                                 {{-- Comment Input --}}
                                 <div class="mb-4">
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jouw ervaring</label>
-                                    <textarea name="comment" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="Vertel ons wat je ervan vond..."></textarea>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('Your experience') }}</label>
+                                    <textarea name="comment" rows="3" class="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="{{ __('Tell us what you thought...') }}"></textarea>
                                 </div>
 
                                 <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">
-                                    Plaats Review
+                                    {{ __('Post Review') }}
                                 </button>
                             </form>
                         </div>

@@ -61,4 +61,25 @@ class Rental extends Model
     {
         return $this->belongsTo(User::class, 'renter_id');
     }
+
+    /**
+     * Bereken de totale huurprijs op basis van de periode en dagprijs.
+     * 
+     * @return float
+     */
+    public function getDaysCount(): int
+    {
+        // Aantal dagen wordt berekend inclusief start- en einddatum (+1)
+        return $this->start_date->diffInDays($this->end_date) + 1;
+    }
+
+    /**
+     * Bereken de totale huurprijs op basis van de periode en dagprijs.
+     * 
+     * @return float
+     */
+    public function getTotalPriceAttribute(): float
+    {
+        return $this->getDaysCount() * $this->advertisement->price;
+    }
 }

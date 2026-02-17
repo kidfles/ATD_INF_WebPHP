@@ -80,6 +80,10 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     
     // CSV Bulk Import (Advertenties inladen via bestand)
     Route::post('/company/import-csv', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'importCsv'])->name('company.import_csv');
+
+    // Agenda (Visueel overzicht van verhuur en verloopdatums)
+    Route::get('/agenda', [App\Http\Controllers\Dashboard\AgendaController::class, 'index'])->name('dashboard.agenda.index');
+    Route::get('/agenda/events', [App\Http\Controllers\Dashboard\AgendaController::class, 'events'])->name('dashboard.agenda.events');
 });
 
 // Algemene Beveiligde Routes (Auth middleware)

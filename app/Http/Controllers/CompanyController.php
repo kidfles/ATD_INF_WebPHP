@@ -117,7 +117,7 @@ class CompanyController extends Controller
             'contract_status' => 'pending' 
         ]);
 
-        return back()->with('success', 'Contract succesvol geüpload. We gaan het controleren.');
+        return back()->with('success', __('Contract successfully uploaded...'));
     }
 
     /**
@@ -140,6 +140,6 @@ class CompanyController extends Controller
             'contract_status' => 'approved'
         ]);
 
-        return back()->with('status', '✅ [TEST] Contract is nu goedgekeurd! API toegang is actief.');
+        return back()->with('status', __('Contract is now approved!'));
     }
 }

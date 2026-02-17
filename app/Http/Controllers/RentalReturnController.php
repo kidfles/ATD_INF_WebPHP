@@ -27,6 +27,12 @@ class RentalReturnController extends Controller
      */
     public function store(Request $request, Rental $rental, WearAndTearCalculator $calculator): RedirectResponse
     {
+        // 0. Security: Ensure user is authorized (Strict: Only renter can submit return proof)
+        abort_unless(
+            $rental->renter_id === auth()->id(),
+            403
+        );
+
         $request->validate([
             'photo' => ['required', 'image', 'max:5000'] // Maximaal 5MB
         ]);
@@ -35,7 +41,9 @@ class RentalReturnController extends Controller
         $path = $request->file('photo')->store('returns', 'public');
 
         // 2. Kosten berekenen via de WearAndTearCalculator Service
-        $finalCost = $calculator->calculate($rental);
+        $result = $calculator->calculate($rental);
+        $finalCost = $result['total'];
+        $breakdown = $result['breakdown'];
 
         // 3. Database record bijwerken met de resultaten
         $rental->update([
@@ -44,6 +52,14 @@ class RentalReturnController extends Controller
             // Optioneel: status bijwerken naar 'returned'
         ]);
 
-        return redirect()->back()->with('status', "Product ingeleverd. Totale kosten: €" . number_format($finalCost, 2));
+        // 4. Feedback geven aan de gebruiker
+        $message = __('rental_returned_cost_breakdown', [
+            'total' => number_format($finalCost, 2),
+            'base' => number_format($breakdown['base_cost'], 2),
+            'late_fee' => number_format($breakdown['late_fee'], 2),
+            'wear_and_tear' => number_format($breakdown['wear_and_tear'], 2),
+        ]);
+
+        return redirect()->back()->with('status', $message);
     }
 }

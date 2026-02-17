@@ -30,7 +30,7 @@ class PageComponentController extends Controller
             'order' => $company->pageComponents()->count() + 1,
         ]);
 
-        return back()->with('status', 'New section added! You can now edit it.');
+        return back()->with('status', __('New section added! You can now edit it.'));
     }
 
     public function bulkUpdate(BulkUpdatePageComponentsRequest $request)
@@ -57,7 +57,7 @@ class PageComponentController extends Controller
             $component->update($updateData);
         }
 
-        return back()->with('status', 'Page updated successfully!');
+        return back()->with('status', __('Page updated successfully!'));
     }
 
     public function destroy(PageComponent $component)
@@ -68,6 +68,6 @@ class PageComponentController extends Controller
 
         $component->delete();
 
-        return back()->with('status', 'Section removed.');
+        return back()->with('status', __('Section removed.'));
     }
 }

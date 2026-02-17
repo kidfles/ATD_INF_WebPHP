@@ -79,7 +79,7 @@ class AdvertisementController extends Controller
         }
 
         return redirect()->route('dashboard.advertisements.index')
-            ->with('success', 'Advertentie succesvol aangemaakt!');
+            ->with('success', __('Advertisement successfully created!'));
     }
 
     /**
@@ -140,7 +140,7 @@ class AdvertisementController extends Controller
         $advertisement->relatedAds()->sync($request->input('related_ads', []));
 
         return redirect()->route('dashboard.advertisements.index')
-            ->with('success', 'Advertentie bijgewerkt!');
+            ->with('success', __('Advertisement updated!'));
     }
 
     /**
@@ -159,6 +159,6 @@ class AdvertisementController extends Controller
         $advertisement->delete();
 
         return redirect()->route('dashboard.advertisements.index')
-            ->with('success', 'Advertentie verwijderd!');
+            ->with('success', __('Advertisement deleted!'));
     }
 }

@@ -30,9 +30,23 @@ public function rules(): array
         'brand_color' => ['required', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
         'custom_url_slug' => [
             'required', 
+            'string',
             'alpha_dash', 
-            \Illuminate\Validation\Rule::unique('company_profiles')->ignore($company->id),
+            'max:255',
+            Rule::unique('company_profiles')->ignore($company->id),
         ],
+        // Wear & Tear Policy
+        'wear_and_tear_policy' => ['required', 'string', 'in:none,fixed,percentage'],
+        'wear_and_tear_value' => [
+            'required_unless:wear_and_tear_policy,none',
+            'numeric',
+            'min:0',
+            Rule::when(
+                $this->input('wear_and_tear_policy') === 'percentage',
+                'max:100'
+            ),
+        ],
+        
         // Allow the components array to be present
         'components' => ['nullable', 'array'],
         'ordered_ids' => ['nullable', 'array'],
