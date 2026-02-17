@@ -118,9 +118,9 @@
     "Upload": "Upload",
     "[TEST] Approve my contract properly": "[TEST] Approve my contract properly",
     "API Access": "API Access",
-    "Use these credentials...": "Use these credentials...",
+    "Use these credentials to push advertisements automatically from your own CRM.": "Use these credentials to push advertisements automatically from your own CRM.",
     "Access blocked": "Access blocked",
-    "Your contract must be approved first...": "Your contract must be approved first...",
+    "Your contract must be approved first before you can use the API.": "Your contract must be approved first before you can use the API.",
     "Keep this token safe!": "Keep this token safe!",
     "Generate New API Key": "Generate New API Key",
     "CSV Advertisement Import": "CSV Advertisement Import",
@@ -226,5 +226,6 @@
     "Overview": "Overview",
     "My Ads": "My Ads",
     "Place Ad": "Place Ad",
-    "Remove from favorites": "Remove from favorites"
+    "Remove from favorites": "Remove from favorites",
+    "This item is already rented for the selected dates.": "This item is already rented for the selected dates."
 }
