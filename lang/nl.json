@@ -227,5 +227,7 @@
     "My Ads": "Mijn Advertenties",
     "Place Ad": "Plaats Advertentie",
     "Remove from favorites": "Verwijder uit favorieten",
-    "This item is already rented for the selected dates.": "Dit item is al verhuurd op de gekozen datums."
+    "This item is already rented for the selected dates.": "Dit item is al verhuurd op de gekozen datums.",
+    "Select start date": "Kies startdatum",
+    "Select end date": "Kies einddatum"
 }

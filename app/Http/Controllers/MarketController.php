@@ -64,6 +64,11 @@ class MarketController extends Controller
         // Bepaal de merkkleur (Standaard naar Indigo als er geen bedrijfsprofiel is)
         $brandColor = $advertisement->user->companyProfile->brand_color ?? '#4f46e5'; 
 
-        return view('pages.market.show', compact('advertisement', 'brandColor'));
+        // Haal toekomstige verhuringen op voor de beschikbaarheidskalender
+        $rentals = $advertisement->rentals()
+            ->where('end_date', '>=', now()->startOfDay())
+            ->get(['start_date', 'end_date']);
+
+        return view('pages.market.show', compact('advertisement', 'brandColor', 'rentals'));
     }
 }

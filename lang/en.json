@@ -227,5 +227,7 @@
     "My Ads": "My Ads",
     "Place Ad": "Place Ad",
     "Remove from favorites": "Remove from favorites",
-    "This item is already rented for the selected dates.": "This item is already rented for the selected dates."
+    "This item is already rented for the selected dates.": "This item is already rented for the selected dates.",
+    "Select start date": "Select start date",
+    "Select end date": "Select end date"
 }

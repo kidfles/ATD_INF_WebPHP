@@ -12,6 +12,11 @@
         .bg-seller { background-color: var(--seller-color); }
         .bg-seller:hover { filter: brightness(90%); }
     </style>
+    
+    {{-- Flatpickr for Rental Calendar --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_green.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -186,11 +191,11 @@
                                         <div class="grid grid-cols-2 gap-4">
                                             <div>
                                                 <label class="block text-xs font-bold text-slate-400 uppercase mb-1">{{ __('Start Date') }}</label>
-                                                <input type="date" name="start_date" min="{{ date('Y-m-d') }}" required class="w-full border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:border-emerald-400 focus:ring-emerald-100/50">
+                                                <input type="text" id="start_date" name="start_date" value="{{ old('start_date') }}" required class="w-full border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:border-emerald-400 focus:ring-emerald-100/50" placeholder="{{ __('Select start date') }}">
                                             </div>
                                             <div>
                                                 <label class="block text-xs font-bold text-slate-400 uppercase mb-1">{{ __('End Date') }}</label>
-                                                <input type="date" name="end_date" min="{{ date('Y-m-d') }}" required class="w-full border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:border-emerald-400 focus:ring-emerald-100/50">
+                                                <input type="text" id="end_date" name="end_date" value="{{ old('end_date') }}" required class="w-full border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:border-emerald-400 focus:ring-emerald-100/50" placeholder="{{ __('Select end date') }}">
                                                 @error('end_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
@@ -338,4 +343,47 @@
             </div>
         </div>
     </div>
+    </div>
+
+    {{-- Flatpickr Initialization --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Haal geboekte datums op uit de backend
+            const rentals = @json($rentals ?? []);
+            
+            // Format voor Flatpickr disable config
+            const disabledDates = rentals.map(rental => {
+                return {
+                    from: rental.start_date,
+                    to: rental.end_date
+                };
+            });
+
+            const commonConfig = {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                disable: disabledDates,
+                locale: {
+                    firstDayOfWeek: 1 // Maandag start
+                }
+            };
+
+            // Init Start Date
+            const fpStart = flatpickr("#start_date", {
+                ...commonConfig,
+                onChange: function(selectedDates, dateStr, instance) {
+                    // Update minDate van end_date zodat je niet terug in de tijd kan selecteren
+                    fpEnd.set('minDate', dateStr);
+                }
+            });
+
+            // Init End Date
+            const fpEnd = flatpickr("#end_date", {
+                ...commonConfig,
+                onChange: function(selectedDates, dateStr, instance) {
+                    // Optioneel: check of range valid is (geen overlap)
+                }
+            });
+        });
+    </script>
 </x-app-layout>
