@@ -278,32 +278,44 @@
                         <p class="mt-1 text-sm text-slate-500">{{ __('Define how costs are calculated when a customer returns a rented item.') }}</p>
                     </header>
 
-                    <div class="mt-6 space-y-6 max-w-xl" x-data="{ policy: '{{ old('wear_and_tear_policy', $company->wear_and_tear_policy ?? 'none') }}' }">
+                    <div class="mt-6 space-y-6 max-w-xl">
                         
-                        {{-- Policy Type --}}
-                        <div class="space-y-2">
-                            <label for="wear_and_tear_policy" class="block text-sm font-bold text-slate-700">{{ __('Wear & Tear Fee Policy') }}</label>
-                            <select id="wear_and_tear_policy" name="wear_and_tear_policy" x-model="policy" class="block w-full bg-slate-50 border-transparent rounded-2xl px-4 py-2.5 text-sm text-slate-600 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50">
-                                <option value="none">{{ __('None (No extra fee)') }}</option>
-                                <option value="fixed">{{ __('Fixed Fee (e.g. Cleaning Cost)') }}</option>
-                                <option value="percentage">{{ __('Percentage of Total Price') }}</option>
-                            </select>
-                        </div>
-
-                        {{-- Policy Value (Conditional) --}}
-                        <div class="space-y-2" x-show="policy !== 'none'" x-transition>
-                            <label for="wear_and_tear_value" class="block text-sm font-bold text-slate-700">{{ __('Fee Value') }}</label>
-                            <div class="relative rounded-2xl shadow-sm">
-                                <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                    <span class="text-slate-400 sm:text-sm font-bold" x-text="policy === 'fixed' ? '€' : '%'"></span>
+                        @if($company->contract_status === 'approved')
+                            <div x-data="{ policy: '{{ old('wear_and_tear_policy', $company->wear_and_tear_policy ?? 'none') }}' }">
+                                {{-- Policy Type --}}
+                                <div class="space-y-2">
+                                    <label for="wear_and_tear_policy" class="block text-sm font-bold text-slate-700">{{ __('Wear & Tear Fee Policy') }}</label>
+                                    <select id="wear_and_tear_policy" name="wear_and_tear_policy" x-model="policy" class="block w-full bg-slate-50 border-transparent rounded-2xl px-4 py-2.5 text-sm text-slate-600 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50">
+                                        <option value="none">{{ __('None (No extra fee)') }}</option>
+                                        <option value="fixed">{{ __('Fixed Fee (e.g. Cleaning Cost)') }}</option>
+                                        <option value="percentage">{{ __('Percentage of Total Price') }}</option>
+                                    </select>
                                 </div>
-                                <input type="number" step="0.01" name="wear_and_tear_value" id="wear_and_tear_value" 
-                                       value="{{ old('wear_and_tear_value', $company->wear_and_tear_value) }}"
-                                       class="block w-full bg-slate-50 border-transparent rounded-2xl pl-10 px-4 py-2.5 text-sm text-slate-700 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all" 
-                                       placeholder="0.00">
+
+                                {{-- Policy Value (Conditional) --}}
+                                <div class="space-y-2 mt-4" x-show="policy !== 'none'" x-transition>
+                                    <label for="wear_and_tear_value" class="block text-sm font-bold text-slate-700">{{ __('Fee Value') }}</label>
+                                    <div class="relative rounded-2xl shadow-sm">
+                                        <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                            <span class="text-slate-400 sm:text-sm font-bold" x-text="policy === 'fixed' ? '€' : '%'"></span>
+                                        </div>
+                                        <input type="number" step="0.01" name="wear_and_tear_value" id="wear_and_tear_value" 
+                                            value="{{ old('wear_and_tear_value', $company->wear_and_tear_value) }}"
+                                            class="block w-full bg-slate-50 border-transparent rounded-2xl pl-10 px-4 py-2.5 text-sm text-slate-700 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all" 
+                                            placeholder="0.00">
+                                    </div>
+                                    <p class="text-xs text-slate-400 mt-1" x-text="policy === 'fixed' ? '{{ __('Fixed amount added to the return cost.') }}' : '{{ __('Percentage calculated from the base rental price.') }}'"></p>
+                                </div>
                             </div>
-                            <p class="text-xs text-slate-400 mt-1" x-text="policy === 'fixed' ? '{{ __('Fixed amount added to the return cost.') }}' : '{{ __('Percentage calculated from the base rental price.') }}'"></p>
-                        </div>
+                        @else
+                            <div class="p-4 bg-amber-50 border border-amber-200 text-amber-700 rounded-xl flex items-start gap-3">
+                                <svg class="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                                <div>
+                                    <strong class="block text-sm">{{ __('Functionality Locked') }}</strong>
+                                    <span class="text-sm opacity-90">{{ __('You can only set a return policy once your contract has been approved.') }}</span>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
 
