@@ -191,8 +191,10 @@
                                             <div>
                                                 <label class="block text-xs font-bold text-slate-400 uppercase mb-1">{{ __('End Date') }}</label>
                                                 <input type="date" name="end_date" min="{{ date('Y-m-d') }}" required class="w-full border-slate-200 rounded-xl text-sm bg-white focus:ring-2 focus:border-emerald-400 focus:ring-emerald-100/50">
+                                                @error('end_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
+                                         @error('start_date') <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
                                         <button type="submit" class="w-full text-white font-bold py-3 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-0.5"
                                                 style="background-color: {{ $brandColor }}">
                                             {{ __('Place Reservation') }}
