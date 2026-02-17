@@ -59,9 +59,9 @@ class AgendaController extends Controller
                 ];
             }
 
-            // 2. Verloopdatums van advertenties (Only Rent & Auction)
+            // 2. Verloopdatums van advertenties (All types with expiry)
             $expiries = $user->advertisements()
-                ->where('type', '!=', 'sell')
+                ->whereNotNull('expires_at')
                 ->whereBetween('expires_at', [$request->start, $request->end])
                 ->get();
 

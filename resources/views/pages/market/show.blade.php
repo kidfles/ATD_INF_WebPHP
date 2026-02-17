@@ -125,6 +125,20 @@
                             @if($advertisement->type === 'auction')
                                 <div class="bg-gray-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
                                     <h3 class="font-bold text-lg mb-2 text-gray-900">{{ __('Place a bid') }}</h3>
+                                    
+                                    {{-- Auction End Date --}}
+                                    @if($advertisement->expires_at)
+                                        <p class="text-sm text-gray-500 mb-4">
+                                            @if($advertisement->expires_at->isPast())
+                                                {{ __('This auction has ended.') }}
+                                            @else
+                                                @php $daysLeft = now()->startOfDay()->diffInDays($advertisement->expires_at->startOfDay()); @endphp
+                                                {{ __('Bidding ends') }}: {{ $advertisement->expires_at->translatedFormat('d M Y') }}
+                                                ({{ $daysLeft }} {{ trans_choice('day|days', $daysLeft) }})
+                                            @endif
+                                        </p>
+                                    @endif
+
                                     <p class="text-sm text-gray-500 mb-4">
                                         {{ __('Highest bid') }}: <span class="font-bold text-gray-900">€ {{ number_format($advertisement->bids->max('amount') ?? $advertisement->price, 2) }}</span>
                                     </p>

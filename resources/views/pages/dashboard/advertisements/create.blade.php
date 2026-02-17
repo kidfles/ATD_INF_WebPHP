@@ -45,6 +45,11 @@
                     </div>
 
                     <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-1.5">{{ __('Einddatum (Optioneel voor Veiling/Verkoop)') }}</label>
+                        <input type="date" name="expires_at" value="{{ old('expires_at') }}" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:border-violet-500/50 focus:ring-violet-500/20 focus:outline-none transition" min="{{ date('Y-m-d', strtotime('+1 day')) }}">
+                    </div>
+
+                    <div>
                         <label class="block text-sm font-bold text-gray-300 mb-1.5">{{ __('Gerelateerde Producten (Koppelverkoop)') }}</label>
                         <p class="text-xs text-gray-500 mb-2">{{ __('Selecteer producten die hierbij horen (houd Ctrl/Cmd ingedrukt om meerdere te selecteren)') }}</p>
                         <select name="related_ads[]" multiple class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-gray-300 focus:border-violet-500/50 focus:ring-violet-500/20 focus:outline-none h-32">
