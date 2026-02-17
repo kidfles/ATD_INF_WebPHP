@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Rental;
-use Carbon\Carbon;
 
 class WearAndTearCalculator
 {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rental;
-use App\Models\Advertisement;
 use Illuminate\Http\Request;
 
 class AgendaController extends Controller
@@ -35,6 +34,11 @@ class AgendaController extends Controller
     {
         try {
             $user = $request->user();
+            $request->validate([
+                'start' => 'required|date',
+                'end'   => 'required|date|after_or_equal:start',
+            ]);
+
             $events = [];
 
             // 1. Verhuurperiodes van de producten van deze gebruiker
@@ -49,7 +53,7 @@ class AgendaController extends Controller
                     'id'    => 'rental-' . $rental->id,
                     'title' => __('Rental') . ': ' . $rental->advertisement->title,
                     'start' => $rental->start_date->toDateString(),
-                    'end'   => $rental->end_date->addDay()->toDateString(), // FullCalendar end is exclusive
+                    'end'   => $rental->end_date->copy()->addDay()->toDateString(), // FullCalendar end is exclusive
                     'color' => $user->companyProfile?->brand_color ?? '#4f46e5',
                     'extendedProps' => ['type' => 'rental'],
                 ];
@@ -84,7 +88,7 @@ class AgendaController extends Controller
                     'id'    => 'my-rental-' . $rental->id,
                     'title' => __('Renting') . ': ' . $rental->advertisement->title,
                     'start' => $rental->start_date->toDateString(),
-                    'end'   => $rental->end_date->addDay()->toDateString(),
+                    'end'   => $rental->end_date->copy()->addDay()->toDateString(),
                     'color' => '#10b981', // Green for items I am renting
                     'extendedProps' => ['type' => 'rental'], // Link to rent overview same as others
                 ];
@@ -93,7 +97,7 @@ class AgendaController extends Controller
             return response()->json($events);
         } catch (\Exception $e) {
             \Log::error('Agenda Error: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
+            return response()->json(['error' => __('An unexpected error occurred. Please try again later.')], 500);
         }
     }
 }

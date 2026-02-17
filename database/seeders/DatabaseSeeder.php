@@ -124,7 +124,7 @@ class DatabaseSeeder extends Seeder
         
         PageComponent::factory()->create([
             'company_id' => $toolCompany->id,
-            'component_type' => 'advertisement_grid',
+            'component_type' => 'featured_ads',
             'order' => 2,
             'content' => [],
         ]);

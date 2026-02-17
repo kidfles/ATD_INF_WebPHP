@@ -44,18 +44,7 @@
                                     @else
                                         <form method="POST" action="{{ route('rentals.return', $rental) }}" enctype="multipart/form-data">
                                             @csrf
-                                            {{-- Hidden input for file upload? Wait, the return flow requires a file upload. 
-                                               The current implementation of 'rentals.return' store method expects a 'photo'.
-                                               BUT the table button was just a submit button? 
-                                               The previous code was: <button type="submit">Return</button>.
-                                               Where was the file input? 
-                                               Ah! The user said "Bij het terugbrengen van een product moet een foto worden geupload".
-                                               My previous implementation (RentalReturnController) validates 'photo'.
-                                               But the VIEW didn't have an input!
-                                               So the previous "Return" button would just submit and FAIL validation (422) or crash.
-                                               I need to make this a proper form or a button that opens a modal.
-                                               For now, to keep it simple and functional without a modal, I will add a file input right here.
-                                            --}}
+                                            {{-- Photo upload required for return --}}
                                             <div class="flex items-center gap-2 justify-end">
                                                 <input type="file" name="photo" required class="text-xs border border-gray-300 rounded p-1 w-48">
                                                 <button type="submit" class="text-indigo-600 hover:text-indigo-900 font-bold border border-indigo-200 px-2 py-1 rounded bg-indigo-50 hover:bg-indigo-100">

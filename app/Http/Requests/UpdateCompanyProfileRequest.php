@@ -37,7 +37,15 @@ public function rules(): array
         ],
         // Wear & Tear Policy
         'wear_and_tear_policy' => ['required', 'string', 'in:none,fixed,percentage'],
-        'wear_and_tear_value' => ['nullable', 'numeric', 'min:0'],
+        'wear_and_tear_value' => [
+            'required_unless:wear_and_tear_policy,none',
+            'numeric',
+            'min:0',
+            Rule::when(
+                $this->input('wear_and_tear_policy') === 'percentage',
+                'max:100'
+            ),
+        ],
         
         // Allow the components array to be present
         'components' => ['nullable', 'array'],

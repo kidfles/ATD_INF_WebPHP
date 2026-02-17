@@ -53,7 +53,7 @@
                     {{-- Type Label (Huur, Verkoop, Veiling) --}}
                     <span class="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-sm border"
                           style="color: {{ $brandColor }}; border-color: {{ $brandColor }};">
-                        {{ ucfirst(__($advertisement->type)) }}
+                        {{ __(ucfirst($advertisement->type)) }}
                     </span>
                 </div>
 

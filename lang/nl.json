@@ -204,5 +204,18 @@
     "Total Spent": "Totaal Uitgegeven",
     "No orders found": "Geen bestellingen gevonden",
     "You haven't purchased anything yet.": "Je hebt nog niets gekocht.",
-    "Browse Marketplace": "Marktplaats Bekijken"
+    "Browse Marketplace": "Marktplaats Bekijken",
+    "Are you sure you want to remove this block?": "Weet je zeker dat je dit blok wilt verwijderen?",
+    "By me": "Door mij",
+    "Overdue": "Te laat",
+    "Active": "Actief",
+    "Returned": "Geretourneerd",
+    "View Return": "Bekijk Retour",
+    "Awaiting Return": "Wacht op retour",
+    "Rented Out": "Verhuurd",
+    "Upcoming": "Aankomend",
+    "Review posted on seller profile!": "Review op verkopersprofiel geplaatst!",
+    "Sadly, this product is already sold.": "Dit product is helaas al verkocht.",
+    "rental.returned_cost_breakdown": "Product ingeleverd. Totaal: €:total (Basis: €:base, Boete: €:late_fee, Slijtage: €:wear_and_tear)",
+    "An unexpected error occurred. Please try again later.": "Er is een onverwachte fout opgetreden. Probeer het later opnieuw."
 }

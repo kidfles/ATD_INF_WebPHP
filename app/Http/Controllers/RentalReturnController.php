@@ -27,6 +27,12 @@ class RentalReturnController extends Controller
      */
     public function store(Request $request, Rental $rental, WearAndTearCalculator $calculator): RedirectResponse
     {
+        // 0. Security: Ensure user is authorized
+        abort_unless(
+            $rental->renter_id === auth()->id() || $rental->advertisement->user_id === auth()->id(),
+            403
+        );
+
         $request->validate([
             'photo' => ['required', 'image', 'max:5000'] // Maximaal 5MB
         ]);
@@ -46,13 +52,13 @@ class RentalReturnController extends Controller
             // Optioneel: status bijwerken naar 'returned'
         ]);
 
-        $message = sprintf(
-            "Product ingeleverd. Totaal: €%s (Basis: €%s, Boete: €%s, Slijtage: €%s)",
-            number_format($finalCost, 2),
-            number_format($breakdown['base_cost'], 2),
-            number_format($breakdown['late_fee'], 2),
-            number_format($breakdown['wear_and_tear'], 2)
-        );
+        // 4. Feedback geven aan de gebruiker
+        $message = __('rental.returned_cost_breakdown', [
+            'total' => number_format($finalCost, 2),
+            'base' => number_format($breakdown['base_cost'], 2),
+            'late_fee' => number_format($breakdown['late_fee'], 2),
+            'wear_and_tear' => number_format($breakdown['wear_and_tear'], 2),
+        ]);
 
         return redirect()->back()->with('status', $message);
     }
