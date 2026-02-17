@@ -11,9 +11,9 @@ class BidSeeder extends Seeder
 {
     public function run(): void
     {
-        // Get Auction Ads
+        // Stap 1: Haal alle lopende veilingen op
         $auctions = Advertisement::where('type', 'auction')->get();
-        // Get Private Users who bid
+        // Stap 2: Haal particuliere gebruikers op die kunnen bieden
         $bidders = User::where('role', 'private_ad')->get();
 
         if ($auctions->isEmpty() || $bidders->isEmpty()) {
@@ -21,24 +21,25 @@ class BidSeeder extends Seeder
         }
 
         foreach ($auctions as $auction) {
-            // Place 1-4 bids per auction
+            // Scenario: Simuleer een actief biedproces met 1 tot 4 biedingen per veiling.
             $numBids = rand(1, 4);
             $currentPrice = $auction->price;
 
             for ($i = 0; $i < $numBids; $i++) {
                 $bidder = $bidders->random();
-                $bidAmount = $currentPrice + rand(10, 50); // Increment
                 
-                // Ensure unique user per bid if needed, or allow multiple.
-                // Dashboard logic implies "Highest", so we just create them.
+                // Bedrijfsregel: Een nieuw bod moet altijd hoger zijn dan de huidige prijs.
+                // We verhogen het bod hier met een willekeurig bedrag tussen 10 en 50.
+                $bidAmount = $currentPrice + rand(10, 50); 
                 
                 Bid::create([
                     'advertisement_id' => $auction->id,
                     'user_id' => $bidder->id,
                     'amount' => $bidAmount,
-                    // 'status' => 'accepted' // REMOVED: Schema does not support status. Dashboard calculates it.
+                    // Opmerking: Status veld is niet nodig. Dashboard bepaalt het hoogste bod dynamisch.
                 ]);
                 
+                // Update de huidige prijs voor de volgende iteratie in de loop
                 $currentPrice = $bidAmount;
             }
         }

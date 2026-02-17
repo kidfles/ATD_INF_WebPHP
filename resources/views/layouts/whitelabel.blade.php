@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+{{--
+    Layout: Whitelabel Company Layout
+    Doel: De basislayout voor specifieke bedrijfspagina's.
+    Kenmerk: Minimalistisch, zodat de branding van het bedrijf (logo/kleuren) centraal staat.
+--}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">

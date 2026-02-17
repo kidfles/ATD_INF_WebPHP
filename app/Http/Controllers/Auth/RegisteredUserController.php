@@ -15,7 +15,7 @@ use Illuminate\View\View;
 class RegisteredUserController extends Controller
 {
     /**
-     * Display the registration view.
+     * Toon het registratieformulier.
      */
     public function create(): View
     {
@@ -23,7 +23,7 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * Handle an incoming registration request.
+     * Verwerk een inkomend registratieverzoek.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -50,12 +50,12 @@ class RegisteredUserController extends Controller
                 'user_id' => $user->id,
                 'company_name' => $request->company_name,
                 'kvk_number' => $request->kvk_number,
-                // Defaults
+                // Standaardwaarden
                 'custom_url_slug' => \Illuminate\Support\Str::slug($request->company_name) . '-' . rand(100,999),
-                'brand_color' => '#000000', // Default color
+                'brand_color' => '#000000', // Standaardkleur
             ]);
 
-            // Direct defaults aanmaken
+            // Direct standaard componenten aanmaken
             \App\Models\PageComponent::create([
                 'company_id' => $company->id,
                 'component_type' => 'hero',

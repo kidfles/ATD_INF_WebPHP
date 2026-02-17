@@ -7,7 +7,14 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Vul de database met testdata.
+     * 
+     * Volgorde is cruciaal vanwege Foreign Key constraints:
+     * 1. Users (Basis entiteiten)
+     * 2. CompanyProfiles (Breidt zakelijke users uit)
+     * 3. PageComponents (Afhankelijk van CompanyProfiles)
+     * 4. Advertisements (Afhankelijk van Users)
+     * 5. Bids/Rentals/Reviews (Interacties op Advertenties/Users)
      */
     public function run(): void
     {

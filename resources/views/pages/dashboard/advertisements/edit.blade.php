@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Advertentie Bewerken
+        Doel: Formulier voor het wijzigen van een bestaande advertentie.
+        Bevat: Pre-filled velden met huidige data.
+    --}}
     <div class="py-4">
         <div class="max-w-3xl mx-auto">
 

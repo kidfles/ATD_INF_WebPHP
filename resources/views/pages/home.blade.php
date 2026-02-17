@@ -1,5 +1,13 @@
 <x-app-layout :hideSidebar="true">
 
+{{--
+    Pagina: Homepagina (Landing)
+    Doel: De eerste indruk van de applicatie.
+    Bevat:
+    - Hero sectie met call-to-actions (Aanmelden/Marktplaats).
+    - Uitgelichte advertenties (Featured Ads).
+--}}
+
     <!-- Hero Section -->
     <div class="relative bg-white overflow-hidden rounded-[2rem] shadow-soft border border-slate-100 -mt-2">
         <div class="max-w-7xl mx-auto">

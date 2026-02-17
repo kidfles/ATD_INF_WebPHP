@@ -18,8 +18,7 @@
                         </div>
                     @else
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                            @foreach($favorites as $fav)
-                                @php $ad = $fav->advertisement; @endphp
+                            @foreach($favorites as $ad)
                                 <div class="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden hover:shadow-soft hover:-translate-y-0.5 transition-all duration-300 group">
                                     @if($ad->image_path)
                                         <img src="{{ asset('storage/' . $ad->image_path) }}" alt="{{ $ad->title }}" class="w-full h-40 object-cover">
@@ -33,10 +32,9 @@
                                         <p class="text-emerald-500 font-extrabold mt-1">€{{ number_format($ad->price, 2) }}</p>
                                         <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
                                             <span class="text-xs text-slate-400 font-semibold">{{ ucfirst($ad->type) }}</span>
-                                            <form action="{{ route('dashboard.favorites.destroy', $fav) }}" method="POST">
+                                            <form action="{{ route('favorites.toggle', $ad) }}" method="POST">
                                                 @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-400 hover:text-red-600 transition-colors">
+                                                <button type="submit" class="text-red-400 hover:text-red-600 transition-colors" title="{{ __('Remove from favorites') }}">
                                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
                                                 </button>
                                             </form>

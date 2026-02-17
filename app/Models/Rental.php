@@ -82,4 +82,28 @@ class Rental extends Model
     {
         return $this->getDaysCount() * $this->advertisement->price;
     }
+
+    /**
+     * Bepaal de status van de verhuur op basis van datums en inleverstatus.
+     * 
+     * @return string
+     */
+    public function getStatusAttribute(): string
+    {
+        if ($this->return_photo_path) {
+            return 'returned';
+        }
+
+        $now = now()->startOfDay();
+
+        if ($now->lt($this->start_date)) {
+            return 'pending'; // Toekomstige reservering
+        }
+
+        if ($now->gt($this->end_date)) {
+            return 'overdue';
+        }
+
+        return 'active';
+    }
 }

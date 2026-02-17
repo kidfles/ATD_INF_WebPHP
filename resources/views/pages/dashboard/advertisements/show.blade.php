@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Advertentie Detail (Dashboard)
+        Doel: Gedetailleerde weergave van een eigen advertentie.
+        Bevat: Afbeelding, prijs, beschrijving en beheeropties.
+    --}}
     <div class="py-4">
         <div class="max-w-5xl mx-auto">
 

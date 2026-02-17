@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+{{--
+    Layout: Market Layout
+    Doel: De layout voor de openbare marktplaats.
+    Structuur: Volledige breedte, met focus op de advertentiegrid en zoekfunctionaliteit.
+--}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">

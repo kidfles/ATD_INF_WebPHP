@@ -11,7 +11,8 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Admin
+        // 1. Admin Gebruiker
+        // Rol: 'admin' - Heeft volledige toegang tot het dashboard en beheertaken.
         User::create([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
@@ -20,7 +21,8 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // 1b. Standard User (No Ad Rights)
+        // 1b. Standaard Gebruiker
+        // Rol: 'user' - Kan alleen kijken, kopen en huren. Mag GEEN advertenties plaatsen.
         User::create([
             'name' => 'Standard User',
             'email' => 'user@example.com',
@@ -29,7 +31,9 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // 2. Private Advertisers
+        // 2. Particuliere Adverteerders
+        // Rol: 'private_ad' - Mag advertenties plaatsen maar heeft geen bedrijfspagina.
+        // Scenario: Testen van individuele verkopen en verhuur zonder KvK.
         $privateUsers = [
             ['name' => 'John Doe', 'email' => 'john@example.com'],
             ['name' => 'Jane Smith', 'email' => 'jane@example.com'],
@@ -46,13 +50,14 @@ class UserSeeder extends Seeder
             ]);
         }
 
-        // 3. Business Advertisers (Profiles created in CompanyProfileSeeder)
+        // 3. Zakelijke Adverteerders
+        // Rol: 'business_ad' - Mag advertenties plaatsen EN heeft een bedrijfsprofiel + pagina.
+        // Koppeling: Profielen worden aangemaakt in CompanyProfileSeeder.
         $businesses = [
             ['name' => 'TechHub Nederland', 'email' => 'info@techhub.nl'],
             ['name' => 'BouwGigant Verhuur', 'email' => 'verhuur@bouwgigant.nl'],
             ['name' => 'Vintage Veiling Huis', 'email' => 'info@vintageveiling.nl'],
-            ['name' => 'Mega Store Outlet', 'email' => 'bulk@example.com'], // For pagination testing
-
+            ['name' => 'Mega Store Outlet', 'email' => 'bulk@example.com'], // Scenario: Paginatie testen met veel data
         ];
 
         foreach ($businesses as $business) {

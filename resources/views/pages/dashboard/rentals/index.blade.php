@@ -51,12 +51,13 @@
                                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-500 border border-red-200">{{ ucfirst($rental->status) }}</span>
                                                 @endif
                                             </td>
-                                            <td class="py-4 text-sm">
-                                                @if($rental->status === 'active' && $rental->end_date->isPast())
-                                                    <form action="{{ route('dashboard.rentals.return', $rental) }}" method="POST" class="inline">
-                                                        @csrf
-                                                        <button type="submit" class="px-3 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full text-xs font-bold hover:bg-emerald-100 transition-all">{{ __('Retourneren') }}</button>
-                                                    </form>
+                                                <td class="py-4 text-sm">
+                                                    @if($rental->status === 'active' || $rental->status === 'overdue')
+                                                        <form action="{{ route('rentals.return', $rental) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-2">
+                                                            @csrf
+                                                            <input type="file" name="photo" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" required>
+                                                            <button type="submit" class="px-3 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full text-xs font-bold hover:bg-emerald-100 transition-all w-fit">{{ __('Retourneren') }}</button>
+                                                        </form>
                                                 @else
                                                     <span class="text-slate-300">—</span>
                                                 @endif

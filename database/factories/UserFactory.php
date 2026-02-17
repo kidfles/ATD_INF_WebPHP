@@ -17,25 +17,25 @@ class UserFactory extends Factory
     protected static ?string $password;
 
     /**
-     * Define the model's default state.
+     * Definieer de standaard staat van het model.
      *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
-        // fake() will use nl_NL locale due to APP_FAKER_LOCALE
+        // fake() gebruikt nl_NL locale vanwege APP_FAKER_LOCALE instelling
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => 'user', // Default role
+            'role' => 'user', // Standaard rol
             'remember_token' => Str::random(10),
         ];
     }
 
     /**
-     * Indicate that the model's email address should be unverified.
+     * Staat: E-mailadres is niet geverifieerd.
      */
     public function unverified(): static
     {
@@ -44,6 +44,9 @@ class UserFactory extends Factory
         ]);
     }
     
+    /**
+     * Staat: Gebruiker is een beheerder (Admin).
+     */
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
@@ -51,6 +54,9 @@ class UserFactory extends Factory
         ]);
     }
     
+    /**
+     * Staat: Gebruiker is een zakelijke adverteerder.
+     */
     public function businessAdvertiser(): static
     {
         return $this->state(fn (array $attributes) => [
@@ -58,6 +64,9 @@ class UserFactory extends Factory
         ]);
     }
     
+    /**
+     * Staat: Gebruiker is een particuliere adverteerder.
+     */
     public function privateAdvertiser(): static
     {
         return $this->state(fn (array $attributes) => [

@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Advertenties Overzicht
+        Doel: Beheerpagina voor de eigen advertenties van de gebruiker.
+        Bevat: Filteropties, lijstweergave en actieknoppen (bewerken/verwijderen).
+    --}}
     <div class="py-4">
         <div class="max-w-7xl mx-auto">
 

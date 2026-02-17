@@ -1,4 +1,11 @@
 <x-app-layout>
+    {{--
+        Pagina: Nieuwe Advertentie
+        Doel: Formulier voor het aanmaken van een nieuwe advertentie.
+        Functionaliteiten:
+        - Keuze uit type (verkoop, verhuur, veiling).
+        - Validatie en file upload voor afbeeldingen.
+    --}}
     <div class="py-4">
         <div class="max-w-3xl mx-auto">
 

@@ -11,9 +11,9 @@ class RentalSeeder extends Seeder
 {
     public function run(): void
     {
-        // Get Rent Ads
+        // Stap 1: Haal advertenties van het type 'huur'
         $rentAds = Advertisement::where('type', 'rent')->get();
-        // Get Private Users who rent
+        // Stap 2: Haal potentiële huurders
         $renters = User::where('role', 'private_ad')->get();
 
         if ($rentAds->isEmpty() || $renters->isEmpty()) {
@@ -21,17 +21,20 @@ class RentalSeeder extends Seeder
         }
 
         foreach ($rentAds as $ad) {
-            // 50% chance to have a rental history
+            // Scenario: 50% kans dat een verhuur-item daadwerkelijk verhuurd is geweest in het verleden.
             if (rand(0, 1)) {
                 $renter = $renters->random();
                 
-                // Past Rental (Completed with Return Info)
+                // Maak een AFGERONDE verhuur historie aan
                 Rental::create([
                     'advertisement_id' => $ad->id,
                     'renter_id' => $renter->id,
                     'start_date' => now()->subDays(10),
                     'end_date' => now()->subDays(5),
-                    'wear_and_tear_cost' => rand(0, 1) ? 15.00 : null, // sometimes damanged
+                    
+                    // Bedrijfsregel: Schade/Slijtage (Wear & Tear)
+                    // Als er schade is, wordt er een bedrag gerekend. Hier simuleren we 50% kans op schade.
+                    'wear_and_tear_cost' => rand(0, 1) ? 15.00 : null, 
                     'return_photo_path' => 'images/placeholders/return.jpg',
                 ]);
             }

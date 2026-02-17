@@ -1,3 +1,11 @@
+{{--
+    Component: Navigatiebalk
+    Doel: De primaire navigatie bovenaan de pagina.
+    Bevat:
+    - Links naar Dashboard, Mijn Advertenties, etc.
+    - Gebruikersmenu (Profiel, Uitloggen).
+    - Responsive hamburger menu voor mobiele apparaten.
+--}}
 <nav x-data="{ open: false }" class="bg-white border-b border-slate-100 shadow-sm">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

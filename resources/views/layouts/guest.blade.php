@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+{{--
+    Layout: Guest Layout
+    Doel: Minimalistische layout voor niet-ingelogde gebruikers (Login, Registratie).
+    Stijl: Gecentreerde kaart op een rustige achtergrond, gericht op conversie/toegang.
+--}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">

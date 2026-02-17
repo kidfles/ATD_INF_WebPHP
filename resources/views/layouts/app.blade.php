@@ -1,5 +1,14 @@
 @props(['hideSidebar' => false])
 
+{{--
+    Layout: App Layout (Dashboard)
+    Doel: De hoofdlayout voor geauthenticeerde gebruikers binnen de beheeromgeving.
+    Functionaliteiten:
+    - Bevat de globale navigatie en (optioneel) de sidebar.
+    - Toont flash-meldingen voor succes/fout feedback.
+    - Regelt de responsive structuur (mobiel/desktop).
+--}}
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>

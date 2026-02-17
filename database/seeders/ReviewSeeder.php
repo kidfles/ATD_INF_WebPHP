@@ -11,7 +11,8 @@ class ReviewSeeder extends Seeder
 {
     public function run(): void
     {
-        // Reviews on Ads (Product Reviews)
+        // 1. Reviews op Producten (Advertenties)
+        // Scenario: Gebruikers laten reviews achter op specifieke items die ze hebben gebruikt.
         $ads = Advertisement::all();
         $users = User::where('role', 'private_ad')->get();
 
@@ -21,22 +22,23 @@ class ReviewSeeder extends Seeder
             Review::create([
                 'reviewer_id' => $users->random()->id,
                 'reviewable_id' => $ad->id,
-                'reviewable_type' => Advertisement::class,
+                'reviewable_type' => Advertisement::class, // Polymorfe koppeling naar Advertentie
                 'rating' => rand(3, 5),
-                'comment' => 'Great product, works as expected!',
+                'comment' => 'Geweldig product, werkt zoals verwacht!',
             ]);
         }
 
-        // Reviews on Sellers (User Reviews)
+        // 2. Reviews op Verkopers (Gebruikers)
+        // Scenario: Gebruikers beoordelen de verkoper zelf op basis van service en betrouwbaarheid.
         $sellers = User::where('role', 'business_ad')->get();
 
         foreach ($sellers as $seller) {
             Review::create([
                 'reviewer_id' => $users->random()->id,
                 'reviewable_id' => $seller->id,
-                'reviewable_type' => User::class,
+                'reviewable_type' => User::class, // Polymorfe koppeling naar User
                 'rating' => rand(4, 5),
-                'comment' => 'Excellent service and reliable equipment.',
+                'comment' => 'Uitstekende service en betrouwbare apparatuur.',
             ]);
         }
     }

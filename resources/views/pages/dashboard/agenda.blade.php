@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Agenda
+        Doel: Toont een overzicht van geplande afspraken of evenementen.
+        Status: Work in progress (WIP).
+    --}}
     <div class="py-4">
         <div class="max-w-7xl mx-auto">
 

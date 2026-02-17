@@ -1,4 +1,12 @@
 <x-app-layout>
+{{--
+    Pagina: Dashboard Overzicht
+    Doel: De centrale hub voor de ingelogde gebruiker.
+    Bevat:
+    - Statistieken (actieve advertenties, openstaande biedingen, etc.).
+    - Recente activiteiten.
+    - Snelkoppelingen naar belangrijke acties.
+--}}
     <div class="py-4">
         <div class="max-w-7xl mx-auto">
 
