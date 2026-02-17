@@ -1,82 +1,60 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Mijn Favorieten') }}
-        </h2>
-    </x-slot>
+    {{--
+        Pagina: Mijn Favorieten
+        Doel: Lijst van advertenties die de gebruiker als favoriet heeft gemarkeerd.
+        Bevat: Afbeeldingen, prijzen en optie om te verwijderen.
+    --}}
+    <div class="py-4">
+        <div class="max-w-7xl mx-auto">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-3xl border border-gray-100">
-                <div class="p-8 text-gray-900">
+            <h2 class="text-2xl font-extrabold text-slate-800 mb-6">{{ __('Mijn Favorieten') }}</h2>
+
+            <div class="bg-white rounded-[2rem] shadow-soft border border-slate-100">
+                <div class="p-6 sm:p-8">
                     @if($favorites->isEmpty())
                         <div class="text-center py-12">
-                            <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                            </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">Geen favorieten</h3>
-                            <p class="mt-1 text-sm text-gray-500">Je hebt nog geen advertenties als favoriet gemarkeerd.</p>
-                            <div class="mt-6">
-                                <a href="{{ route('market.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    Naar de Markt
-                                </a>
+                            <div class="bg-red-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                <svg class="w-8 h-8 text-red-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.486 4.486 0 000 6.364L12 20.364l7.682-7.682a4.486 4.486 0 000-6.364 4.486 4.486 0 00-6.364 0L12 7.636l-1.318-1.318a4.486 4.486 0 00-6.364 0z"/>
+                                </svg>
                             </div>
+                            <p class="text-slate-400 font-medium">{{ __('Je hebt nog geen favorieten.') }}</p>
+                            <a href="{{ route('market.index') }}" class="inline-flex items-center mt-4 px-5 py-2.5 bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-full text-sm font-bold shadow-sm hover:shadow-emerald-500/30 transition-all">{{ __('Ontdek de marktplaats') }}</a>
                         </div>
                     @else
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                             @foreach($favorites as $ad)
-                                <div class="border rounded-xl overflow-hidden shadow-sm hover:shadow-md transition bg-white flex flex-col h-full relative group">
-                                    
-                                    {{-- Image --}}
-                                    <div class="relative h-48 bg-gray-100">
-                                        @if($ad->image_path)
-                                            <img src="{{ asset('storage/' . $ad->image_path) }}" class="w-full h-full object-cover">
-                                        @else
-                                            <div class="w-full h-full flex items-center justify-center text-gray-300">
-                                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                            </div>
-                                        @endif
-                                        
-                                        {{-- Remove Button (X) --}}
-                                        <form action="{{ route('favorites.toggle', $ad) }}" method="POST" class="absolute top-2 right-2">
-                                            @csrf
-                                            <button type="submit" class="bg-white/90 backdrop-blur p-1.5 rounded-full text-red-500 hover:bg-red-50 transition shadow-sm" title="Verwijder uit favorieten">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
-                                                </svg>
-                                            </button>
-                                        </form>
-
-                                        {{-- Badge --}}
-                                        <div class="absolute top-2 left-2 px-2 py-1 bg-white/90 backdrop-blur rounded-full text-xs font-bold uppercase tracking-wider text-indigo-600 shadow-sm">
-                                            {{ $ad->type }}
+                                <div class="bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden hover:shadow-soft hover:-translate-y-0.5 transition-all duration-300 group">
+                                    @if($ad->image_path)
+                                        <img src="{{ asset('storage/' . $ad->image_path) }}" alt="{{ $ad->title }}" class="w-full h-40 object-cover">
+                                    @else
+                                        <div class="w-full h-40 bg-slate-100 flex items-center justify-center">
+                                            <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                         </div>
-                                    </div>
-
-                                    {{-- Content --}}
-                                    <div class="p-4 flex flex-col flex-1">
-                                        <h3 class="font-bold text-lg text-gray-900 truncate mb-1" title="{{ $ad->title }}">
-                                            {{ $ad->title }}
-                                        </h3>
-                                        <p class="text-sm text-gray-500 mb-4 line-clamp-2">{{ $ad->description }}</p>
-                                        
-                                        <div class="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                                            <span class="font-black text-lg text-gray-900">€ {{ number_format($ad->price, 2) }}</span>
-                                            <a href="{{ route('market.show', $ad) }}" class="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline">
-                                                Bekijk &rarr;
-                                            </a>
+                                    @endif
+                                    <div class="p-4">
+                                        <a href="{{ route('market.show', $ad) }}" class="font-bold text-slate-800 group-hover:text-emerald-600 transition-colors block truncate">{{ $ad->title }}</a>
+                                        <p class="text-emerald-500 font-extrabold mt-1">€{{ number_format($ad->price, 2) }}</p>
+                                        <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                                            <span class="text-xs text-slate-400 font-semibold">{{ ucfirst($ad->type) }}</span>
+                                            <form action="{{ route('favorites.toggle', $ad) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="text-red-400 hover:text-red-600 transition-colors" title="{{ __('Remove from favorites') }}">
+                                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
-                        
-                        <div class="mt-8">
+                        <div class="mt-6">
                             {{ $favorites->links() }}
                         </div>
                     @endif
                 </div>
             </div>
+
         </div>
     </div>
 </x-app-layout>

@@ -58,6 +58,6 @@ class RentalController extends Controller
             'end_date' => $end,
         ]);
 
-        return back()->with('status', __('Rental successfully booked!'));
+        return back()->with('success', __('Rental successfully booked!'));
     }
 }

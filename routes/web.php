@@ -46,7 +46,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
         return view('pages.dashboard.index', [
             // "Mijn Activiteit" - zaken die ik heb gekocht/gehuurd
             'myRentals' => $user->rentals()->with('advertisement')->latest()->get(),
-            'myBids'    => $user->bids()->with('advertisement')->latest()->get(),
+            'myBids'    => $user->bids()->with('advertisement')->latest()->take(5)->get(),
+            'myBidsCount' => $user->bids()->count(),
             'myAds'     => $user->advertisements()->latest()->take(5)->get(),
             
             // "Mijn Verkoop" - zaken die anderen bij mij hebben gekocht/gehuurd
@@ -82,8 +83,8 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     Route::post('/company/import-csv', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'importCsv'])->name('company.import_csv');
 
     // Agenda (Visueel overzicht van verhuur en verloopdatums)
-    Route::get('/agenda', [App\Http\Controllers\Dashboard\AgendaController::class, 'index'])->name('dashboard.agenda.index');
-    Route::get('/agenda/events', [App\Http\Controllers\Dashboard\AgendaController::class, 'events'])->name('dashboard.agenda.events');
+    Route::get('/agenda', [App\Http\Controllers\Dashboard\AgendaController::class, 'index'])->name('agenda.index');
+    Route::get('/agenda/events', [App\Http\Controllers\Dashboard\AgendaController::class, 'events'])->name('agenda.events');
 });
 
 // Algemene Beveiligde Routes (Auth middleware)

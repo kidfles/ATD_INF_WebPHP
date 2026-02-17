@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+{{--
+    Layout: Publieke Layout
+    Doel: Wrapper voor openbare pagina's (niet-dashboard).
+--}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -7,16 +11,15 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
+        {{-- Nunito Font --}}
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=nunito:400,500,600,700,800&display=swap" rel="stylesheet" />
 
-        <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased bg-gray-100">
-        <div class="min-h-screen bg-gray-100">
-            {{-- GLOBAL HEADER (Marktplaats Style) --}}
+    <body class="font-sans antialiased bg-slate-50 text-slate-700">
+        <div class="min-h-screen bg-slate-50">
+            {{-- GLOBAL HEADER --}}
             <x-global-header />
 
             {{-- Main Content (No Sidebar) --}}
@@ -25,12 +28,12 @@
                     
                     {{-- Alert Messages --}}
                     @if(session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 mx-4 sm:mx-0">
+                        <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-5 py-4 rounded-2xl mb-4 mx-4 sm:mx-0 text-sm font-medium" x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0">
                             {{ session('success') }}
                         </div>
                     @endif
                     @if(session('error'))
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mx-4 sm:mx-0">
+                        <div class="bg-red-50 border border-red-200 text-red-600 px-5 py-4 rounded-2xl mb-4 mx-4 sm:mx-0 text-sm font-medium">
                             {{ session('error') }}
                         </div>
                     @endif

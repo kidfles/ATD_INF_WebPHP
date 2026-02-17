@@ -11,26 +11,32 @@ use App\Models\User;
 class AdvertisementFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Definieer de standaard staat van het model.
+     * 
+     * Genereert realistische Nederlandse advertenties met willekeurige types 
+     * (verkoop, verhuur, veiling) en bijbehorende prijzen.
      *
      * @return array<string, mixed>
      */
     public function definition(): array
     {
-        // Use a list of real Dutch product names to be realistic
+        // Lijst met realistische Nederlandse productnamen
         $products = [
             'Elektrische Fiets', 'Houten Eettafel', 'Iphone 13 Pro', 'Playstation 5', 
             'Wasmachine Bosch', 'Tweedehands Bank', 'Vintage Kast', 'Racefiets Carbon',
             'Laptop HP Pavilion', 'Samsung Galaxy S22', 'Koffiezetapparaat', 'Boormachine Makita'
         ];
 
+        $type = $this->faker->randomElement(['sell', 'rent', 'auction']);
+
         return [
             'user_id' => User::factory(),
-            'type' => $this->faker->randomElement(['sell', 'rent', 'auction']),
+            'type' => $type,
             'title' => $this->faker->randomElement($products) . ' ' . $this->faker->word(),
-            'description' => $this->faker->paragraph(3), // Dutch text due to APP_FAKER_LOCALE
+            'description' => $this->faker->paragraph(3), // Nederlandse tekst via APP_FAKER_LOCALE
             'price' => $this->faker->randomFloat(2, 5, 2500),
-            'expires_at' => $this->faker->dateTimeBetween('now', '+3 months'),
+            // Bedrijfsregel: Verkoop advertenties hebben geen verloopdatum, veilingen wel.
+            'expires_at' => $type === 'sell' ? null : $this->faker->dateTimeBetween('now', '+3 months'),
         ];
     }
 }

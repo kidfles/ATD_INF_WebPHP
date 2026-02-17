@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+{{--
+    Layout: PDF Contract
+    Doel: Genereert het samenwerkingscontract voor zakelijke partners (whitelabel).
+    Bevat: Bedrijfsgegevens, voorwaarden en handtekeningvelden.
+--}}
 <html>
 <head>
     <title>Contract - {{ $company->company_name }}</title>

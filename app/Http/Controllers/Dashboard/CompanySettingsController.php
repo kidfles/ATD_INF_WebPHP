@@ -51,6 +51,12 @@ class CompanySettingsController extends Controller
             $data['wear_and_tear_value'] = null;
         }
 
+        // 1b. Security: Only allow return policy updates if contract is approved
+        if ($company->contract_status !== 'approved') {
+            unset($data['wear_and_tear_policy']);
+            unset($data['wear_and_tear_value']);
+        }
+
         $company->update($data);
 
         // 2. Pagina-componenten bijwerken (Hero teksten, Body teksten, etc.)

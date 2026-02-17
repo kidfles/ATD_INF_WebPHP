@@ -1,12 +1,13 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Agenda') }}
-        </h2>
-    </x-slot>
+    {{--
+        Pagina: Agenda
+        Doel: Toont een overzicht van geplande afspraken of evenementen.
+        Status: Work in progress (WIP).
+    --}}
+    <div class="py-4">
+        <div class="max-w-7xl mx-auto">
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-extrabold text-slate-800 mb-6">{{ __('Agenda') }}</h2>
 
             {{-- Calendar Component --}}
             @if(in_array(Auth::user()->role, ['business_ad', 'private_ad']))

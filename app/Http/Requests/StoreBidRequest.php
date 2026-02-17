@@ -48,7 +48,20 @@ class StoreBidRequest extends FormRequest
     {
         return [
             'amount.required' => 'Vul een bedrag in.',
-            'authorize' => 'Je hebt het limiet van 4 actieve biedingen bereikt.',
         ];
+    }
+
+    /**
+     * Handle a failed authorization attempt.
+     *
+     * @return void
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function failedAuthorization()
+    {
+        throw \Illuminate\Validation\ValidationException::withMessages([
+            'amount' => ['Je hebt het limiet van 4 actieve biedingen bereikt.'],
+        ]);
     }
 }
