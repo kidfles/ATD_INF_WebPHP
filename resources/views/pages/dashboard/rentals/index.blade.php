@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Mijn Huuritems
+        Doel: Overzicht van items die de gebruiker momenteel huurt.
+        Bevat: Huurperiode, status en retourformulier (indien actief).
+    --}}
     <div class="py-4">
         <div class="max-w-7xl mx-auto">
 

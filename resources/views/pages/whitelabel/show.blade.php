@@ -1,5 +1,9 @@
 <x-whitelabel-layout :company="$company">
-    
+    {{--
+        Pagina: Bedrijfspagina (Whitelabel)
+        Doel: Publieke pagina van een specifiek bedrijf.
+        Bevat: Branding van het bedrijf en hun specifieke aanbod.
+    --}}
     @php
         $adComponents = $company->pageComponents->where('component_type', 'featured_ads');
         $textComponents = $company->pageComponents->where('component_type', 'text');

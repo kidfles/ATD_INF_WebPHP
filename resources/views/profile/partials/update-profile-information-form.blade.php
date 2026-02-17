@@ -1,4 +1,8 @@
 <section>
+    {{--
+        Sectie: Profielinformatie Bewerken
+        Doel: Formulier voor het updaten van naam en e-mailadres (inclusief e-mailverificatie status).
+    --}}
     <header>
         <h2 class="text-lg font-extrabold text-slate-800">
             {{ __('Profile Information') }}

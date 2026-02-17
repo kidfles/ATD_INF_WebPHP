@@ -1,4 +1,9 @@
 <div class="bg-white rounded-[2rem] shadow-soft border border-slate-100 w-full md:w-64 flex-shrink-0 overflow-hidden">
+{{--
+    Component: Dashboard Sidebar
+    Doel: Zijbalk navigatie voor de beheeromgeving.
+    Bevat: Links naar alle beheermodules (advertenties, biedingen, etc.).
+--}}
     <div class="p-5 border-b border-slate-100">
         <h2 class="text-base font-extrabold text-slate-800 flex items-center gap-2.5">
             <div class="bg-emerald-50 p-2 rounded-xl">

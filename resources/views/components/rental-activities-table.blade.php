@@ -1,4 +1,8 @@
 <div class="bg-white rounded-[2rem] shadow-soft border border-slate-100 overflow-hidden mb-6">
+{{--
+    Component: Verhuur Activiteiten Tabel
+    Doel: Overzichttabel van recente verhuurtransacties en statussen.
+--}}
     <div class="p-6">
         <h3 class="font-extrabold text-lg text-slate-800 mb-5 flex items-center gap-2.5">
             <div class="bg-teal-50 p-2 rounded-xl">

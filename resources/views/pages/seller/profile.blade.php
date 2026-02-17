@@ -1,4 +1,9 @@
 <x-public-layout>
+    {{--
+        Pagina: Verkoper Profiel
+        Doel: Openbaar profiel van een verkoper.
+        Bevat: Naam, bio, actieve advertenties en beoordelingen.
+    --}}
     {{-- PART 1: THE HERO SECTION --}}
     
     @if($isBusiness && $heroComponent)

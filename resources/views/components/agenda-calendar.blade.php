@@ -1,4 +1,8 @@
 <div class="bg-white rounded-[2rem] shadow-soft border border-slate-100 overflow-hidden mb-6">
+{{--
+    Component: Agenda Kalender
+    Doel: Weergave van verhuur- en retourdata in een kalenderoverzicht.
+--}}
     <div class="p-6">
         <h3 class="font-extrabold text-lg text-slate-800 mb-4 flex items-center gap-2.5">
             <div class="bg-amber-50 p-2 rounded-xl">

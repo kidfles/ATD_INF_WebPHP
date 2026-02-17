@@ -1,4 +1,9 @@
 <x-app-layout :hideSidebar="true">
+    {{--
+        Pagina: Advertentie Detail (Publiek)
+        Doel: Volledige weergave van een advertentie voor potentiële kopers.
+        Bevat: Foto's, beschrijving, prijs, verkoper info en actieknoppen (kopen/bieden/huren).
+    --}}
     <style>
         :root {
             --seller-color: {{ $brandColor ?? '#059669' }};

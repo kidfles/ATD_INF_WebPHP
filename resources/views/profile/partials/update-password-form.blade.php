@@ -1,4 +1,8 @@
 <section>
+    {{--
+        Sectie: Wachtwoord Wijzigen
+        Doel: Formulier om het wachtwoord van de gebruiker veilig te updaten.
+    --}}
     <header>
         <h2 class="text-lg font-extrabold text-slate-800">
             {{ __('Update Password') }}

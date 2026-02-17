@@ -1,4 +1,12 @@
 <x-app-layout>
+    {{--
+        Pagina: Bedrijfspagina Instellingen
+        Doel: Beheer de whitelabel omgeving.
+        Functionaliteiten:
+        - Aanpassen styling (kleuren, logo).
+        - Beheren van pagina-secties (hero, tekst, advertenties).
+        - Uploaden van contracten voor goedkeuring.
+    --}}
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 

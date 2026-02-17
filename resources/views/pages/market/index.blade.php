@@ -1,4 +1,9 @@
 <x-app-layout :hideSidebar="true">
+    {{--
+        Pagina: Marktplaats Overzicht
+        Doel: De openbare catalogus van advertenties.
+        Bevat: Zoekfilters, categorieën en rasterweergave van advertenties.
+    --}}
     <div class="py-2">
         <h1 class="text-3xl font-extrabold text-slate-800 mb-6">{{ __('Marketplace') }}</h1>
 

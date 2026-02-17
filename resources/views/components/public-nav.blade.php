@@ -1,4 +1,8 @@
 <nav class="bg-white border-b border-slate-100 shadow-sm">
+{{--
+    Component: Publieke Navigatie
+    Doel: Navigatiemenu voor publieke pagina's.
+--}}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">

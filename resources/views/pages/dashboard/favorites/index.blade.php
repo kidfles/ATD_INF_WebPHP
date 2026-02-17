@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Mijn Favorieten
+        Doel: Lijst van advertenties die de gebruiker als favoriet heeft gemarkeerd.
+        Bevat: Afbeeldingen, prijzen en optie om te verwijderen.
+    --}}
     <div class="py-4">
         <div class="max-w-7xl mx-auto">
 

@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Profiel Bewerken
+        Doel: Hoofdpagina voor accountbeheer.
+        Bevat: Inclusies voor profielinfo, wachtwoord wijzigen en account verwijderen.
+    --}}
     <div class="py-4">
         <div class="max-w-4xl mx-auto space-y-6">
 

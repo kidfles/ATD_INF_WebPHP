@@ -1,4 +1,8 @@
 <section class="space-y-6">
+    {{--
+        Sectie: Account Verwijderen
+        Doel: Formulier en bevestigingsmodal voor het definitief verwijderen van het account.
+    --}}
     <header>
         <h2 class="text-lg font-extrabold text-slate-800">
             {{ __('Delete Account') }}

@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+{{--
+    Layout: Publieke Layout
+    Doel: Wrapper voor openbare pagina's (niet-dashboard).
+--}}
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">

@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Mijn Aankopen
+        Doel: Historisch overzicht van gekochte items.
+        Bevat: Besteldetails, totale uitgaven en datum van aankoop.
+    --}}
     <div class="py-4">
         <div class="max-w-7xl mx-auto space-y-6">
 

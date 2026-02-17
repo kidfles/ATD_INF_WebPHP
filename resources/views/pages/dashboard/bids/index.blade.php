@@ -1,4 +1,9 @@
 <x-app-layout>
+    {{--
+        Pagina: Mijn Biedingen
+        Doel: Overzicht van alle biedingen die de gebruiker heeft geplaatst.
+        Bevat: Advertentie details, bod status (hoogste/overboden) en bedrag.
+    --}}
     <div class="py-4">
         <div class="max-w-7xl mx-auto">
 
