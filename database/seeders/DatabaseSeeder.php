@@ -184,12 +184,26 @@ class DatabaseSeeder extends Seeder
             'type' => 'sell',
         ]);
 
-        // Random Filler Data (Background noise)
-        User::factory(5)->create()->each(function ($u) {
-            if (rand(0,1)) {
-                Advertisement::factory(rand(1, 2))->create(['user_id' => $u->id]);
-            }
-        });
+        // -- Mega Store (Pagination Testing / Bulk Data) --
+        $bulkBusiness = User::factory()->businessAdvertiser()->create([
+            'name' => 'Mega Store Outlet',
+            'email' => 'bulk@example.com',
+            'password' => bcrypt('password'),
+        ]);
+
+        CompanyProfile::factory()->create([
+            'user_id' => $bulkBusiness->id,
+            'company_name' => 'Mega Store Outlet',
+            'custom_url_slug' => 'mega-store',
+            'brand_color' => '#ef4444', // Red
+            'kvk_number' => '90000003',
+            'contract_status' => 'approved',
+        ]);
+
+        // Create 50 mixed ads for this specific user to test pagination
+        Advertisement::factory(50)->create([
+            'user_id' => $bulkBusiness->id,
+        ]);
 
         // ==========================================
         // 4. INTERACTIONS (Bids, Reviews, etc.)
@@ -269,11 +283,9 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        // Add expiry dates to tech products for calendar visibility
+        // Tech Solutions Ads (Selling)
+        // Note: We do NOT set expires_at for sell ads anymore.
         $techAds = Advertisement::where('user_id', $techBusiness->id)->get();
-        foreach ($techAds as $i => $ad) {
-            $ad->update(['expires_at' => now()->addDays(($i + 1) * 10)]); // 10, 20, 30, 40 days out
-        }
 
         // ==========================================
         // 6. LINKED ADVERTISEMENTS (Cross-Sell / Upsell)
@@ -299,12 +311,5 @@ class DatabaseSeeder extends Seeder
             $techAds[1]->relatedAds()->sync([$techAds[0]->id]);
         }
 
-        // Note: Private sell-type advertisements (e.g. the mountain bike) intentionally
-        // do not receive an expires_at value here coverage as per business rules.
-
-        // Private ads expiry (the mountain bike)
-        Advertisement::where('user_id', $privateUser->id)
-            ->where('type', 'sell')
-            ->update(['expires_at' => now()->addDays(21)]);
     }
 }

@@ -24,13 +24,15 @@ class AdvertisementFactory extends Factory
             'Laptop HP Pavilion', 'Samsung Galaxy S22', 'Koffiezetapparaat', 'Boormachine Makita'
         ];
 
+        $type = $this->faker->randomElement(['sell', 'rent', 'auction']);
+
         return [
             'user_id' => User::factory(),
-            'type' => $this->faker->randomElement(['sell', 'rent', 'auction']),
+            'type' => $type,
             'title' => $this->faker->randomElement($products) . ' ' . $this->faker->word(),
             'description' => $this->faker->paragraph(3), // Dutch text due to APP_FAKER_LOCALE
             'price' => $this->faker->randomFloat(2, 5, 2500),
-            'expires_at' => $this->faker->dateTimeBetween('now', '+3 months'),
+            'expires_at' => $type === 'sell' ? null : $this->faker->dateTimeBetween('now', '+3 months'),
         ];
     }
 }
