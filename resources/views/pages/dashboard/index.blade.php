@@ -97,6 +97,21 @@
                 </div>
                 @endif
 
+                {{-- Private Seller Profile (Private Seller only) --}}
+                @if(Auth::user()->role === 'private_ad')
+                <div class="opacity-0 animate-pop-in" style="animation-delay: 500ms;">
+                    <a href="{{ route('seller.show', Auth::user()) }}" 
+                       class="group block h-full flex flex-col bg-white rounded-[2rem] shadow-soft border border-slate-100 p-6 hover:-translate-y-1 hover:shadow-soft-lg transition-all duration-300">
+                        <div class="w-12 h-12 bg-pink-50 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-pink-100 transition-colors">
+                            <svg class="w-6 h-6 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                        </div>
+                        <h3 class="text-lg font-extrabold text-slate-800 mb-1">{{ __('My Public Profile') }}</h3>
+                        <p class="text-sm text-slate-400 mb-3 flex-grow">{{ __('View your profile and read your reviews.') }}</p>
+                        <span class="text-pink-500 text-sm font-bold group-hover:text-pink-600 transition-colors mt-auto">{{ __('View Profile') }} &rarr;</span>
+                    </a>
+                </div>
+                @endif
+
                 {{-- Company Settings (Business only) --}}
                 @if(Auth::user()->role === 'business_ad')
                 <div class="opacity-0 animate-pop-in" style="animation-delay: 500ms;">

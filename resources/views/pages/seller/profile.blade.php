@@ -1,4 +1,4 @@
-<x-public-layout>
+<x-app-layout :hideSidebar="true">
     {{--
         Pagina: Verkoper Profiel
         Doel: Openbaar profiel van een verkoper.
@@ -35,9 +35,9 @@
                         {{ $isBusiness ? ($user->companyProfile->company_name ?? $user->name) : $user->name }}
                     </h1>
                     <div class="flex items-center gap-4 mt-2 text-white/80 text-sm font-medium">
-                        <span>Lid sinds {{ $user->created_at->format('M Y') }}</span>
+                        <span>{{ __('Member since') }} {{ $user->created_at->format('M Y') }}</span>
                         <span>•</span>
-                        <span>{{ $user->advertisements->count() }} Advertenties</span>
+                        <span>{{ $user->advertisements->count() }} {{ __('Advertisements') }}</span>
                     </div>
                 </div>
 
@@ -52,7 +52,7 @@
             {{-- LEFT COLUMN: Reviews (Sticky) --}}
             <div class="lg:col-span-1">
                 <div class="bg-white shadow-soft rounded-[2rem] p-6 sticky top-6 border border-slate-100">
-                    <h3 class="text-lg font-extrabold text-slate-800 mb-4">Reviews</h3>
+                    <h3 class="text-lg font-extrabold text-slate-800 mb-4">{{ __('Reviews') }}</h3>
                     
                     {{-- Average Score --}}
                     <div class="flex items-center mb-6">
@@ -77,7 +77,7 @@
                             <div class="mb-6 pt-6 border-t border-slate-100">
                                 <button onclick="document.getElementById('seller-review-form').classList.toggle('hidden')" 
                                         class="w-full bg-gradient-to-r from-emerald-400 to-teal-500 text-white py-2.5 rounded-full font-bold text-sm shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 hover:-translate-y-0.5 transition-all duration-300">
-                                    Schrijf een Review
+                                    {{ __('Write a Review') }}
                                 </button>
                             </div>
                             
@@ -86,23 +86,23 @@
                                 <form action="{{ route('reviews.storeSeller', $user) }}" method="POST">
                                     @csrf
                                     <div class="mb-3">
-                                        <label class="block text-xs font-bold text-slate-600 mb-1">Score</label>
+                                        <label class="block text-xs font-bold text-slate-600 mb-1">{{ __('Score') }}</label>
                                         <select name="rating" class="w-full text-sm bg-white border-slate-200 rounded-xl focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50">
-                                            <option value="5">5 ★ - Uitstekend</option>
-                                            <option value="4">4 ★ - Goed</option>
-                                            <option value="3">3 ★ - Gemiddeld</option>
-                                            <option value="2">2 ★ - Matig</option>
-                                            <option value="1">1 ★ - Slecht</option>
+                                            <option value="5">{{ __('5 ★ - Excellent') }}</option>
+                                            <option value="4">{{ __('4 ★ - Good') }}</option>
+                                            <option value="3">{{ __('3 ★ - Average') }}</option>
+                                            <option value="2">{{ __('2 ★ - Fair') }}</option>
+                                            <option value="1">{{ __('1 ★ - Poor') }}</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
-                                        <textarea name="comment" rows="3" class="w-full text-sm bg-white border-slate-200 rounded-xl focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50" placeholder="Jouw ervaring..."></textarea>
+                                        <textarea name="comment" rows="3" class="w-full text-sm bg-white border-slate-200 rounded-xl focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50" placeholder="{{ __('Your experience...') }}"></textarea>
                                     </div>
-                                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-400 to-teal-500 text-white py-2.5 rounded-full font-bold text-sm shadow-lg hover:-translate-y-0.5 transition-all">Verstuur</button>
+                                    <button type="submit" class="w-full bg-gradient-to-r from-emerald-400 to-teal-500 text-white py-2.5 rounded-full font-bold text-sm shadow-lg hover:-translate-y-0.5 transition-all">{{ __('Submit') }}</button>
                                 </form>
                             </div>
                         @elseif(auth()->id() === $user->id)
-                            <p class="text-xs text-center text-slate-400 mb-6 italic">Dit is je eigen profiel</p>
+                            <p class="text-xs text-center text-slate-400 mb-6 italic">{{ __('This is your own profile') }}</p>
                         @endif
                     @endauth
 
@@ -111,7 +111,7 @@
                         @forelse($user->reviewsReceived as $review)
                             <div class="border-b border-slate-100 pb-4 last:border-0">
                                 <div class="flex justify-between items-center mb-1">
-                                    <span class="font-bold text-sm text-slate-700">{{ $review->reviewer?->name ?? 'Verwijderde gebruiker' }}</span>
+                                    <span class="font-bold text-sm text-slate-700">{{ $review->reviewer?->name ?? __('Deleted user') }}</span>
                                     <span class="text-xs text-slate-400">{{ $review->created_at->diffForHumans() }}</span>
                                 </div>
                                 <div class="flex text-yellow-400 text-xs mb-2">
@@ -121,7 +121,7 @@
                             </div>
                         @empty
                             <div class="text-center py-4">
-                                <p class="text-slate-400 text-sm italic">Nog geen reviews.</p>
+                                <p class="text-slate-400 text-sm italic">{{ __('No reviews yet.') }}</p>
                             </div>
                         @endforelse
                     </div>
@@ -132,8 +132,8 @@
             {{-- RIGHT COLUMN: Advertisements --}}
             <div class="lg:col-span-2">
                 <div class="flex justify-between items-end mb-6">
-                    <h3 class="text-xl font-extrabold text-slate-800">Actueel Aanbod</h3>
-                    <span class="text-sm text-slate-400 font-medium">{{ $user->advertisements->count() }} resultaten</span>
+                    <h3 class="text-xl font-extrabold text-slate-800">{{ __('Current Offerings') }}</h3>
+                    <span class="text-sm text-slate-400 font-medium">{{ $user->advertisements->count() }} {{ __('results') }}</span>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -159,7 +159,7 @@
                         </div>
                     @empty
                         <div class="col-span-2 text-center py-12 bg-white rounded-[2rem] border border-dashed border-slate-200 shadow-soft">
-                            <p class="text-slate-400">Deze verkoper heeft momenteel geen actieve advertenties.</p>
+                            <p class="text-slate-400">{{ __('This seller currently has no active advertisements.') }}</p>
                         </div>
                     @endforelse
                 </div>
@@ -167,4 +167,4 @@
 
         </div>
     </div>
-</x-public-layout>
+</x-app-layout>
