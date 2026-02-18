@@ -32,17 +32,7 @@ class ReviewController extends Controller
         ]);
 
         // 2. Bedrijfsregel: Heeft de gebruiker dit item daadwerkelijk gehuurd of gekocht?
-        $user = $request->user();
-
-        $hasRented = $user->rentals()
-            ->where('advertisement_id', $advertisement->id)
-            ->exists();
-
-        $hasBought = $user->orders()
-            ->where('advertisement_id', $advertisement->id)
-            ->exists();
-
-        if (!$hasRented && !$hasBought) {
+        if (!$advertisement->canBeReviewedBy($request->user())) {
             return back()->withErrors(['msg' => 'Je mag alleen een review plaatsen als je dit product gekocht of gehuurd hebt.']);
         }
 
