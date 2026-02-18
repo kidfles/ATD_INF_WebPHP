@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\CompanyProfile;
-use App\Models\PageComponent;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +17,7 @@ class CompanyController extends Controller
 {
     /**
      * Toon de publieke profielpagina van een bedrijf.
-     * Maakt automatisch standaardcomponenten aan als deze nog niet bestaan.
+     * Toont whitelabel-onderdelen en advertenties van de zakelijke gebruiker.
      * 
      * @param CompanyProfile $company Het bedrijfsprofiel dat getoond moet worden.
      * @return \Illuminate\View\View De whitelabel weergave.
