@@ -112,6 +112,10 @@
                                                 @else
                                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-500 border border-red-200">{{ ucfirst(__($rental->status)) }}</span>
                                                 @endif
+
+                                                @if($rental->wear_and_tear_cost > 0)
+                                                    <span class="block text-[10px] text-red-500 font-bold mt-1">+€{{ number_format($rental->wear_and_tear_cost, 2) }}</span>
+                                                @endif
                                             </td>
                                             <td class="py-4 text-sm text-right">
                                                 @if($view === 'rented' && ($rental->status === 'active' || $rental->status === 'overdue') && $rental->advertisement)

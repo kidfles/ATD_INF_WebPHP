@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             CompanyProfileSeeder::class,
-            PageComponentSeeder::class,
+            // PageComponentSeeder is verwijderd omdat dit nu automatisch 
+            // wordt afgehandeld door de CompanyProfileObserver.
             AdvertisementSeeder::class,
             BidSeeder::class,
             RentalSeeder::class,
