@@ -222,7 +222,7 @@
     "Upcoming": "Upcoming",
     "Review posted on seller profile!": "Review posted on seller profile!",
     "Sadly, this product is already sold.": "Sadly, this product is already sold.",
-    "rental_returned_cost_breakdown": "Return cost: :total (base rental: :base, late fees: :late_fee, wear and tear: :wear_and_tear).",
+    "rental_returned_cost_breakdown": "Return cost: €:total (base rental: €:base, late fees: €:late_fee, wear and tear: €:wear_and_tear).",
     "An unexpected error occurred. Please try again later.": "An unexpected error occurred. Please try again later.",
     "Related Products": "Related Products",
     "Often bought together": "Often bought together",

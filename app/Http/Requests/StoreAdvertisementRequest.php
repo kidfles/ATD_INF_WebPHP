@@ -52,7 +52,7 @@ class StoreAdvertisementRequest extends FormRequest
                     }
                 }
             ],
-            'image'       => ['nullable', 'image', 'max:10240'], // Max 10MB, No dimension check
+            'image'       => ['nullable', 'image', 'max:10240', 'dimensions:min_width=100,min_height=100'], // Max 10MB, Min 100x100px
             'related_ads' => ['nullable', 'array'],
             'related_ads.*' => ['exists:advertisements,id'],
             'expires_at'  => ['nullable', 'date', 'after:today', 'required_if:type,auction'],

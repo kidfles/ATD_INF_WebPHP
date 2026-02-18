@@ -61,6 +61,10 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     Route::get('/rentals', [\App\Http\Controllers\RentalController::class, 'index'])->name('rentals.index');
     Route::get('/bids', [\App\Http\Controllers\BidController::class, 'index'])->name('bids.index');
     Route::resource('advertisements', AdvertisementController::class);
+
+    // Bestellingen en Favorieten (Verplaatst voor verified check)
+    Route::get('/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+    Route::get('/favorites', [\App\Http\Controllers\FavoriteController::class, 'index'])->name('favorites.index');
     
     // Bedrijfsinstellingen (Alleen voor zakelijke adverteerders)
     Route::get('/company/settings', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'edit'])->name('company.settings.edit');
@@ -101,13 +105,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Bestellingen (Orders)
-    Route::post('/advertisements/{advertisement}/buy', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
-    Route::get('/dashboard/orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('dashboard.orders.index');
-
     // Favorieten
     Route::post('/advertisements/{advertisement}/favorite', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('favorites.toggle');
-    Route::get('/dashboard/favorites', [\App\Http\Controllers\FavoriteController::class, 'index'])->name('dashboard.favorites.index');
     
     // Reviews plaatsen op advertenties
     Route::post('/advertisements/{advertisement}/review', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
