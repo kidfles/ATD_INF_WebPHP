@@ -10,7 +10,7 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <h2 class="text-2xl font-extrabold text-slate-800">{{ __('Mijn Favorieten') }}</h2>
                 
-                <form action="{{ route('favorites.index') }}" method="GET" class="flex flex-wrap gap-2">
+                <form action="{{ route('dashboard.favorites.index') }}" method="GET" class="flex flex-wrap gap-2">
                     <select name="type" class="bg-white border-slate-200 rounded-xl text-sm text-slate-700 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all cursor-pointer" onchange="this.form.submit()">
                         <option value="">{{ __('Alle types') }}</option>
                         <option value="sell" {{ request('type') == 'sell' ? 'selected' : '' }}>{{ __('Verkoop') }}</option>
