@@ -7,10 +7,24 @@
     <div class="py-4">
         <div class="max-w-7xl mx-auto">
 
-            <h2 class="text-2xl font-extrabold text-slate-800 mb-6">{{ __('Mijn Huuritems') }}</h2>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <h2 class="text-2xl font-extrabold text-slate-800">{{ __('My Rental Activities') }}</h2>
+                
+                <div class="inline-flex p-1 bg-slate-100 rounded-2xl">
+                    <a href="{{ route('dashboard.rentals.index', array_merge(request()->query(), ['view' => 'rented'])) }}" 
+                       class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ $view === 'rented' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
+                        {{ __('My Bookings') }}
+                    </a>
+                    <a href="{{ route('dashboard.rentals.index', array_merge(request()->query(), ['view' => 'rented_out'])) }}" 
+                       class="px-4 py-2 rounded-xl text-sm font-bold transition-all {{ $view === 'rented_out' ? 'bg-white text-emerald-600 shadow-sm' : 'text-slate-500 hover:text-slate-700' }}">
+                        {{ __('My Rentals') }}
+                    </a>
+                </div>
+            </div>
 
             {{-- Filter and Sort Form --}}
             <form action="{{ route('dashboard.rentals.index') }}" method="GET" class="mb-8 flex flex-wrap gap-4 items-center bg-white p-5 rounded-[2rem] shadow-soft border border-slate-100">
+                <input type="hidden" name="view" value="{{ $view }}">
                 <div class="flex-1 min-w-[200px]">
                     <div class="relative">
                         <input type="text" name="search" value="{{ request('search') }}" 
@@ -40,7 +54,7 @@
                 </button>
 
                 @if(request()->hasAny(['search', 'status', 'sort']))
-                    <a href="{{ route('dashboard.rentals.index') }}" class="text-sm text-slate-400 hover:text-emerald-500 font-medium transition-colors">
+                    <a href="{{ route('dashboard.rentals.index', ['view' => $view]) }}" class="text-sm text-slate-400 hover:text-emerald-500 font-medium transition-colors">
                         {{ __('Clear') }}
                     </a>
                 @endif
@@ -68,11 +82,11 @@
                                 <thead>
                                     <tr>
                                         <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Item') }}</th>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('From') }}</th>
+                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ $view === 'rented' ? __('Owner') : __('Renter') }}</th>
                                         <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Start') }}</th>
                                         <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('End') }}</th>
                                         <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Status') }}</th>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Actions') }}</th>
+                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4 text-right">{{ __('Actions') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-100">
@@ -85,25 +99,31 @@
                                                     <span class="text-sm font-bold text-slate-400 italic">{{ __('Unavailable') }}</span>
                                                 @endif
                                             </td>
-                                            <td class="py-4 pr-4 text-sm text-slate-500">{{ $rental->advertisement->user->name ?? __('Unknown') }}</td>
+                                            <td class="py-4 pr-4 text-sm text-slate-500">
+                                                {{ $view === 'rented' ? ($rental->advertisement->user->name ?? __('Unknown')) : ($rental->renter->name ?? __('Unknown')) }}
+                                            </td>
                                             <td class="py-4 pr-4 text-sm text-slate-600 font-semibold">{{ $rental->start_date->format('d M Y') }}</td>
                                             <td class="py-4 pr-4 text-sm text-slate-600 font-semibold">{{ $rental->end_date->format('d M Y') }}</td>
                                             <td class="py-4 pr-4">
                                                 @if($rental->status === 'active')
-                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">{{ __('Actief') }}</span>
+                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">{{ __('Active') }}</span>
                                                 @elseif($rental->status === 'pending')
-                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">{{ __('In afwachting') }}</span>
+                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">{{ __('Pending') }}</span>
                                                 @else
                                                     <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-500 border border-red-200">{{ ucfirst(__($rental->status)) }}</span>
                                                 @endif
                                             </td>
-                                            <td class="py-4 text-sm">
-                                                @if(($rental->status === 'active' || $rental->status === 'overdue') && $rental->advertisement)
-                                                    <form action="{{ route('rentals.return', $rental) }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-2">
+                                            <td class="py-4 text-sm text-right">
+                                                @if($view === 'rented' && ($rental->status === 'active' || $rental->status === 'overdue') && $rental->advertisement)
+                                                    <form action="{{ route('rentals.return', $rental) }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-end gap-2">
                                                         @csrf
                                                         <input type="file" name="photo" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" required>
-                                                        <button type="submit" class="px-3 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full text-xs font-bold hover:bg-emerald-100 transition-all w-fit">{{ __('Retourneren') }}</button>
+                                                        <button type="submit" class="px-3 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full text-xs font-bold hover:bg-emerald-100 transition-all w-fit">{{ __('Return') }}</button>
                                                     </form>
+                                                @elseif($view === 'rented_out' && $rental->return_photo_path)
+                                                    <a href="{{ asset('storage/' . $rental->return_photo_path) }}" target="_blank" class="px-3 py-1.5 bg-slate-50 text-slate-600 border border-slate-200 rounded-full text-xs font-bold hover:bg-slate-100 transition-all inline-block">
+                                                        {{ __('Check return photo') }}
+                                                    </a>
                                                 @else
                                                     <span class="text-slate-300">—</span>
                                                 @endif
