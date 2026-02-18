@@ -98,6 +98,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/advertisements/{advertisement}/bid', [\App\Http\Controllers\BidController::class, 'store'])->name('bids.store');
     Route::delete('/bids/{bid}', [\App\Http\Controllers\BidController::class, 'destroy'])->name('bids.destroy');
     Route::post('/advertisements/{advertisement}/rent', [\App\Http\Controllers\RentalController::class, 'store'])->name('rentals.store');
+    Route::post('/advertisements/{advertisement}/buy', [\App\Http\Controllers\OrderController::class, 'store'])->name('orders.store');
     Route::post('/rentals/{rental}/return', [\App\Http\Controllers\RentalReturnController::class, 'store'])->name('rentals.return');
     
     // Gebruikersprofiel Beheer
