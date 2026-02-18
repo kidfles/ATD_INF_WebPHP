@@ -35,10 +35,15 @@ public function rules(): array
             'max:255',
             Rule::unique('company_profiles')->ignore($company->id),
         ],
-        // Wear & Tear Policy
-        'wear_and_tear_policy' => ['required', 'string', 'in:none,fixed,percentage'],
+        // Wear & Tear Policy (Only validate if contract is approved and user can actually see these fields)
+        'wear_and_tear_policy' => [
+            Rule::requiredIf($company->contract_status === 'approved'),
+            'string',
+            'in:none,fixed,percentage'
+        ],
         'wear_and_tear_value' => [
-            'required_unless:wear_and_tear_policy,none',
+            Rule::requiredIf(fn() => $company->contract_status === 'approved' && $this->input('wear_and_tear_policy') !== 'none'),
+            'nullable', // Allow null if not required
             'numeric',
             'min:0',
             Rule::when(

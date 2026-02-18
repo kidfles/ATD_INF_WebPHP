@@ -8,21 +8,21 @@
         <div class="max-w-7xl mx-auto">
 
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                <h2 class="text-2xl font-extrabold text-slate-800">{{ __('Mijn Favorieten') }}</h2>
+                <h2 class="text-2xl font-extrabold text-slate-800">{{ __('My Favorites') }}</h2>
                 
                 <form action="{{ route('dashboard.favorites.index') }}" method="GET" class="flex flex-wrap gap-2">
                     <select name="type" class="bg-white border-slate-200 rounded-xl text-sm text-slate-700 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all cursor-pointer" onchange="this.form.submit()">
-                        <option value="">{{ __('Alle types') }}</option>
-                        <option value="sell" {{ request('type') == 'sell' ? 'selected' : '' }}>{{ __('Verkoop') }}</option>
-                        <option value="rent" {{ request('type') == 'rent' ? 'selected' : '' }}>{{ __('Verhuur') }}</option>
-                        <option value="auction" {{ request('type') == 'auction' ? 'selected' : '' }}>{{ __('Veiling') }}</option>
+                        <option value="">{{ __('All types') }}</option>
+                        <option value="sell" {{ request('type') == 'sell' ? 'selected' : '' }}>{{ __('Sale') }}</option>
+                        <option value="rent" {{ request('type') == 'rent' ? 'selected' : '' }}>{{ __('Rental') }}</option>
+                        <option value="auction" {{ request('type') == 'auction' ? 'selected' : '' }}>{{ __('Auction') }}</option>
                     </select>
 
                     <select name="sort" class="bg-white border-slate-200 rounded-xl text-sm text-slate-700 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all cursor-pointer" onchange="this.form.submit()">
-                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>{{ __('Nieuwste eerst') }}</option>
-                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>{{ __('Oudste eerst') }}</option>
-                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>{{ __('Prijs: Laag naar Hoog') }}</option>
-                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>{{ __('Prijs: Hoog naar Laag') }}</option>
+                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>{{ __('Newest first') }}</option>
+                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>{{ __('Oldest first') }}</option>
+                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>{{ __('Price: Low to High') }}</option>
+                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>{{ __('Price: High to Low') }}</option>
                     </select>
                 </form>
             </div>
@@ -36,8 +36,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.486 4.486 0 000 6.364L12 20.364l7.682-7.682a4.486 4.486 0 000-6.364 4.486 4.486 0 00-6.364 0L12 7.636l-1.318-1.318a4.486 4.486 0 00-6.364 0z"/>
                                 </svg>
                             </div>
-                            <p class="text-slate-400 font-medium">{{ __('Je hebt nog geen favorieten.') }}</p>
-                            <a href="{{ route('market.index') }}" class="inline-flex items-center mt-4 px-5 py-2.5 bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-full text-sm font-bold shadow-sm hover:shadow-emerald-500/30 transition-all">{{ __('Ontdek de marktplaats') }}</a>
+                            <p class="text-slate-400 font-medium">{{ __("You haven't added any favorites yet.") }}</p>
+                            <a href="{{ route('market.index') }}" class="inline-flex items-center mt-4 px-5 py-2.5 bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-full text-sm font-bold shadow-sm hover:shadow-emerald-500/30 transition-all">{{ __('Discover the marketplace') }}</a>
                         </div>
                     @else
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
