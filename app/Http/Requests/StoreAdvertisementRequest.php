@@ -37,15 +37,22 @@ class StoreAdvertisementRequest extends FormRequest
                 'required', 
                 'in:sell,rent,auction',
                 function ($attribute, $value, $fail) {
-                    // Check limit per type
-                    $count = $this->user()->advertisements()->where('type', $value)->count();
+                    $user = $this->user();
+                    $query = $user->advertisements()->where('type', $value);
+
+                    // Bij update: sluit de huidige advertentie uit van de telling
+                    if ($this->route('advertisement')) {
+                         $query->where('id', '!=', $this->route('advertisement')->id);
+                    }
+
+                    $count = $query->count();
                     
                     if ($count >= 4) {
                         $fail("Je mag maximaal 4 {$value} advertenties hebben.");
                     }
                 }
             ],
-            'image'       => ['nullable', 'image', 'max:10240'], // Max 10MB, No dimension check
+            'image'       => ['nullable', 'image', 'max:10240', 'dimensions:min_width=100,min_height=100'], // Max 10MB, Min 100x100px
             'related_ads' => ['nullable', 'array'],
             'related_ads.*' => ['exists:advertisements,id'],
             'expires_at'  => ['nullable', 'date', 'after:today', 'required_if:type,auction'],

@@ -23,12 +23,14 @@ class BidController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met de lijst van biedingen.
      */
-    public function index()
+    public function index(Request $request)
     {
         $bids = auth()->user()->bids()
+            ->filter($request->only(['search', 'sort']))
             ->with(['advertisement.user', 'advertisement.bids']) // Eager loading voor betere prestaties (N+1 voorkomen)
-            ->latest()
-            ->get();
+            ->paginate(10)
+            ->withQueryString();
+            
         return view('pages.dashboard.bids.index', compact('bids'));
     }
 
@@ -43,6 +45,11 @@ class BidController extends Controller
     {
         $user = $request->user();
         $amount = $request->validated('amount');
+
+        // Check if user has reached the maximum number of bids
+        if ($user->bids()->count() >= 4) {
+            return back()->with('error', __('You can place a maximum of 4 bids.'));
+        }
 
         // 1. Controleer of de advertentie wel een veiling is
         if ($advertisement->type !== 'auction') {

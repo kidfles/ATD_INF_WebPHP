@@ -101,9 +101,14 @@ class Advertisement extends Model
      */
     public function canBeReviewedBy(User $user): bool
     {
-        // Geverifieerde Verhuur check: Een gebruiker moet een bevestigde verhuur
-        // gekoppeld aan deze advertentie hebben om een review te mogen plaatsen.
-        return $this->rentals()->where('renter_id', $user->id)->exists();
+        // Check of de gebruiker dit item heeft gehuurd
+        $hasRented = $this->rentals()->where('renter_id', $user->id)->exists();
+
+        // Check of de gebruiker dit item heeft gekocht via orders relatie
+        // (Aanname: User model heeft een 'orders' relatie en orders hebben een 'advertisement_id')
+        $hasBought = $user->orders()->where('advertisement_id', $this->id)->exists();
+
+        return $hasRented || $hasBought;
     }
 
     /**
@@ -156,6 +161,7 @@ class Advertisement extends Model
                 'price_asc' => $q->orderBy('price', 'asc'),
                 'price_desc' => $q->orderBy('price', 'desc'),
                 'newest' => $q->orderBy('created_at', 'desc'),
+                'oldest' => $q->orderBy('created_at', 'asc'),
                 default => $q->orderBy('created_at', 'desc'),
             };
         });

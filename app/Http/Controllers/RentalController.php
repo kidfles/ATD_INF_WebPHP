@@ -22,10 +22,27 @@ class RentalController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met de verhuurhistorie.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rentals = auth()->user()->rentals()->with('advertisement')->latest()->get();
-        return view('pages.dashboard.rentals.index', compact('rentals'));
+        $view = $request->get('view', 'rented'); // 'rented' of 'rented_out'
+        $user = auth()->user();
+
+        if ($view === 'rented_out') {
+            // Items die door anderen van mij worden gehuurd
+            $query = \App\Models\Rental::whereHas('advertisement', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
+        } else {
+            // Items die ikzelf huur
+            $query = $user->rentals();
+        }
+
+        $rentals = $query->filter($request->only(['search', 'status', 'sort']))
+            ->with(['advertisement.user', 'renter']) // Fix N+1 voor beide scenario's
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('pages.dashboard.rentals.index', compact('rentals', 'view'));
     }
 
     /**
@@ -37,6 +54,11 @@ class RentalController extends Controller
      */
     public function store(StoreRentalRequest $request, Advertisement $advertisement): RedirectResponse
     {
+        // Prevent renting own item
+        if ($advertisement->user_id === auth()->id()) {
+            return back()->withErrors(['start_date' => __('You cannot rent your own advertisement.')])->withInput();
+        }
+
         // Check availability
         $start = $request->validated('start_date');
         $end = $request->validated('end_date');
