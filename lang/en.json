@@ -265,5 +265,12 @@
     "My Bookings": "My Bookings",
     "Owner": "Owner",
     "Renter": "Renter",
-    "Check return photo": "Check return photo"
+    "Check return photo": "Check return photo",
+    "New Advertisement": "New Advertisement",
+    "Search by title...": "Search by title...",
+    "Newest": "Newest",
+    "Price (Low-High)": "Price (Low-High)",
+    "Price (High-Low)": "Price (High-Low)",
+    "Delete?": "Delete?",
+    "Delete": "Delete"
 }
