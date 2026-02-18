@@ -161,6 +161,7 @@ class Advertisement extends Model
                 'price_asc' => $q->orderBy('price', 'asc'),
                 'price_desc' => $q->orderBy('price', 'desc'),
                 'newest' => $q->orderBy('created_at', 'desc'),
+                'oldest' => $q->orderBy('created_at', 'asc'),
                 default => $q->orderBy('created_at', 'desc'),
             };
         });

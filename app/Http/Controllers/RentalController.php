@@ -42,6 +42,11 @@ class RentalController extends Controller
      */
     public function store(StoreRentalRequest $request, Advertisement $advertisement): RedirectResponse
     {
+        // Prevent renting own item
+        if ($advertisement->user_id === auth()->id()) {
+            return back()->withErrors(['start_date' => __('You cannot rent your own advertisement.')])->withInput();
+        }
+
         // Check availability
         $start = $request->validated('start_date');
         $end = $request->validated('end_date');

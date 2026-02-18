@@ -34,7 +34,12 @@ class FavoriteController extends Controller
      */
     public function index()
     {
-        $favorites = auth()->user()->favorites()->with('user')->paginate(12);
+        $favorites = auth()->user()->favorites()
+            ->filter(request()->only(['search', 'sort', 'type']))
+            ->with('user')
+            ->paginate(12)
+            ->withQueryString();
+            
         return view('pages.dashboard.favorites.index', compact('favorites'));
     }
 }

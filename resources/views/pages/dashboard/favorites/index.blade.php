@@ -7,7 +7,25 @@
     <div class="py-4">
         <div class="max-w-7xl mx-auto">
 
-            <h2 class="text-2xl font-extrabold text-slate-800 mb-6">{{ __('Mijn Favorieten') }}</h2>
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                <h2 class="text-2xl font-extrabold text-slate-800">{{ __('Mijn Favorieten') }}</h2>
+                
+                <form action="{{ route('favorites.index') }}" method="GET" class="flex flex-wrap gap-2">
+                    <select name="type" class="bg-white border-slate-200 rounded-xl text-sm text-slate-700 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all cursor-pointer" onchange="this.form.submit()">
+                        <option value="">{{ __('Alle types') }}</option>
+                        <option value="sell" {{ request('type') == 'sell' ? 'selected' : '' }}>{{ __('Verkoop') }}</option>
+                        <option value="rent" {{ request('type') == 'rent' ? 'selected' : '' }}>{{ __('Verhuur') }}</option>
+                        <option value="auction" {{ request('type') == 'auction' ? 'selected' : '' }}>{{ __('Veiling') }}</option>
+                    </select>
+
+                    <select name="sort" class="bg-white border-slate-200 rounded-xl text-sm text-slate-700 focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all cursor-pointer" onchange="this.form.submit()">
+                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>{{ __('Nieuwste eerst') }}</option>
+                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>{{ __('Oudste eerst') }}</option>
+                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>{{ __('Prijs: Laag naar Hoog') }}</option>
+                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>{{ __('Prijs: Hoog naar Laag') }}</option>
+                    </select>
+                </form>
+            </div>
 
             <div class="bg-white rounded-[2rem] shadow-soft border border-slate-100">
                 <div class="p-6 sm:p-8">
