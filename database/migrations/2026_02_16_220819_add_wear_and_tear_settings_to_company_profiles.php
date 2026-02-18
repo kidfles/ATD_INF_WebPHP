@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('company_profiles', function (Blueprint $table) {
             $table->enum('wear_and_tear_policy', ['none', 'fixed', 'percentage'])->default('none')->after('kvk_number');
-            $table->decimal('wear_and_tear_value', 10, 2)->default(0.00)->after('wear_and_tear_policy');
+            $table->decimal('wear_and_tear_value', 10, 2)->nullable()->default(0.00)->after('wear_and_tear_policy');
         });
     }
 
