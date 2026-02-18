@@ -7,7 +7,26 @@ use App\Models\CompanyProfile;
 class CompanyProfileObserver
 {
     /**
-     * Handle the CompanyProfile "created" event.
+     * Het CompanyProfile "creating" event.
+     */
+    public function creating(CompanyProfile $companyProfile): void
+    {
+        if (!$companyProfile->custom_url_slug) {
+            $slug = \Illuminate\Support\Str::slug($companyProfile->company_name);
+            $uniqueSlug = $slug;
+            $counter = 1;
+
+            // Controleer op uniciteit en voeg een teller toe indien nodig
+            while (CompanyProfile::where('custom_url_slug', $uniqueSlug)->exists()) {
+                $uniqueSlug = $slug . '-' . $counter++;
+            }
+
+            $companyProfile->custom_url_slug = $uniqueSlug;
+        }
+    }
+
+    /**
+     * Het CompanyProfile "created" event.
      */
     public function created(CompanyProfile $companyProfile): void
     {

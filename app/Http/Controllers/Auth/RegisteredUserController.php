@@ -65,8 +65,6 @@ class RegisteredUserController extends Controller
                 'user_id' => $user->id,
                 'company_name' => $request->company_name,
                 'kvk_number' => $request->kvk_number,
-                // Genereer een unieke URL slug op basis van de bedrijfsnaam
-                'custom_url_slug' => \Illuminate\Support\Str::slug($request->company_name) . '-' . rand(100,999),
                 'brand_color' => '#000000', // Standaardkleur is zwart
             ]);
         }
