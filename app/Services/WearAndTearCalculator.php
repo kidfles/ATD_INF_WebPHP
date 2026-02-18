@@ -15,12 +15,8 @@ class WearAndTearCalculator
     public function calculate(Rental $rental): array
     {
         // 1. Base Cost (Duration in Days * Price)
-        // Use inclusive calendar days (00:00 to 00:00 + 1 day)
-        $start = $rental->start_date->startOfDay();
-        $end = $rental->end_date->startOfDay();
-        
-        // Count inclusive days
-        $bookedDays = $start->diffInDays($end) + 1;
+        // Rely purely on the Model's unified logic
+        $bookedDays = $rental->getDaysCount();
         $pricePerDay = $rental->advertisement->price;
         $baseCost = $bookedDays * $pricePerDay;
 

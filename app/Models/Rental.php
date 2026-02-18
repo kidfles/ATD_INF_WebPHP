@@ -68,6 +68,8 @@ class Rental extends Model
         'end_date',
         'return_photo_path',
         'wear_and_tear_cost',
+        'total_price',
+        'total_cost',
     ];
 
     /**
@@ -79,6 +81,8 @@ class Rental extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'wear_and_tear_cost' => 'decimal:2',
+        'total_price' => 'decimal:2',
+        'total_cost' => 'decimal:2',
     ];
 
     /**
@@ -108,8 +112,8 @@ class Rental extends Model
      */
     public function getDaysCount(): int
     {
-        // Aantal dagen wordt berekend inclusief start- en einddatum (+1)
-        return $this->start_date->diffInDays($this->end_date) + 1;
+        // Fix: Exact difference with a minimum of 1 day
+        return max(1, $this->start_date->diffInDays($this->end_date));
     }
 
     /**
@@ -117,9 +121,45 @@ class Rental extends Model
      * 
      * @return float
      */
-    public function getTotalPriceAttribute(): float
+    public function getTotalPriceAttribute($value): float
     {
-        return $this->getDaysCount() * $this->advertisement->price;
+        // If the DB column is populated, use it. Otherwise calculate dynamically (for old rows)
+        if ($value !== null) {
+            return (float) $value;
+        }
+        return (float) ($this->getDaysCount() * $this->advertisement->price);
+    }
+
+    /**
+     * Haal de totale kosten op (incl. boetes/slijtage).
+     * 
+     * @param mixed $value
+     * @return float
+     */
+    public function getTotalCostAttribute($value): float
+    {
+        // If returned, the DB column will hold the finalized total_cost
+        if ($value !== null) {
+            return (float) $value;
+        }
+
+        // If active, dynamically estimate the final cost based on company settings
+        $basePrice = $this->total_price;
+        $wearAndTear = 0.00;
+        $company = $this->advertisement->user->companyProfile ?? null;
+
+        if ($company) {
+            $policy = $company->wear_and_tear_policy ?? 'none';
+            $wtValue = $company->wear_and_tear_value ?? 0.00;
+
+            if ($policy === 'fixed') {
+                $wearAndTear = (float) $wtValue;
+            } elseif ($policy === 'percentage') {
+                $wearAndTear = $basePrice * ((float) $wtValue / 100);
+            }
+        }
+
+        return (float) ($basePrice + $wearAndTear);
     }
 
     /**

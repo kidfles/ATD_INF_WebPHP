@@ -60,92 +60,154 @@
                 @endif
             </form>
 
-            <div class="bg-white rounded-[2rem] shadow-soft border border-slate-100">
-                <div class="p-6">
-                    
-                    @if(session('status'))
-                        <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-2xl mb-4 text-sm font-medium">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    
-                    @if($rentals->isEmpty())
-                        <div class="text-center py-12">
-                            <div class="bg-slate-50 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                                <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <div class="opacity-0 animate-pop-in mb-6" style="animation-delay: 100ms;">
+                <div class="bg-white rounded-[2rem] shadow-soft border border-slate-100 mb-6">
+                    <div class="p-6">
+                        <h3 class="font-extrabold text-lg text-slate-800 mb-5 flex items-center gap-2.5">
+                            <div class="bg-teal-50 p-2 rounded-xl">
+                                <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                             </div>
-                            <p class="text-slate-400 font-medium">{{ __('No rentals found.') }}</p>
-                        </div>
-                    @else
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full">
-                                <thead>
-                                    <tr>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Item') }}</th>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ $view === 'rented' ? __('Owner') : __('Renter') }}</th>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Start') }}</th>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('End') }}</th>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4">{{ __('Status') }}</th>
-                                        <th class="text-left text-xs font-bold text-slate-400 uppercase tracking-wider pb-4 text-right">{{ __('Actions') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-100">
-                                    @foreach($rentals as $rental)
-                                        <tr class="hover:bg-slate-50 transition-colors">
-                                            <td class="py-4 pr-4">
-                                                @if($rental->advertisement)
-                                                    <a href="{{ route('market.show', $rental->advertisement) }}" class="text-sm font-bold text-emerald-600 hover:text-emerald-700 transition-colors">{{ $rental->advertisement->title }}</a>
-                                                @else
-                                                    <span class="text-sm font-bold text-slate-400 italic">{{ __('Unavailable') }}</span>
-                                                @endif
-                                            </td>
-                                            <td class="py-4 pr-4 text-sm text-slate-500">
-                                                {{ $view === 'rented' ? ($rental->advertisement->user->name ?? __('Unknown')) : ($rental->renter->name ?? __('Unknown')) }}
-                                            </td>
-                                            <td class="py-4 pr-4 text-sm text-slate-600 font-semibold">{{ $rental->start_date->format('d M Y') }}</td>
-                                            <td class="py-4 pr-4 text-sm text-slate-600 font-semibold">{{ $rental->end_date->format('d M Y') }}</td>
-                                            <td class="py-4 pr-4">
-                                                @if($rental->status === 'active')
-                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">{{ __('Active') }}</span>
-                                                @elseif($rental->status === 'pending')
-                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">{{ __('Pending') }}</span>
-                                                @else
-                                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-500 border border-red-200">{{ ucfirst(__($rental->status)) }}</span>
-                                                @endif
+                            {{ __('Rental Activities') }}
+                        </h3>
 
-                                                @if($rental->wear_and_tear_cost > 0)
-                                                    <span class="block text-[10px] text-red-500 font-bold mt-1">+€{{ number_format($rental->wear_and_tear_cost, 2) }}</span>
-                                                @endif
-                                            </td>
-                                            <td class="py-4 text-sm text-right">
-                                                @if($view === 'rented' && ($rental->status === 'active' || $rental->status === 'overdue') && $rental->advertisement)
-                                                    <form action="{{ route('rentals.return', $rental) }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-end gap-2">
-                                                        @csrf
-                                                        <input type="file" name="photo" class="text-xs text-slate-500 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" required>
-                                                        <button type="submit" class="px-3 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-full text-xs font-bold hover:bg-emerald-100 transition-all w-fit">{{ __('Return') }}</button>
-                                                    </form>
-                                                @elseif($view === 'rented_out' && $rental->return_photo_path)
-                                                    <a href="{{ asset('storage/' . $rental->return_photo_path) }}" target="_blank" class="px-3 py-1.5 bg-slate-50 text-slate-600 border border-slate-200 rounded-full text-xs font-bold hover:bg-slate-100 transition-all inline-block">
-                                                        {{ __('Check return photo') }}
-                                                    </a>
-                                                @else
-                                                    <span class="text-slate-300">—</span>
-                                                @endif
-                                            </td>
+                        @if(session('status'))
+                            <div class="bg-emerald-50 border border-emerald-100 text-emerald-700 px-6 py-4 rounded-2xl mb-8 flex items-center gap-3">
+                                <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span class="font-bold text-sm">{{ session('status') }}</span>
+                            </div>
+                        @endif
+                    
+                        @if($rentals->isEmpty())
+                            <p class="text-slate-400 italic font-medium py-10 text-center">{{ __('No rental history available yet.') }}</p>
+@else
+                            <div class="overflow-x-auto -mx-6 px-6 scrollbar-hide">
+                                <table class="min-w-full">
+                                    <thead>
+                                        <tr class="border-b border-slate-100">
+                                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider">{{ __('Object') }}</th>
+                                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider text-nowrap">{{ $view === 'rented' ? __('Owner') : __('Renter') }}</th>
+                                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider text-nowrap">{{ __('Pricing') }}</th>
+                                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider text-nowrap">{{ __('Dates') }}</th>
+                                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-400 uppercase tracking-wider text-nowrap">{{ __('Status') }}</th>
+                                            <th class="px-6 py-3 text-right text-xs font-bold text-slate-400 uppercase tracking-wider text-nowrap">{{ __('Action') }}</th>
                                         </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100">
+                                        @foreach($rentals as $rental)
+                                            <tr class="hover:bg-slate-50 transition">
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                    @if($rental->advertisement)
+                                                        <a href="{{ route('market.show', $rental->advertisement) }}" class="text-emerald-600 hover:text-emerald-700 hover:underline transition-colors font-bold whitespace-normal">
+                                                            {{ $rental->advertisement->title }}
+                                                        </a>
+                                                        <span class="block text-xs text-slate-400">
+                                                            {{ $view === 'rented' ? __('Outgoing') : __('Incoming') }}
+                                                        </span>
+                                                    @else
+                                                        <span class="text-slate-400 italic">{{ __('Unavailable') }}</span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                                                    <div class="flex items-center gap-2">
+                                                        <div class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[8px] font-bold text-slate-500">
+                                                            {{ substr($view === 'rented' ? ($rental->advertisement->user->name ?? 'U') : ($rental->renter->name ?? 'U'), 0, 1) }}
+                                                        </div>
+                                                        <span class="font-medium">
+                                                            {{ $view === 'rented' ? ($rental->advertisement->user->name ?? __('Unknown')) : ($rental->renter->name ?? __('Unknown')) }}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                    <div x-data="{ open: false }" class="relative flex flex-col items-start cursor-pointer" @click.away="open = false">
+                                                        <button type="button" 
+                                                                @click="open = !open" 
+                                                                class="font-extrabold text-emerald-600 italic text-xs bg-emerald-50/50 px-2.5 py-1 rounded-lg border border-emerald-100 hover:bg-emerald-100 transition-all flex items-center gap-1.5 active:scale-95">
+                                                            €{{ number_format($rental->total_cost, 2) }}
+                                                            <svg class="w-2.5 h-2.5 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
+                                                        </button>
+                                                        
+                                                        {{-- Click Calculation Breakdown --}}
+                                                        <div x-show="open" 
+                                                             x-transition:enter="transition ease-out duration-200"
+                                                             x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                                                             x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                                             x-transition:leave="transition ease-in duration-100"
+                                                             x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                                             x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                                                             class="absolute top-full left-0 mt-3 z-[100] min-w-[200px]" 
+                                                             style="display: none;">
+                                                            <div class="bg-white opacity-100 text-slate-900 py-3 px-4 rounded-2xl shadow-2xl border border-slate-100 ring-1 ring-slate-900/5">
+                                                                <p class="text-slate-400 uppercase tracking-widest text-[9px] font-extrabold mb-2 border-b border-slate-50 pb-2">{{ __('Calculation') }}</p>
+                                                                <div class="space-y-1.5 text-[11px]">
+                                                                    <div class="flex justify-between items-center gap-4">
+                                                                        <span class="text-slate-500">{{ __('Base Price') }}</span>
+                                                                        <span class="font-extrabold text-slate-800">€{{ number_format($rental->total_price, 2) }}</span>
+                                                                    </div>
+                                                                    @if($rental->total_cost > $rental->total_price)
+                                                                        <div class="flex justify-between items-center gap-4 pt-1.5 border-t border-slate-50">
+                                                                            <span class="text-red-500 font-bold">{{ __('Penalty & Fees') }}</span>
+                                                                            <span class="font-extrabold text-red-500">+€{{ number_format($rental->total_cost - $rental->total_price, 2) }}</span>
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="mt-3 pt-2 border-t border-slate-100 flex justify-between items-center font-extrabold text-emerald-600 text-xs">
+                                                                    <span>{{ __('Total') }}</span>
+                                                                    <span>€{{ number_format($rental->total_cost, 2) }}</span>
+                                                                </div>
+                                                                
+                                                                {{-- Tooltip Arrow --}}
+                                                                <div class="absolute -top-1.5 left-5 w-3 h-3 bg-white rotate-45 border-l border-t border-slate-100"></div>
+                                                            </div>
+                                                        </div>
 
-                        {{-- Pagination --}}
-                        <div class="mt-6">
-                            {{ $rentals->links() }}
-                        </div>
-                    @endif
+                                                        @if($rental->total_cost > $rental->total_price)
+                                                            <span class="text-[9px] font-bold text-red-400/70 mt-1 ml-0.5">{{ __('Incl. fees') }}</span>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                                                    {{ $rental->start_date->format('M d') }} - {{ $rental->end_date->format('M d') }}
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-sm">
+                                                    @if($rental->status === 'returned')
+                                                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200">{{ __('Returned') }}</span>
+                                                    @elseif($rental->status === 'active')
+                                                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-teal-50 text-teal-600 border border-teal-200">{{ __('Active') }}</span>
+                                                    @elseif($rental->status === 'overdue')
+                                                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-red-50 text-red-500 border border-red-200">{{ __('Overdue') }}</span>
+                                                    @else
+                                                        <span class="px-2.5 py-1 inline-flex text-xs leading-5 font-bold rounded-full bg-slate-50 text-slate-500 border border-slate-200">{{ ucfirst(__($rental->status)) }}</span>
+                                                    @endif
+                                                </td>
+                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                    @if($view === 'rented' && ($rental->status === 'active' || $rental->status === 'overdue') && $rental->advertisement)
+                                                        <form action="{{ route('rentals.return', $rental) }}" method="POST" enctype="multipart/form-data" class="flex items-center gap-2 justify-end">
+                                                            @csrf
+                                                            <input type="file" name="photo" class="hidden" id="return_photo_{{ $rental->id }}" required>
+                                                            <label for="return_photo_{{ $rental->id }}" class="text-[10px] font-bold text-slate-400 cursor-pointer hover:text-emerald-500 transition-colors uppercase">{{ __('Photo') }}</label>
+                                                            <button type="submit" class="text-emerald-600 hover:text-emerald-700 font-bold border border-emerald-200 px-3 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 transition-colors text-xs">{{ __('Return') }}</button>
+                                                        </form>
+                                                    @elseif($rental->return_photo_path)
+                                                        <a href="{{ asset($rental->return_photo_path) }}" target="_blank" class="text-xs text-emerald-500 hover:text-emerald-600 hover:underline transition-colors font-semibold">
+                                                            {{ __('View Return') }}
+                                                        </a>
+                                                    @else
+                                                        <span class="text-slate-200">—</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-slate-50">
+                                {{ $rentals->links() }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
-
         </div>
     </div>
 </x-app-layout>
