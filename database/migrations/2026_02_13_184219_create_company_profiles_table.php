@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('kvk_number', 8);
             $table->string('brand_color', 7);
             $table->string('custom_url_slug')->unique();
-            $table->enum('contract_status', ['pending', 'approved'])->default('pending');
+            $table->enum('contract_status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });
     }
