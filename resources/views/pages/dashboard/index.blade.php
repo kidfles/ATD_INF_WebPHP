@@ -54,7 +54,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
 
                 {{-- Manage Ads (Advertiser only) --}}
-                @if(Auth::user()->role !== App\Enums\UserRole::User)
+                @if(Auth::user()->isAdvertiser())
                 <div class="opacity-0 animate-pop-in" style="animation-delay: 100ms;">
                     <a href="{{ route('dashboard.advertisements.index') }}" 
                        class="group block h-full flex flex-col bg-white rounded-[2rem] shadow-soft border border-slate-100 p-6 hover:-translate-y-1 hover:shadow-soft-lg transition-all duration-300">

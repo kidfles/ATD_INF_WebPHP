@@ -61,7 +61,7 @@
                             @foreach($myAdvertisements as $option)
                                 <option value="{{ $option->id }}" 
                                     @if($advertisement->relatedAds->contains($option->id)) selected @endif
-                                    @if(Auth::user()->isAdvertiser() && is_array(old('related_ads')) && in_array($option->id, old('related_ads'))) selected @endif
+                                    @if(is_array(old('related_ads')) && in_array($option->id, old('related_ads'))) selected @endif
                                 >
                                     {{ ucfirst($option->type->value) }}: {{ $option->title }}
                                 </option>
