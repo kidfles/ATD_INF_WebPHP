@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Dashboard\ContractController;
 use App\Http\Controllers\AdvertisementController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -76,9 +77,9 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     Route::delete('/company/components/{component}', [App\Http\Controllers\Dashboard\PageComponentController::class, 'destroy'])->name('company.components.destroy');
     
     // Contractbeheer en Goedkeuring
-    Route::get('/company/contract/download', [\App\Http\Controllers\CompanyController::class, 'downloadContract'])->name('company.contract.download');
-    Route::post('/company/contract/upload', [\App\Http\Controllers\CompanyController::class, 'uploadContract'])->name('company.contract.upload');
-    Route::post('/company/contract/approve-test', [\App\Http\Controllers\CompanyController::class, 'approveContractTest'])->name('company.contract.approve_test');
+    Route::get('/company/contract/download', [ContractController::class, 'download'])->name('company.contract.download');
+    Route::post('/company/contract/upload', [ContractController::class, 'upload'])->name('company.contract.upload');
+    Route::post('/company/contract/approve-test', [ContractController::class, 'approveTest'])->name('company.contract.approve_test');
     
     // API Toegang (Alleen als contract is goedgekeurd)
     Route::post('/company/api-token', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'generateToken'])->name('company.api_token')->middleware('contract.approved');
