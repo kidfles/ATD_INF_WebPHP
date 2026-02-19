@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
 use App\Enums\AdvertisementType;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * OrderController
@@ -26,7 +28,7 @@ class OrderController extends Controller
      * @param Advertisement $advertisement De advertentie die gekocht wordt.
      * @return \Illuminate\Http\RedirectResponse Redirect naar het besteloverzicht.
      */
-    public function store(Request $request, Advertisement $advertisement)
+    public function store(Request $request, Advertisement $advertisement): RedirectResponse
     {
         $user = Auth::user();
 
@@ -71,7 +73,7 @@ class OrderController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met alle geplaatste bestellingen.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $orders = Auth::user()->orders()
             ->filter($request->only(['search', 'sort']))

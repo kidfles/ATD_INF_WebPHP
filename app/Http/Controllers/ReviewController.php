@@ -7,6 +7,7 @@ use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * ReviewController
@@ -23,7 +24,7 @@ class ReviewController extends Controller
      * @param Advertisement $advertisement De advertentie die beoordeeld wordt.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met succes- of foutmelding.
      */
-    public function store(Request $request, Advertisement $advertisement)
+    public function store(Request $request, Advertisement $advertisement): RedirectResponse
     {
         // 1. Invoer valideren
         $request->validate([
@@ -63,7 +64,7 @@ class ReviewController extends Controller
      * @param User $user De verkoper die beoordeeld wordt.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met succes- of foutmelding.
      */
-    public function storeSeller(Request $request, User $user)
+    public function storeSeller(Request $request, User $user): RedirectResponse
     {
         // 1. Invoer valideren
         $request->validate([

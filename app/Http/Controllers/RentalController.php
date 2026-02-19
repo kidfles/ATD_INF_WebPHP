@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreRentalRequest;
 use App\Models\Advertisement;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * RentalController
@@ -22,7 +23,7 @@ class RentalController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met de verhuurhistorie.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $view = $request->get('view', 'rented'); // 'rented' of 'rented_out'
         $user = auth()->user();

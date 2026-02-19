@@ -10,6 +10,7 @@ use App\Models\Advertisement;
 use App\Models\Bid;
 use Illuminate\Http\RedirectResponse;
 use App\Enums\AdvertisementType;
+use Illuminate\View\View;
 
 /**
  * BidController
@@ -24,7 +25,7 @@ class BidController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met de lijst van biedingen.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $bids = auth()->user()->bids()
             ->filter($request->only(['search', 'sort']))

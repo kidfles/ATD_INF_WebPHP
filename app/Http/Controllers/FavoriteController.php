@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Advertisement;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * FavoriteController
@@ -19,7 +21,7 @@ class FavoriteController extends Controller
      * @param Advertisement $advertisement De advertentie die getoggled moet worden.
      * @return \Illuminate\Http\RedirectResponse Redirect terug naar de vorige pagina.
      */
-    public function toggle(Advertisement $advertisement)
+    public function toggle(Advertisement $advertisement): RedirectResponse
     {
         // Toggle voegt toe als het niet bestaat, verwijdert als het wel bestaat (pivot tabel)
         auth()->user()->favorites()->toggle($advertisement->id);
@@ -32,7 +34,7 @@ class FavoriteController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met de favorietenlijst.
      */
-    public function index()
+    public function index(): View
     {
         $favorites = auth()->user()->favorites()
             ->filter(request()->only(['search', 'sort', 'type']))

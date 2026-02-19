@@ -60,7 +60,7 @@ class StoreAdvertisementRequest extends FormRequest
         ];
     }
 
-    protected function failedAuthorization()
+    protected function failedAuthorization(): void
     {
         throw new \Illuminate\Auth\Access\AuthorizationException(
             $this->isMethod('post') 

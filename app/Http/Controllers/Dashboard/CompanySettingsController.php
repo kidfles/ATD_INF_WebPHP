@@ -9,6 +9,8 @@ use App\Models\PageComponent;
 use App\Jobs\ProcessAdvertisementImport;
 use App\Enums\ContractStatus;
 use App\Enums\AdvertisementType;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * CompanySettingsController
@@ -25,7 +27,7 @@ class CompanySettingsController extends Controller
      * @param Request $request Het huidige HTTP request.
      * @return \Illuminate\View\View De weergave met het instellingenformulier.
      */
-    public function edit(Request $request)
+    public function edit(Request $request): View
     {
         $company = $request->user()->companyProfile;
         if (!$company) {
@@ -41,7 +43,7 @@ class CompanySettingsController extends Controller
      * @param UpdateCompanyProfileRequest $request Het gevalideerde request met instellingen en componenten.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met succesmelding.
      */
-    public function update(UpdateCompanyProfileRequest $request)
+    public function update(UpdateCompanyProfileRequest $request): RedirectResponse
     {
         $company = $request->user()->companyProfile;
 
@@ -94,7 +96,7 @@ class CompanySettingsController extends Controller
      * @param Request $request Het huidige HTTP request.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met de nieuwe token (eenmalig zichtbaar).
      */
-    public function generateToken(Request $request)
+    public function generateToken(Request $request): RedirectResponse
     {
         $user = $request->user();
 
@@ -122,7 +124,7 @@ class CompanySettingsController extends Controller
      * @param Request $request Het HTTP request met het CSV-bestand.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met statusmelding.
      */
-    public function importCsv(Request $request)
+    public function importCsv(Request $request): RedirectResponse
     {
         $request->validate([
             'csv_file' => 'required|file|mimes:csv,txt|max:2048',

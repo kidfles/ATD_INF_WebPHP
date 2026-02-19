@@ -54,11 +54,9 @@ class StoreBidRequest extends FormRequest
     /**
      * Handle a failed authorization attempt.
      *
-     * @return void
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function failedAuthorization()
+    protected function failedAuthorization(): void
     {
         throw \Illuminate\Validation\ValidationException::withMessages([
             'amount' => ['Je hebt het limiet van 4 actieve biedingen bereikt.'],
