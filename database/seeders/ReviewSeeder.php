@@ -6,6 +6,7 @@ use App\Models\Advertisement;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Enums\UserRole;
 
 class ReviewSeeder extends Seeder
 {
@@ -14,7 +15,7 @@ class ReviewSeeder extends Seeder
         // 1. Reviews op Producten (Advertenties)
         // Scenario: Gebruikers laten reviews achter op specifieke items die ze hebben gebruikt.
         $ads = Advertisement::all();
-        $users = User::where('role', 'private_ad')->get();
+        $users = User::where('role', UserRole::PrivateSeller)->get();
 
         if ($users->isEmpty()) return;
 
@@ -30,7 +31,7 @@ class ReviewSeeder extends Seeder
 
         // 2. Reviews op Verkopers (Gebruikers)
         // Scenario: Gebruikers beoordelen de verkoper zelf op basis van service en betrouwbaarheid.
-        $sellers = User::where('role', 'business_ad')->get();
+        $sellers = User::where('role', UserRole::BusinessSeller)->get();
 
         foreach ($sellers as $seller) {
             Review::create([

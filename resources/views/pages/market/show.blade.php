@@ -131,7 +131,7 @@
                         @else
                             
                             {{-- VEILING LOGICA --}}
-                            @if($advertisement->type === 'auction')
+                            @if($advertisement->type->value === 'auction')
                                 <div class="bg-slate-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
                                     <h3 class="font-extrabold text-lg mb-2 text-slate-800">{{ __('Place a bid') }}</h3>
                                     
@@ -183,7 +183,7 @@
                                 </div>
 
                             {{-- HUUR LOGICA --}}
-                            @elseif($advertisement->type === 'rent')
+                            @elseif($advertisement->type->value === 'rent')
                                 <div class="bg-slate-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
                                     <h3 class="font-extrabold text-lg mb-4 text-slate-800">{{ __('Rent this item') }}</h3>
                                     <form action="{{ route('rentals.store', $advertisement) }}" method="POST" class="space-y-4">

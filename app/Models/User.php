@@ -84,13 +84,23 @@ class User extends Authenticatable
     }
 
     /**
-     * Controleer of de gebruiker een particuliere adverteerder is.
+     * Controleer of de gebruiker een particulier account heeft.
      * 
      * @return bool True als de gebruiker een particulier account heeft.
      */
     public function isPrivateAdvertiser(): bool
     {
         return $this->role === UserRole::PrivateSeller;
+    }
+
+    /**
+     * Controleer of de gebruiker een adverteerder is (zakelijk of particulier).
+     * 
+     * @return bool True als de gebruiker een adverteerder is.
+     */
+    public function isAdvertiser(): bool
+    {
+        return in_array($this->role, [UserRole::PrivateSeller, UserRole::BusinessSeller]);
     }
 
     // -- Relaties --

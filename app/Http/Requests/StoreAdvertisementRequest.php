@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Advertisement;
+use App\Enums\AdvertisementType;
 
 class StoreAdvertisementRequest extends FormRequest
 {
@@ -35,7 +36,7 @@ class StoreAdvertisementRequest extends FormRequest
             'price'       => ['required', 'numeric', 'min:0'],
             'type'        => [
                 'required', 
-                'in:sell,rent,auction',
+                Rule::in(array_column(AdvertisementType::cases(), 'value')),
                 function ($attribute, $value, $fail) {
                     $user = $this->user();
                     $query = $user->advertisements()->where('type', $value);

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AdvertisementType;
+use App\Enums\UserRole;
 use App\Models\Advertisement;
 use App\Models\Rental;
 use App\Models\User;
@@ -12,9 +14,9 @@ class RentalSeeder extends Seeder
     public function run(): void
     {
         // Stap 1: Haal advertenties van het type 'huur'
-        $rentAds = Advertisement::where('type', 'rent')->get();
+        $rentAds = Advertisement::where('type', AdvertisementType::Rent)->get();
         // Stap 2: Haal potentiële huurders
-        $renters = User::where('role', 'private_ad')->get();
+        $renters = User::where('role', UserRole::PrivateSeller)->get();
 
         if ($rentAds->isEmpty() || $renters->isEmpty()) {
             return;

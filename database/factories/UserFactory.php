@@ -60,7 +60,7 @@ class UserFactory extends Factory
     public function businessAdvertiser(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => 'business_ad',
+            'role' => \App\Enums\UserRole::BusinessSeller,
         ]);
     }
     
