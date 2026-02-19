@@ -232,6 +232,12 @@
 
                     <div class="mt-6 space-y-6 max-w-xl">
                         
+                        {{-- Company Name --}}
+                        <div class="space-y-2">
+                            <label for="company_name" class="block text-sm font-bold text-slate-700">{{ __('Company Name') }}</label>
+                            <input name="company_name" type="text" class="block w-full bg-slate-50 border-transparent rounded-2xl px-4 py-2.5 text-sm text-slate-700 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50 transition-all mt-1" value="{{ old('company_name', $company->company_name) }}">
+                        </div>
+
                         {{-- Brand Color Input --}}
                         <div class="space-y-2">
                             <label for="brand_color" class="block text-sm font-bold text-slate-700">{{ __('Brand Color (Hex Code)') }}</label>
