@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MarketController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\Dashboard\ContractController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\AdvertisementController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -42,21 +43,7 @@ Route::post('/verkoper/{user}/reviews', [\App\Http\Controllers\ReviewController:
 Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')->group(function () {
     
     // Dashboard Startpagina (Overzicht van eigen activiteit en verkoop)
-    Route::get('/', function () {
-        $user = auth()->user();
-        return view('pages.dashboard.index', [
-            // "Mijn Activiteit" - zaken die ik heb gekocht/gehuurd
-            'myRentals' => $user->rentals()->with('advertisement')->latest()->get(),
-            'myBids'    => $user->bids()->with('advertisement')->latest()->take(5)->get(),
-            'myBidsCount' => $user->bids()->count(),
-            'myAds'     => $user->advertisements()->latest()->take(5)->get(),
-            
-            // "Mijn Verkoop" - zaken die anderen bij mij hebben gekocht/gehuurd
-            'incomingRentals' => \App\Models\Rental::whereHas('advertisement', function($q) use ($user) {
-                $q->where('user_id', $user->id);
-            })->with(['advertisement', 'renter'])->get(),
-        ]);
-    })->name('index');
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     // Beheer van eigen verhuur, biedingen en advertenties
     Route::get('/rentals', [\App\Http\Controllers\RentalController::class, 'index'])->name('rentals.index');
