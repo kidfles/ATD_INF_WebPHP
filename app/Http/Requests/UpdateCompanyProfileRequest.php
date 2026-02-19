@@ -27,6 +27,7 @@ class UpdateCompanyProfileRequest extends FormRequest
     {
     $company = $this->user()->companyProfile;
     return [
+        'company_name' => ['required'],
         'kvk_number' => ['required', 'digits:8'],
         'brand_color' => ['required', 'regex:/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/'],
         'custom_url_slug' => [
@@ -66,3 +67,5 @@ class UpdateCompanyProfileRequest extends FormRequest
             'kvk_number.required'   => 'KVK-nummer is verplicht.',
         ];
     }
+
+}
