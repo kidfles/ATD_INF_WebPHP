@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Enums\ContractStatus;
 
 /**
  * CompanyProfile Model
@@ -44,6 +45,7 @@ class CompanyProfile extends Model
     {
         return [
             'wear_and_tear_value' => 'decimal:2',
+            'contract_status' => ContractStatus::class,
         ];
     }
 

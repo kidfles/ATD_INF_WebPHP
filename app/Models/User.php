@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Laravel\Sanctum\HasApiTokens;
+use App\Enums\UserRole;
 
 /**
  * User Model
@@ -56,6 +57,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
         ];
     }
 
@@ -68,7 +70,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === UserRole::Admin;
     }
 
     /**
@@ -78,7 +80,7 @@ class User extends Authenticatable
      */
     public function isBusinessAdvertiser(): bool
     {
-        return $this->role === 'business_ad';
+        return $this->role === UserRole::BusinessSeller;
     }
 
     /**
@@ -88,7 +90,7 @@ class User extends Authenticatable
      */
     public function isPrivateAdvertiser(): bool
     {
-        return $this->role === 'private_ad';
+        return $this->role === UserRole::PrivateSeller;
     }
 
     // -- Relaties --
