@@ -127,7 +127,7 @@ class Rental extends Model
         if ($value !== null) {
             return (float) $value;
         }
-        return (float) ($this->getDaysCount() * $this->advertisement->price);
+        return (float) ($this->getDaysCount() * ($this->advertisement?->price ?? 0));
     }
 
     /**
@@ -146,7 +146,7 @@ class Rental extends Model
         // If active, dynamically estimate the final cost based on company settings
         $basePrice = $this->total_price;
         $wearAndTear = 0.00;
-        $company = $this->advertisement->user->companyProfile ?? null;
+        $company = $this->advertisement?->user?->companyProfile ?? null;
 
         if ($company) {
             $policy = $company->wear_and_tear_policy ?? 'none';

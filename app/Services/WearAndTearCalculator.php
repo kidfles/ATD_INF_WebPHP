@@ -17,7 +17,7 @@ class WearAndTearCalculator
         // 1. Basiskosten (Aantal dagen * Dagprijs)
         // We vertrouwen hier op de logiek in het Rental model
         $bookedDays = $rental->getDaysCount();
-        $pricePerDay = $rental->advertisement->price;
+        $pricePerDay = (float) ($rental->advertisement?->price ?? 0);
         $baseCost = $bookedDays * $pricePerDay;
 
         // 2. Boete-logica voor te laat inleveren
@@ -52,7 +52,7 @@ class WearAndTearCalculator
         $policy = 'none';
         $value = 0.00;
 
-        $company = $rental->advertisement->user->companyProfile;
+        $company = $rental->advertisement?->user?->companyProfile;
         if ($company) {
             $policy = $company->wear_and_tear_policy ?? 'none';
             $value = $company->wear_and_tear_value ?? 0.00;

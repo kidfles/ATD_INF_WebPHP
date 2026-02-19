@@ -376,8 +376,8 @@
             };
 
             const pricePerDay = {{ $advertisement->price }};
-            const wtPolicy = '{{ $advertisement->user->companyProfile->wear_and_tear_policy ?? 'none' }}';
-            const wtValue = {{ $advertisement->user->companyProfile->wear_and_tear_value ?? 0 }};
+            const wtPolicy = '{{ $advertisement->user?->companyProfile?->wear_and_tear_policy ?? 'none' }}';
+            const wtValue = {{ $advertisement->user?->companyProfile?->wear_and_tear_value ?? 0 }};
 
             function updateEstimatedPrice() {
                 const startStr = document.getElementById('start_date').value;

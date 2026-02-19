@@ -114,10 +114,10 @@
                                                 <td class="px-4 py-4 align-top text-sm text-slate-500">
                                                     <div class="flex items-center gap-2">
                                                         <div class="w-6 h-6 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-slate-600">
-                                                            {{ substr($view === 'rented' ? ($rental->advertisement->user->name ?? 'U') : ($rental->renter->name ?? 'U'), 0, 1) }}
+                                                            {{ substr($view === 'rented' ? ($rental->advertisement?->user?->name ?? 'U') : ($rental->renter?->name ?? 'U'), 0, 1) }}
                                                         </div>
                                                         <span class="font-medium whitespace-normal">
-                                                            {{ $view === 'rented' ? ($rental->advertisement->user->name ?? __('Unknown')) : ($rental->renter->name ?? __('Unknown')) }}
+                                                            {{ $view === 'rented' ? ($rental->advertisement?->user?->name ?? __('Unknown')) : ($rental->renter?->name ?? __('Unknown')) }}
                                                         </span>
                                                     </div>
                                                 </td>
