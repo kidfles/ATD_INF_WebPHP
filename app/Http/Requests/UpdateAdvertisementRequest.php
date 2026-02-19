@@ -27,4 +27,15 @@ class UpdateAdvertisementRequest extends FormRequest
             'related_ads.*' => ['exists:advertisements,id'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'title.required'   => 'Vul een titel in.',
+            'price.required'   => 'Vul een prijs in.',
+            'price.numeric'    => 'De prijs moet een getal zijn.',
+            'type.required'    => 'Kies een advertentietype.',
+            'type.in'          => 'Ongeldig advertentietype.',
+        ];
+    }
 }

@@ -31,4 +31,12 @@ class BulkUpdatePageComponentsRequest extends FormRequest
             // Basic array check provides some protection against arbitrary injection.
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'ordered_ids.present'  => 'Volgorde is verplicht.',
+            'components.present'   => 'Componenten zijn verplicht.',
+        ];
+    }
 }

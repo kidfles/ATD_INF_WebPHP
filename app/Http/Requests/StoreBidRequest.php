@@ -47,7 +47,9 @@ class StoreBidRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'amount.required' => 'Vul een bedrag in.',
+            'amount.required' => 'Vul een bod in.',
+            'amount.numeric'  => 'Het bod moet een getal zijn.',
+            'amount.min'      => 'Het bod moet minimaal €0,01 zijn.',
         ];
     }
 

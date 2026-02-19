@@ -26,4 +26,13 @@ class StoreRentalRequest extends FormRequest
             'end_date'   => ['required', 'date', 'after:start_date'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'start_date.required' => 'Begindatum is verplicht.',
+            'end_date.required'   => 'Einddatum is verplicht.',
+            'end_date.after'      => 'De einddatum moet na de begindatum liggen.',
+        ];
+    }
 }

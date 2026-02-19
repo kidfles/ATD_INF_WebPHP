@@ -60,6 +60,17 @@ class StoreAdvertisementRequest extends FormRequest
         ];
     }
 
+    public function messages(): array
+    {
+        return [
+            'title.required'   => 'Vul een titel in.',
+            'price.required'   => 'Vul een prijs in.',
+            'price.numeric'    => 'De prijs moet een getal zijn.',
+            'type.required'    => 'Kies een advertentietype.',
+            'type.in'          => 'Ongeldig advertentietype.',
+        ];
+    }
+
     protected function failedAuthorization(): void
     {
         throw new \Illuminate\Auth\Access\AuthorizationException(

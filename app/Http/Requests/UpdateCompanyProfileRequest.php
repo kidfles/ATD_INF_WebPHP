@@ -23,8 +23,8 @@ class UpdateCompanyProfileRequest extends FormRequest
      */
     // app/Http/Requests/UpdateCompanyProfileRequest.php
 
-public function rules(): array
-{
+    public function rules(): array
+    {
     $company = $this->user()->companyProfile;
     return [
         'kvk_number' => ['required', 'digits:8'],
@@ -58,4 +58,11 @@ public function rules(): array
         'ordered_ids' => ['nullable', 'array'],
     ];
 }
-}
+
+    public function messages(): array
+    {
+        return [
+            'company_name.required' => 'Bedrijfsnaam is verplicht.',
+            'kvk_number.required'   => 'KVK-nummer is verplicht.',
+        ];
+    }

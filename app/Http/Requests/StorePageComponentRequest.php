@@ -25,4 +25,12 @@ class StorePageComponentRequest extends FormRequest
             'type' => 'required|in:hero,text,featured_ads',
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'type.required' => 'Kies een type.',
+            'type.in' => 'Ongeldig type.',
+        ];
+    }
 }
