@@ -43,8 +43,6 @@ class RentalSeeder extends Seeder
                 $rental->wear_and_tear_cost = $result['breakdown']['wear_and_tear'];
                 $rental->total_cost = $result['total'];
                 
-                // Simuleer af en toe een late fee door de datum handmatig te pushen in de calculator context
-                // maar voor de seeder houden we het nu simpel en consistent.
                 $rental->save();
             }
         }
