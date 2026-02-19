@@ -10,7 +10,7 @@
             {{-- Page Header --}}
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-extrabold text-slate-800">{{ __('Advertisements') }}</h2>
-                @if(Auth::user()->role !== 'user')
+                @if(Auth::user()->isAdvertiser())
                 <a href="{{ route('dashboard.advertisements.create') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-full font-bold text-sm shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 hover:-translate-y-0.5 transition-all duration-300 px-5 py-2.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                     {{ __('New Advertisement') }}
@@ -53,7 +53,7 @@
                         <p class="text-slate-400 truncate mt-2 text-sm">{{ $ad->description }}</p>
                         <p class="font-extrabold mt-2 text-slate-800 text-lg">€ {{ number_format($ad->price, 2) }}</p>
                         <p class="text-xs text-slate-400 mb-4">
-                            <span class="px-2.5 py-1 rounded-full bg-slate-50 border border-slate-100 text-slate-500 font-semibold">{{ ucfirst($ad->type) }}</span>
+                            <span class="px-2.5 py-1 rounded-full bg-slate-50 border border-slate-100 text-slate-500 font-semibold">{{ ucfirst($ad->type->value) }}</span>
                         </p>
                         
                         <div class="flex gap-2 pt-4 border-t border-slate-100">

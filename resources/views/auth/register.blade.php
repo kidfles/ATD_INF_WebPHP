@@ -1,27 +1,27 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}" x-data="{ accountType: 'private_ad' }">
+    <form method="POST" action="{{ route('register') }}" x-data="{ accountType: '{{ \App\Enums\UserRole::PrivateSeller->value }}' }">
         @csrf
 
         <div class="mt-4">
             <x-input-label for="role" :value="__('Ik wil mij registreren als:')" />
             <div class="mt-2 flex flex-col sm:flex-row gap-3">
                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="radio" name="role" value="user" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30" checked>
+                    <input type="radio" name="role" value="{{ \App\Enums\UserRole::User->value }}" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30" checked>
                     <span class="ml-2 text-sm text-slate-600 font-medium">Koper / Huurder</span>
                 </label>
                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="radio" name="role" value="private_ad" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30">
+                    <input type="radio" name="role" value="{{ \App\Enums\UserRole::PrivateSeller->value }}" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30">
                     <span class="ml-2 text-sm text-slate-600 font-medium">Particulier</span>
                 </label>
                 <label class="inline-flex items-center cursor-pointer">
-                    <input type="radio" name="role" value="business_ad" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30">
+                    <input type="radio" name="role" value="{{ \App\Enums\UserRole::BusinessSeller->value }}" x-model="accountType" class="rounded-full bg-slate-50 border-slate-200 text-emerald-500 shadow-sm focus:ring-emerald-400/30">
                     <span class="ml-2 text-sm text-slate-600 font-medium">Zakelijk (Adverteerder)</span>
                 </label>
             </div>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
 
-        <div x-show="accountType === 'business_ad'" style="display: none;" class="mt-4 border-l-2 border-emerald-300 pl-4 bg-emerald-50/50 p-3 rounded-2xl">
+        <div x-show="accountType === '{{ \App\Enums\UserRole::BusinessSeller->value }}'" style="display: none;" class="mt-4 border-l-2 border-emerald-300 pl-4 bg-emerald-50/50 p-3 rounded-2xl">
             <h3 class="font-bold text-slate-700 mb-2">{{ __('Bedrijfsgegevens') }}</h3>
             
             <div class="mt-2">

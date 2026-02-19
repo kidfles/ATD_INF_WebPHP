@@ -1,10 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
 use App\Models\Advertisement;
 use App\Http\Requests\StoreAdvertisementRequest;
 use Illuminate\Http\Request;
+use App\Enums\UserRole;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * AdvertisementController
@@ -20,7 +23,7 @@ class AdvertisementController extends Controller
      * @param Request $request Het huidige HTTP request.
      * @return \Illuminate\View\View De weergave met de lijst van advertenties.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         // Dashboard logica: Toon alleen de advertenties van de huidige gebruiker
         $advertisements = $request->user()->advertisements()
@@ -37,12 +40,10 @@ class AdvertisementController extends Controller
      * @return \Illuminate\View\View De weergave van het aanmaakformulier.
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException Als de gebruiker een koper/huurder rol heeft.
      */
-    public function create()
+    public function create(): View
     {
         // Bedrijfsregel: Kopers/huurders (rol 'user') mogen geen advertenties plaatsen
-        if (auth()->user()->role === 'user') {
-            abort(403, 'Als koper/huurder kun je geen advertenties plaatsen.');
-        }
+        abort_unless(auth()->user()->role !== UserRole::User, 403, 'Als koper/huurder kun je geen advertenties plaatsen.');
 
         // Haal alle advertenties van de gebruiker op voor de gerelateerde advertenties selectie
         $myAdvertisements = auth()->user()->advertisements()->select('id', 'title', 'type')->get();
@@ -56,12 +57,10 @@ class AdvertisementController extends Controller
      * @param StoreAdvertisementRequest $request Het gevalideerde Store request.
      * @return \Illuminate\Http\RedirectResponse Redirect naar het overzicht.
      */
-    public function store(StoreAdvertisementRequest $request)
+    public function store(StoreAdvertisementRequest $request): RedirectResponse
     {
         // Extra veiligheidscheck voor rol
-        if ($request->user()->role === 'user') {
-            abort(403, 'Als koper/huurder kun je geen advertenties plaatsen.');
-        }
+        abort_unless($request->user()->role !== UserRole::User, 403, 'Als koper/huurder kun je geen advertenties plaatsen.');
 
         $data = $request->validated();
         
@@ -88,12 +87,11 @@ class AdvertisementController extends Controller
      * @param Advertisement $advertisement Het advertentiemodel.
      * @return \Illuminate\View\View De detailweergave.
      */
-    public function show(Advertisement $advertisement)
+    public function show(Advertisement $advertisement): View
     {
         // Toegang beperken tot de eigenaar
-        if ($advertisement->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($advertisement->user_id === auth()->id(), 403);
+        
         return view('pages.dashboard.advertisements.show', compact('advertisement'));
     }
 
@@ -103,12 +101,10 @@ class AdvertisementController extends Controller
      * @param Advertisement $advertisement Het advertentiemodel.
      * @return \Illuminate\View\View De bewerkingsweergave.
      */
-    public function edit(Advertisement $advertisement)
+    public function edit(Advertisement $advertisement): View
     {
         // Eigendom controleren
-        if ($advertisement->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($advertisement->user_id === auth()->id(), 403);
 
         // Haal alle eigen advertenties op behalve de huidige (zelfreferentie voorkomen)
         $myAdvertisements = auth()->user()->advertisements()
@@ -126,7 +122,7 @@ class AdvertisementController extends Controller
      * @param Advertisement $advertisement Het advertentiemodel.
      * @return \Illuminate\Http\RedirectResponse Redirect naar het overzicht.
      */
-    public function update(\App\Http\Requests\UpdateAdvertisementRequest $request, Advertisement $advertisement)
+    public function update(\App\Http\Requests\UpdateAdvertisementRequest $request, Advertisement $advertisement): RedirectResponse
     {
         $data = $request->validated();
 
@@ -149,12 +145,10 @@ class AdvertisementController extends Controller
      * @param Advertisement $advertisement Het advertentiemodel.
      * @return \Illuminate\Http\RedirectResponse Redirect naar het overzicht.
      */
-    public function destroy(Advertisement $advertisement)
+    public function destroy(Advertisement $advertisement): RedirectResponse
     {
         // Alleen de eigenaar mag zijn eigen advertentie verwijderen
-        if ($advertisement->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($advertisement->user_id === auth()->id(), 403);
 
         $advertisement->delete();
 

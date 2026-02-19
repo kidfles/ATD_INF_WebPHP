@@ -54,7 +54,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
 
                 {{-- Manage Ads (Advertiser only) --}}
-                @if(Auth::user()->role !== 'user')
+                @if(Auth::user()->isAdvertiser())
                 <div class="opacity-0 animate-pop-in" style="animation-delay: 100ms;">
                     <a href="{{ route('dashboard.advertisements.index') }}" 
                        class="group block h-full flex flex-col bg-white rounded-[2rem] shadow-soft border border-slate-100 p-6 hover:-translate-y-1 hover:shadow-soft-lg transition-all duration-300">
@@ -83,7 +83,7 @@
                 </div>
 
                 {{-- Agenda (Advertiser only) --}}
-                @if(in_array(Auth::user()->role, ['business_ad', 'private_ad']))
+                @if(Auth::user()->isAdvertiser())
                 <div class="opacity-0 animate-pop-in" style="animation-delay: 400ms;">
                     <a href="{{ route('dashboard.agenda.index') }}" 
                        class="group block h-full flex flex-col bg-white rounded-[2rem] shadow-soft border border-slate-100 p-6 hover:-translate-y-1 hover:shadow-soft-lg transition-all duration-300">
@@ -98,7 +98,7 @@
                 @endif
 
                 {{-- Private Seller Profile (Private Seller only) --}}
-                @if(Auth::user()->role === 'private_ad')
+                @if(Auth::user()->isPrivateAdvertiser())
                 <div class="opacity-0 animate-pop-in" style="animation-delay: 500ms;">
                     <a href="{{ route('seller.show', Auth::user()) }}" 
                        class="group block h-full flex flex-col bg-white rounded-[2rem] shadow-soft border border-slate-100 p-6 hover:-translate-y-1 hover:shadow-soft-lg transition-all duration-300">
@@ -113,7 +113,7 @@
                 @endif
 
                 {{-- Company Settings (Business only) --}}
-                @if(Auth::user()->role === 'business_ad')
+                @if(Auth::user()->isBusinessAdvertiser())
                 <div class="opacity-0 animate-pop-in" style="animation-delay: 500ms;">
                     <a href="{{ route('dashboard.company.settings.edit') }}" 
                        class="group block h-full flex flex-col bg-white rounded-[2rem] shadow-soft border border-slate-100 p-6 hover:-translate-y-1 hover:shadow-soft-lg transition-all duration-300 relative">
@@ -124,7 +124,7 @@
                         <p class="text-sm text-slate-400 mb-3 flex-grow">{{ __('Manage your company profile and branding.') }}</p>
                         
                         {{-- Contract Warning --}}
-                        @if(Auth::user()->companyProfile && Auth::user()->companyProfile->contract_status !== 'approved')
+                        @if(Auth::user()->companyProfile && Auth::user()->companyProfile->contract_status !== \App\Enums\ContractStatus::Approved)
                             <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5 mb-3">
                                 <div class="flex items-center gap-2">
                                     <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
@@ -142,7 +142,7 @@
             {{-- ═══════════════════════════════════════════════════════════
                  CALENDAR + RENTAL TABLE
                  ═══════════════════════════════════════════════════════════ --}}
-            @if(in_array(Auth::user()->role, ['business_ad', 'private_ad']))
+            @if(Auth::user()->isAdvertiser())
             <div class="opacity-0 animate-pop-in mb-6" style="animation-delay: 500ms;">
                 <x-agenda-calendar />
             </div>
@@ -168,7 +168,7 @@
                                     </div>
                                     {{ __('My Advertisements') }}
                                 </h3>
-                                @if(Auth::user()->role !== 'user')
+                                @if(Auth::user()->isAdvertiser())
                                 <a href="{{ route('dashboard.advertisements.create') }}" class="text-sm text-emerald-500 hover:text-emerald-600 font-bold transition-colors">{{ __('New +') }}</a>
                                 @endif
                             </div>
@@ -181,7 +181,7 @@
                                         <li class="px-6 py-3.5 flex justify-between items-center hover:bg-slate-50 transition cursor-pointer group" onclick="window.location='{{ route('market.show', $ad) }}'">
                                             <div>
                                                 <p class="text-sm font-bold text-emerald-600 group-hover:text-emerald-700 transition-colors">{{ $ad->title }}</p>
-                                                <p class="text-xs text-slate-400">{{ ucfirst($ad->type) }} • €{{ number_format($ad->price, 2) }}</p>
+                                                <p class="text-xs text-slate-400">{{ ucfirst($ad->type->value) }} • €{{ number_format($ad->price, 2) }}</p>
                                             </div>
                                             <div class="flex items-center gap-3">
                                                 <a href="{{ route('dashboard.advertisements.edit', $ad) }}" class="text-xs text-slate-400 hover:text-emerald-600 transition-colors px-2 py-1 rounded-lg hover:bg-emerald-50" onclick="event.stopPropagation()">{{ __('Edit') }}</a>

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\CompanyProfile;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Enums\ContractStatus;
 
 class CompanyProfileSeeder extends Seeder
 {
@@ -18,7 +19,7 @@ class CompanyProfileSeeder extends Seeder
                 'kvk_number' => '12345678',
                 'brand_color' => '#3b82f6', // Blauw - Testen van thema-integratie
                 'custom_url_slug' => 'techhub',
-                'contract_status' => 'approved',
+                'contract_status' => ContractStatus::Approved,
                 'contract_file_path' => 'contracts/techhub_signed.pdf',
             ],
             // Scenario 2: In afwachting van goedkeuring
@@ -28,7 +29,7 @@ class CompanyProfileSeeder extends Seeder
                 'kvk_number' => '87654321',
                 'brand_color' => '#f59e0b', // Amber
                 'custom_url_slug' => 'bouwgigant',
-                'contract_status' => 'pending', 
+                'contract_status' => ContractStatus::Pending, 
                 'contract_file_path' => null, // Simulatie: Contract nog niet geüpload
             ],
             // Scenario 3: Veilinghuis (Goedgekeurd)
@@ -37,7 +38,7 @@ class CompanyProfileSeeder extends Seeder
                 'kvk_number' => '56781234',
                 'brand_color' => '#8b5cf6', // Violet
                 'custom_url_slug' => 'vintage-veiling',
-                'contract_status' => 'approved',
+                'contract_status' => ContractStatus::Approved,
                 'contract_file_path' => 'contracts/vintage_signed.pdf',
             ],
              // Scenario 4: Bulk Data (Goedgekeurd)
@@ -47,7 +48,7 @@ class CompanyProfileSeeder extends Seeder
                 'kvk_number' => '90000003',
                 'brand_color' => '#ef4444', // Rood
                 'custom_url_slug' => 'mega-store',
-                'contract_status' => 'approved',
+                'contract_status' => ContractStatus::Approved,
                 'contract_file_path' => 'contracts/mega_signed.pdf',
             ],
         ];

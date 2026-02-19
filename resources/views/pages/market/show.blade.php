@@ -62,7 +62,7 @@
                     {{-- Type Label (Huur, Verkoop, Veiling) --}}
                     <span class="absolute top-4 left-4 z-10 bg-white/95 backdrop-blur px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider shadow-sm border"
                           style="color: {{ $brandColor }}; border-color: {{ $brandColor }};">
-                        {{ __(ucfirst($advertisement->type)) }}
+                        {{ __(ucfirst($advertisement->type->value)) }}
                     </span>
                 </div>
 
@@ -131,7 +131,7 @@
                         @else
                             
                             {{-- VEILING LOGICA --}}
-                            @if($advertisement->type === 'auction')
+                            @if($advertisement->type === \App\Enums\AdvertisementType::Auction)
                                 <div class="bg-slate-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
                                     <h3 class="font-extrabold text-lg mb-2 text-slate-800">{{ __('Place a bid') }}</h3>
                                     
@@ -183,7 +183,7 @@
                                 </div>
 
                             {{-- HUUR LOGICA --}}
-                            @elseif($advertisement->type === 'rent')
+                            @elseif($advertisement->type === \App\Enums\AdvertisementType::Rent)
                                 <div class="bg-slate-50 p-5 rounded-2xl border-l-4 shadow-sm" style="border-color: {{ $brandColor }}">
                                     <h3 class="font-extrabold text-lg mb-4 text-slate-800">{{ __('Rent this item') }}</h3>
                                     <form action="{{ route('rentals.store', $advertisement) }}" method="POST" class="space-y-4">
@@ -279,7 +279,7 @@
                                     {{-- Prijs en type label --}}
                                     <div class="flex justify-between items-center mt-4">
                                         <p class="font-extrabold text-lg text-slate-800">€ {{ number_format($related->price, 2) }}</p>
-                                        <span class="bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-full text-xs font-bold text-slate-500">{{ __(ucfirst($related->type)) }}</span>
+                                        <span class="bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-full text-xs font-bold text-slate-500">{{ __(ucfirst($related->type->value)) }}</span>
                                     </div>
                                 </div>
                             </div>

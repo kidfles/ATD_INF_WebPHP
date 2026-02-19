@@ -1,9 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
 use App\Models\Advertisement;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * MarketController
@@ -20,7 +22,7 @@ class MarketController extends Controller
      * @param Request $request Het huidige HTTP request met filters.
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse De marktplaats weergave of een redirect.
      */
-    public function index(Request $request)
+    public function index(Request $request): View|RedirectResponse
     {
         // 1. Afhandelen van "Filters Wissen"
         if ($request->has('clear')) {
@@ -56,7 +58,7 @@ class MarketController extends Controller
      * @param Advertisement $advertisement Het advertentiemodel.
      * @return \Illuminate\View\View De detailweergave van de advertentie.
      */
-    public function show(Advertisement $advertisement)
+    public function show(Advertisement $advertisement): View
     {
         // Eager load het bedrijfsprofiel van de verkoper voor branding
         $advertisement->load(['user.companyProfile', 'bids.user', 'relatedAds']);

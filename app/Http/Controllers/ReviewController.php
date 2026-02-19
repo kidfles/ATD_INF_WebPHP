@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -7,6 +7,7 @@ use App\Models\Review;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 /**
  * ReviewController
@@ -23,7 +24,7 @@ class ReviewController extends Controller
      * @param Advertisement $advertisement De advertentie die beoordeeld wordt.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met succes- of foutmelding.
      */
-    public function store(Request $request, Advertisement $advertisement)
+    public function store(Request $request, Advertisement $advertisement): RedirectResponse
     {
         // 1. Invoer valideren
         $request->validate([
@@ -32,7 +33,7 @@ class ReviewController extends Controller
         ]);
 
         // 2. Bedrijfsregel: Heeft de gebruiker dit item daadwerkelijk gehuurd of gekocht?
-        if (!$advertisement->canBeReviewedBy($request->user())) {
+        if (! $advertisement->canBeReviewedBy($request->user())) {
             return back()->withErrors(['msg' => 'Je mag alleen een review plaatsen als je dit product gekocht of gehuurd hebt.']);
         }
 
@@ -63,7 +64,7 @@ class ReviewController extends Controller
      * @param User $user De verkoper die beoordeeld wordt.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met succes- of foutmelding.
      */
-    public function storeSeller(Request $request, User $user)
+    public function storeSeller(Request $request, User $user): RedirectResponse
     {
         // 1. Invoer valideren
         $request->validate([
@@ -71,15 +72,15 @@ class ReviewController extends Controller
             'comment' => 'required|string|max:1000',
         ]);
 
-        // 2. Bedrijfsregel: Alleen reviewen als er een transactie is geweest
-        if (!$user->hasSoldTo(Auth::user()) && Auth::id() !== $user->id) {
-             return back()->withErrors(['msg' => 'Je mag alleen een verkoper reviewen als je iets bij hen hebt gekocht of gehuurd.']);
-        }
+           // 2. Bedrijfsregel: Alleen reviewen als er een transactie is geweest
+           if (! $user->hasSoldTo(Auth::user()) && Auth::id() !== $user->id) {
+               return back()->withErrors(['msg' => 'Je mag alleen een verkoper reviewen als je iets bij hen hebt gekocht of gehuurd.']);
+           }
         
-        // Voorkom dat gebruikers zichzelf beoordelen
-        if (Auth::id() === $user->id) {
-             return back()->withErrors(['msg' => 'Je kunt jezelf niet reviewen.']);
-        }
+           // Voorkom dat gebruikers zichzelf beoordelen
+           if (Auth::id() === $user->id) {
+               return back()->withErrors(['msg' => 'Je kunt jezelf niet reviewen.']);
+           }
 
         // 3. Controleer op dubbele reviews op dit verkopersprofiel
         $existingReview = Review::where('reviewer_id', Auth::id())

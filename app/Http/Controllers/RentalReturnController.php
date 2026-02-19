@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -28,10 +28,7 @@ class RentalReturnController extends Controller
     public function store(Request $request, Rental $rental, WearAndTearCalculator $calculator): RedirectResponse
     {
         // 0. Security: Ensure user is authorized (Strict: Only renter can submit return proof)
-        abort_unless(
-            $rental->renter_id === auth()->id(),
-            403
-        );
+        abort_unless($rental->renter_id === auth()->id(), 403);
 
         $request->validate([
             'photo' => ['required', 'image', 'max:5000'] // Maximaal 5MB

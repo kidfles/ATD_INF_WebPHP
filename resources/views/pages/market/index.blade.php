@@ -70,7 +70,7 @@
                         {{-- Prijs en type label --}}
                         <div class="flex justify-between items-center mt-4">
                             <p class="font-extrabold text-lg text-slate-800">€ {{ number_format($ad->price, 2) }}</p>
-                            <span class="bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-full text-xs font-bold text-slate-500">{{ __(ucfirst($ad->type)) }}</span>
+                            <span class="bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-full text-xs font-bold text-slate-500">{{ __(ucfirst($ad->type->value)) }}</span>
                         </div>
                     </div>
                 </div>

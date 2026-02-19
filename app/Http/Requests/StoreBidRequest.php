@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Requests;
 
@@ -26,6 +26,7 @@ class StoreBidRequest extends FormRequest
             'amount' => [
                 'required', 
                 'numeric',
+                'min:0.01',
                 function ($attribute, $value, $fail) {
                     $advertisement = $this->route('advertisement');
                     
@@ -47,18 +48,18 @@ class StoreBidRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'amount.required' => 'Vul een bedrag in.',
+            'amount.required' => 'Vul een bod in.',
+            'amount.numeric'  => 'Het bod moet een getal zijn.',
+            'amount.min'      => 'Het bod moet minimaal €0,01 zijn.',
         ];
     }
 
     /**
      * Handle a failed authorization attempt.
      *
-     * @return void
-     *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function failedAuthorization()
+    protected function failedAuthorization(): void
     {
         throw \Illuminate\Validation\ValidationException::withMessages([
             'amount' => ['Je hebt het limiet van 4 actieve biedingen bereikt.'],

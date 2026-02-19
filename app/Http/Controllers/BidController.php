@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -9,6 +9,8 @@ use App\Http\Requests\StoreBidRequest;
 use App\Models\Advertisement;
 use App\Models\Bid;
 use Illuminate\Http\RedirectResponse;
+use App\Enums\AdvertisementType;
+use Illuminate\View\View;
 
 /**
  * BidController
@@ -23,7 +25,7 @@ class BidController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met de lijst van biedingen.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $bids = auth()->user()->bids()
             ->filter($request->only(['search', 'sort']))
@@ -52,7 +54,7 @@ class BidController extends Controller
         }
 
         // 1. Controleer of de advertentie wel een veiling is
-        if ($advertisement->type !== 'auction') {
+        if ($advertisement->type !== AdvertisementType::Auction) {
             return back()->with('error', __('Bidding is only allowed on auctions.'));
         }
 
@@ -85,9 +87,7 @@ class BidController extends Controller
     public function destroy(Bid $bid): RedirectResponse
     {
         // Alleen de eigenaar van het bod mag het annuleren
-        if ($bid->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($bid->user_id === auth()->id(), 403);
 
         $bid->delete();
 

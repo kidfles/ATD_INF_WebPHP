@@ -10,7 +10,7 @@
             <h2 class="text-2xl font-extrabold text-slate-800 mb-6">{{ __('Agenda') }}</h2>
 
             {{-- Calendar Component --}}
-            @if(in_array(Auth::user()->role, ['business_ad', 'private_ad']))
+            @if(Auth::user()->isAdvertiser())
             <x-agenda-calendar />
             @endif
 

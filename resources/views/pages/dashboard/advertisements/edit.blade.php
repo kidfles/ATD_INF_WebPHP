@@ -43,9 +43,9 @@
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-1.5">{{ __('Type') }}</label>
                         <select name="type" class="w-full bg-slate-50 border-transparent rounded-2xl px-4 py-3 text-sm text-slate-600 focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100/50">
-                            <option value="sell" {{ old('type', $advertisement->type) == 'sell' ? 'selected' : '' }}>{{ __('Verkoop') }}</option>
-                            <option value="rent" {{ old('type', $advertisement->type) == 'rent' ? 'selected' : '' }}>{{ __('Verhuur') }}</option>
-                            <option value="auction" {{ old('type', $advertisement->type) == 'auction' ? 'selected' : '' }}>{{ __('Veiling') }}</option>
+                            <option value="sell" {{ old('type', $advertisement->type->value) == 'sell' ? 'selected' : '' }}>{{ __('Verkoop') }}</option>
+                            <option value="rent" {{ old('type', $advertisement->type->value) == 'rent' ? 'selected' : '' }}>{{ __('Verhuur') }}</option>
+                            <option value="auction" {{ old('type', $advertisement->type->value) == 'auction' ? 'selected' : '' }}>{{ __('Veiling') }}</option>
                         </select>
                     </div>
 
@@ -63,7 +63,7 @@
                                     @if($advertisement->relatedAds->contains($option->id)) selected @endif
                                     @if(is_array(old('related_ads')) && in_array($option->id, old('related_ads'))) selected @endif
                                 >
-                                    {{ ucfirst($option->type) }}: {{ $option->title }}
+                                    {{ ucfirst($option->type->value) }}: {{ $option->title }}
                                 </option>
                             @endforeach
                         </select>

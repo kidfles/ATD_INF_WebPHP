@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Requests;
 
@@ -29,6 +29,14 @@ class BulkUpdatePageComponentsRequest extends FormRequest
             // Specific content validation could be added here if needed, 
             // but structure varies by component type.
             // Basic array check provides some protection against arbitrary injection.
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'ordered_ids.present'  => 'Volgorde is verplicht.',
+            'components.present'   => 'Componenten zijn verplicht.',
         ];
     }
 }

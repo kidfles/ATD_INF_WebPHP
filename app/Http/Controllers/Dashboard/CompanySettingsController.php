@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
@@ -7,6 +7,10 @@ use App\Http\Requests\UpdateCompanyProfileRequest;
 use Illuminate\Http\Request;
 use App\Models\PageComponent;
 use App\Jobs\ProcessAdvertisementImport;
+use App\Enums\ContractStatus;
+use App\Enums\AdvertisementType;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * CompanySettingsController
@@ -23,7 +27,7 @@ class CompanySettingsController extends Controller
      * @param Request $request Het huidige HTTP request.
      * @return \Illuminate\View\View De weergave met het instellingenformulier.
      */
-    public function edit(Request $request)
+    public function edit(Request $request): View
     {
         $company = $request->user()->companyProfile;
         if (!$company) {
@@ -39,7 +43,7 @@ class CompanySettingsController extends Controller
      * @param UpdateCompanyProfileRequest $request Het gevalideerde request met instellingen en componenten.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met succesmelding.
      */
-    public function update(UpdateCompanyProfileRequest $request)
+    public function update(UpdateCompanyProfileRequest $request): RedirectResponse
     {
         $company = $request->user()->companyProfile;
 
@@ -52,7 +56,7 @@ class CompanySettingsController extends Controller
         }
 
         // 1b. Security: Only allow return policy updates if contract is approved
-        if ($company->contract_status !== 'approved') {
+        if ($company->contract_status !== ContractStatus::Approved) {
             unset($data['wear_and_tear_policy']);
             unset($data['wear_and_tear_value']);
         }
@@ -92,12 +96,12 @@ class CompanySettingsController extends Controller
      * @param Request $request Het huidige HTTP request.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met de nieuwe token (eenmalig zichtbaar).
      */
-    public function generateToken(Request $request)
+    public function generateToken(Request $request): RedirectResponse
     {
         $user = $request->user();
 
         // Beveiligingscheck: Contract moet goedgekeurd zijn voor API-toegang
-        if ($user->companyProfile->contract_status !== 'approved') {
+        if ($user->companyProfile->contract_status !== ContractStatus::Approved) {
             return back()->with('error', __('Approve your contract first to get API access.'));
         }
 
@@ -120,7 +124,7 @@ class CompanySettingsController extends Controller
      * @param Request $request Het HTTP request met het CSV-bestand.
      * @return \Illuminate\Http\RedirectResponse Redirect terug met statusmelding.
      */
-    public function importCsv(Request $request)
+    public function importCsv(Request $request): RedirectResponse
     {
         $request->validate([
             'csv_file' => 'required|file|mimes:csv,txt|max:2048',
@@ -143,7 +147,7 @@ class CompanySettingsController extends Controller
         }
 
         // 2. Check: zijn alle type-waarden geldig?
-        $allowedTypes = ['sell', 'rent', 'auction'];
+        $allowedTypes = array_column(AdvertisementType::cases(), 'value');
         $invalidRows = [];
         $csvTypeCounts = []; // Telt hoeveel ads per type in de CSV staan
 
@@ -153,7 +157,7 @@ class CompanySettingsController extends Controller
             if (empty($type)) {
                 $invalidRows[] = "Rij {$index}: type is leeg";
             } elseif (!in_array($type, $allowedTypes)) {
-                $invalidRows[] = "Rij {$index}: ongeldig type '{$record['type']}' (toegestaan: sell, rent, auction)";
+                $invalidRows[] = "Rij {$index}: ongeldig type '{$record['type']}' (toegestaan: " . implode(', ', $allowedTypes) . ")";
             } else {
                 $csvTypeCounts[$type] = ($csvTypeCounts[$type] ?? 0) + 1;
             }

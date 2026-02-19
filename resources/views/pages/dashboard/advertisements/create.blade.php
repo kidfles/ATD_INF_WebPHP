@@ -64,7 +64,7 @@
                                 <option value="{{ $option->id }}" 
                                     @if(is_array(old('related_ads')) && in_array($option->id, old('related_ads'))) selected @endif
                                 >
-                                    {{ ucfirst($option->type) }}: {{ $option->title }}
+                                    {{ ucfirst($option->type->value) }}: {{ $option->title }}
                                 </option>
                             @endforeach
                         </select>

@@ -66,7 +66,7 @@
                         <h3 class="font-bold text-slate-800 mb-2">{{ __('Step 2: Upload') }}</h3>
                         
                         {{-- Status Logic --}}
-                        @if(auth()->user()->companyProfile->contract_status === 'approved')
+                        @if(auth()->user()->companyProfile->contract_status === \App\Enums\ContractStatus::Approved)
                             <div class="flex items-center bg-emerald-50 border border-emerald-200 text-emerald-700 p-3 rounded-xl mb-4">
                                 <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <div>
@@ -88,7 +88,7 @@
                         @endif
 
                         {{-- Upload Form --}}
-                        @if(auth()->user()->companyProfile->contract_status !== 'approved')
+                        @if(auth()->user()->companyProfile->contract_status !== \App\Enums\ContractStatus::Approved)
                             <form action="{{ route('dashboard.company.contract.upload') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="flex gap-2">
@@ -122,7 +122,7 @@
                 </header>
 
                 <div class="mt-6">
-                    @if(auth()->user()->companyProfile->contract_status !== 'approved')
+                    @if(auth()->user()->companyProfile->contract_status !== \App\Enums\ContractStatus::Approved)
                         <div class="p-4 bg-red-50 border border-red-200 text-red-600 rounded-2xl text-sm font-medium">
                             <strong>{{ __('Access blocked') }}:</strong> {{ __('Your contract must be approved first before you can use the API.') }}
                         </div>
@@ -280,7 +280,7 @@
 
                     <div class="mt-6 space-y-6 max-w-xl">
                         
-                        @if($company->contract_status === 'approved')
+                        @if($company->contract_status === \App\Enums\ContractStatus::Approved)
                             <div x-data="{ policy: '{{ old('wear_and_tear_policy', $company->wear_and_tear_policy ?? 'none') }}' }">
                                 {{-- Policy Type --}}
                                 <div class="space-y-2">

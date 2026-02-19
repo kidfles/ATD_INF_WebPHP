@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
@@ -15,9 +15,11 @@ class EnsureUserHasRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (! $request->user() || ! in_array($request->user()->role, $roles)) {
-            abort(403, 'Unauthorized action.');
-        }
+        abort_unless(
+            $request->user() && in_array($request->user()->role->value, $roles),
+            403,
+            'Unauthorized action.'
+        );
 
         return $next($request);
     }

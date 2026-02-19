@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Enums\UserRole;
 
 class UserSeeder extends Seeder
 {
@@ -17,7 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin User',
             'email' => 'admin@example.com',
             'password' => Hash::make('password'),
-            'role' => 'admin',
+            'role' => UserRole::Admin,
             'email_verified_at' => now(),
         ]);
 
@@ -27,7 +28,7 @@ class UserSeeder extends Seeder
             'name' => 'Standard User',
             'email' => 'user@example.com',
             'password' => Hash::make('password'),
-            'role' => 'user',
+            'role' => UserRole::User,
             'email_verified_at' => now(),
         ]);
 
@@ -45,7 +46,7 @@ class UserSeeder extends Seeder
                 'name' => $user['name'],
                 'email' => $user['email'],
                 'password' => Hash::make('password'),
-                'role' => 'private_ad',
+                'role' => UserRole::PrivateSeller,
                 'email_verified_at' => now(),
             ]);
         }
@@ -65,7 +66,7 @@ class UserSeeder extends Seeder
                 'name' => $business['name'],
                 'email' => $business['email'],
                 'password' => Hash::make('password'),
-                'role' => 'business_ad',
+                'role' => UserRole::BusinessSeller,
                 'email_verified_at' => now(),
             ]);
         }

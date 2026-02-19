@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Jobs;
 
@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Csv\Reader;
+use App\Enums\AdvertisementType;
 
 /**
  * ProcessAdvertisementImport
@@ -89,7 +90,7 @@ class ProcessAdvertisementImport implements ShouldQueue
 
                 // Valideer het type (alleen 'sell', 'rent', 'auction' toegestaan)
                 $type = strtolower(trim($record['type']));
-                if (!in_array($type, ['sell', 'rent', 'auction'])) {
+                if (!in_array($type, array_column(AdvertisementType::cases(), 'value'))) {
                     Log::warning("[CSV Import] Rij {$index} overgeslagen: ongeldig type '{$type}'");
                     $skipped++;
                     continue;

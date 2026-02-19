@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 /**
  * SellerProfileController
@@ -20,7 +21,7 @@ class SellerProfileController extends Controller
      * @param User $user De gebruiker (verkoper) wiens profiel getoond wordt.
      * @return \Illuminate\View\View De weergave van het verkopersprofiel.
      */
-    public function show(User $user)
+    public function show(User $user): View
     {
         // 1. Benodigde relaties inladen voor de weergave
         $user->load([

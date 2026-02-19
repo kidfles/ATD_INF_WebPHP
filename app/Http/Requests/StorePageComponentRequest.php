@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Requests;
 
@@ -23,6 +23,14 @@ class StorePageComponentRequest extends FormRequest
     {
         return [
             'type' => 'required|in:hero,text,featured_ads',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'type.required' => 'Kies een type.',
+            'type.in' => 'Ongeldig type.',
         ];
     }
 }

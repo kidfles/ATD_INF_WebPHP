@@ -54,7 +54,7 @@
                                         <a href="{{ route('market.show', $ad) }}" class="font-bold text-slate-800 group-hover:text-emerald-600 transition-colors block truncate">{{ $ad->title }}</a>
                                         <p class="text-emerald-500 font-extrabold mt-1">€{{ number_format($ad->price, 2) }}</p>
                                         <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-                                            <span class="text-xs text-slate-400 font-semibold">{{ ucfirst($ad->type) }}</span>
+                                            <span class="text-xs text-slate-400 font-semibold">{{ ucfirst($ad->type->value) }}</span>
                                             <form action="{{ route('favorites.toggle', $ad) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" class="text-red-400 hover:text-red-600 transition-colors" title="{{ __('Remove from favorites') }}">

@@ -1,10 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Models\Advertisement;
+use App\Enums\AdvertisementType;
 
 class StoreAdvertisementRequest extends FormRequest
 {
@@ -35,7 +36,7 @@ class StoreAdvertisementRequest extends FormRequest
             'price'       => ['required', 'numeric', 'min:0'],
             'type'        => [
                 'required', 
-                'in:sell,rent,auction',
+                Rule::in(array_column(AdvertisementType::cases(), 'value')),
                 function ($attribute, $value, $fail) {
                     $user = $this->user();
                     $query = $user->advertisements()->where('type', $value);
@@ -59,7 +60,18 @@ class StoreAdvertisementRequest extends FormRequest
         ];
     }
 
-    protected function failedAuthorization()
+    public function messages(): array
+    {
+        return [
+            'title.required'   => 'Vul een titel in.',
+            'price.required'   => 'Vul een prijs in.',
+            'price.numeric'    => 'De prijs moet een getal zijn.',
+            'type.required'    => 'Kies een advertentietype.',
+            'type.in'          => 'Ongeldig advertentietype.',
+        ];
+    }
+
+    protected function failedAuthorization(): void
     {
         throw new \Illuminate\Auth\Access\AuthorizationException(
             $this->isMethod('post') 

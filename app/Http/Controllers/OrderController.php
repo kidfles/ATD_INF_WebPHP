@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
+use App\Enums\AdvertisementType;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 /**
  * OrderController
@@ -25,7 +28,7 @@ class OrderController extends Controller
      * @param Advertisement $advertisement De advertentie die gekocht wordt.
      * @return \Illuminate\Http\RedirectResponse Redirect naar het besteloverzicht.
      */
-    public function store(Request $request, Advertisement $advertisement)
+    public function store(Request $request, Advertisement $advertisement): RedirectResponse
     {
         $user = Auth::user();
 
@@ -40,7 +43,7 @@ class OrderController extends Controller
         }
 
         // 3. Validatie: Is het een verkoop advertentie? (Geen huur of veiling)
-        if ($advertisement->type !== 'sell') {
+        if ($advertisement->type !== AdvertisementType::Sale) {
             return back()->with('error', __('This type of advertisement cannot be bought directly.'));
         }
 
@@ -70,7 +73,7 @@ class OrderController extends Controller
      * 
      * @return \Illuminate\View\View De weergave met alle geplaatste bestellingen.
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $orders = Auth::user()->orders()
             ->filter($request->only(['search', 'sort']))

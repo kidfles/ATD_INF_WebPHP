@@ -1,17 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Rental;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
 
 class AgendaController extends Controller
 {
     /**
      * Toon de agenda-pagina met de FullCalendar kalender.
      */
-    public function index()
+    public function index(): View
     {
         $user = auth()->user();
         
@@ -30,7 +32,7 @@ class AgendaController extends Controller
      * Lever een JSON-feed van events voor FullCalendar.
      * FullCalendar stuurt automatisch 'start' en 'end' parameters mee.
      */
-    public function events(Request $request)
+    public function events(Request $request): JsonResponse
     {
         try {
             $user = $request->user();

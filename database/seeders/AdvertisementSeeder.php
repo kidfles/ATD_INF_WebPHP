@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Advertisement;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Enums\AdvertisementType;
 
 class AdvertisementSeeder extends Seeder
 {
@@ -31,9 +32,9 @@ class AdvertisementSeeder extends Seeder
         $techId = $getUserId('info@techhub.nl');
         if ($techId) {
             $techAds = [
-                ['title' => 'iPhone 14 Pro Max', 'type' => 'sell', 'price' => 1099.00, 'description' => 'Zo goed als nieuw, krasvrij.'],
-                ['title' => 'MacBook Air M2', 'type' => 'sell', 'price' => 1250.00, 'description' => 'Slechts 5 laadcycli.'],
-                ['title' => 'Sony WH-1000XM5', 'type' => 'sell', 'price' => 299.00, 'description' => 'Noise cancelling koptelefoon.'],
+                ['title' => 'iPhone 14 Pro Max', 'type' => AdvertisementType::Sale, 'price' => 1099.00, 'description' => 'Zo goed als nieuw, krasvrij.'],
+                ['title' => 'MacBook Air M2', 'type' => AdvertisementType::Sale, 'price' => 1250.00, 'description' => 'Slechts 5 laadcycli.'],
+                ['title' => 'Sony WH-1000XM5', 'type' => AdvertisementType::Sale, 'price' => 299.00, 'description' => 'Noise cancelling koptelefoon.'],
             ];
 
             foreach ($techAds as $ad) {
@@ -65,7 +66,7 @@ class AdvertisementSeeder extends Seeder
                     'title' => $ad['title'],
                     'description' => 'Te huur per dag. Professionele kwaliteit.',
                     'price' => $ad['price'],
-                    'type' => 'rent',
+                    'type' => AdvertisementType::Rent,
                     'expires_at' => null, // Verhuur-aanbod blijft staan (in tegenstelling tot een veiling)
                     'image_path' => 'images/placeholders/tools.jpg',
                 ]);
@@ -89,7 +90,7 @@ class AdvertisementSeeder extends Seeder
                     'title' => $ad['title'],
                     'description' => 'Bied mee op dit unieke item. Veiling eindigt binnenkort.',
                     'price' => $ad['price'], // Startbod
-                    'type' => 'auction',
+                    'type' => AdvertisementType::Auction,
                     'expires_at' => now()->addDays(7), // Bedrijfsregel: Veiling loopt 7 dagen
                     'image_path' => 'images/placeholders/vintage.jpg',
                 ]);
