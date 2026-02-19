@@ -89,3 +89,21 @@ Na het uitvoeren van de seeders kun je inloggen met de volgende accounts (wachtw
 *   **Prive Verkoper:** `john@example.com`
 *   **Zakelijke Verkoper:** `info@techhub.nl`
 *   **Standaard User:** `user@example.com`
+
+---
+
+## 📖 Technische Documentatie
+
+Voor een diepgaande uitleg van de implementatie, best practices en unieke features, zie:
+
+👉 **[DOCUMENTATION.md](DOCUMENTATION.md)** - Volledige technische documentatie
+
+Deze documentatie bevat:
+- ✅ **Routes/Controllers/Middleware** - Zone-based routing, resource controllers, custom middleware
+- ✅ **Migrations/Database Ontwerp** - Schema rationale, foreign keys, polymorfisme
+- ✅ **Eloquent ORM** - Relationships, query scopes, business logic
+- ✅ **Forms/Resources/Views** - FormRequest validation, Blade components, error handling
+- ✅ **Unieke Waarde Propositie** - Whitelabel, verhuur engine, contract management, polymorfische reviews
+- ✅ **Architectuur Diagrammen** - ASCII visualisaties van key features en system layers
+
+---
