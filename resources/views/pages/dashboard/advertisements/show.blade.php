@@ -28,7 +28,7 @@
                             <p class="text-slate-500 mb-6 leading-relaxed">{{ $advertisement->description }}</p>
                             
                             <div class="flex items-center justify-between">
-                                <span class="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-xs font-bold text-slate-500 uppercase">{{ ucfirst($advertisement->type) }}</span>
+                                <span class="px-3 py-1 bg-slate-50 border border-slate-100 rounded-full text-xs font-bold text-slate-500 uppercase">{{ ucfirst($advertisement->type->value) }}</span>
                                 <span class="text-slate-400 text-sm">{{ __('Aangeboden door') }}: <span class="text-slate-700 font-bold">{{ $advertisement->user->name }}</span></span>
                             </div>
                         </div>
