@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Advertisement;
 use App\Http\Requests\StoreAdvertisementRequest;
 use Illuminate\Http\Request;
+use App\Enums\UserRole;
 
 /**
  * AdvertisementController
@@ -40,7 +41,7 @@ class AdvertisementController extends Controller
     public function create()
     {
         // Bedrijfsregel: Kopers/huurders (rol 'user') mogen geen advertenties plaatsen
-        if (auth()->user()->role === 'user') {
+        if (auth()->user()->role === UserRole::User) {
             abort(403, 'Als koper/huurder kun je geen advertenties plaatsen.');
         }
 
@@ -59,7 +60,7 @@ class AdvertisementController extends Controller
     public function store(StoreAdvertisementRequest $request)
     {
         // Extra veiligheidscheck voor rol
-        if ($request->user()->role === 'user') {
+        if ($request->user()->role === UserRole::User) {
             abort(403, 'Als koper/huurder kun je geen advertenties plaatsen.');
         }
 

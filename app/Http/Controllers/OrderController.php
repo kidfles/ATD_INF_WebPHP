@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\DB;
+use App\Enums\AdvertisementType;
 
 /**
  * OrderController
@@ -40,7 +41,7 @@ class OrderController extends Controller
         }
 
         // 3. Validatie: Is het een verkoop advertentie? (Geen huur of veiling)
-        if ($advertisement->type !== 'sell') {
+        if ($advertisement->type !== AdvertisementType::Sale) {
             return back()->with('error', __('This type of advertisement cannot be bought directly.'));
         }
 

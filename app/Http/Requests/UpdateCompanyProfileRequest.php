@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Enums\ContractStatus;
 
 class UpdateCompanyProfileRequest extends FormRequest
 {
@@ -37,12 +38,12 @@ public function rules(): array
         ],
         // Wear & Tear Policy (Only validate if contract is approved and user can actually see these fields)
         'wear_and_tear_policy' => [
-            Rule::requiredIf($company->contract_status === 'approved'),
+            Rule::requiredIf($company->contract_status === ContractStatus::Approved),
             'string',
             'in:none,fixed,percentage'
         ],
         'wear_and_tear_value' => [
-            Rule::requiredIf(fn() => $company->contract_status === 'approved' && $this->input('wear_and_tear_policy') !== 'none'),
+            Rule::requiredIf(fn() => $company->contract_status === ContractStatus::Approved && $this->input('wear_and_tear_policy') !== 'none'),
             'nullable', // Allow null if not required
             'numeric',
             'min:0',

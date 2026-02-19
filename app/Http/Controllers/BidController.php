@@ -9,6 +9,7 @@ use App\Http\Requests\StoreBidRequest;
 use App\Models\Advertisement;
 use App\Models\Bid;
 use Illuminate\Http\RedirectResponse;
+use App\Enums\AdvertisementType;
 
 /**
  * BidController
@@ -52,7 +53,7 @@ class BidController extends Controller
         }
 
         // 1. Controleer of de advertentie wel een veiling is
-        if ($advertisement->type !== 'auction') {
+        if ($advertisement->type !== AdvertisementType::Auction) {
             return back()->with('error', __('Bidding is only allowed on auctions.'));
         }
 

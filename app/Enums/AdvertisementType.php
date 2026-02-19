@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum AdvertisementType: string
 {
-    case Sale    = 'sale';
+    case Sale    = 'sell';
     case Rent    = 'rent';
     case Auction = 'auction';
 }

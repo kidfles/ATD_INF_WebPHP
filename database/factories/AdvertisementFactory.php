@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use App\Enums\AdvertisementType;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Advertisement>
@@ -27,7 +28,7 @@ class AdvertisementFactory extends Factory
             'Laptop HP Pavilion', 'Samsung Galaxy S22', 'Koffiezetapparaat', 'Boormachine Makita'
         ];
 
-        $type = $this->faker->randomElement(['sell', 'rent', 'auction']);
+        $type = $this->faker->randomElement(AdvertisementType::cases());
 
         return [
             'user_id' => User::factory(),
@@ -36,7 +37,7 @@ class AdvertisementFactory extends Factory
             'description' => $this->faker->paragraph(3), // Nederlandse tekst via APP_FAKER_LOCALE
             'price' => $this->faker->randomFloat(2, 5, 2500),
             // Bedrijfsregel: Verkoop advertenties hebben geen verloopdatum, veilingen wel.
-            'expires_at' => $type === 'sell' ? null : $this->faker->dateTimeBetween('now', '+3 months'),
+            'expires_at' => $type === AdvertisementType::Sale ? null : $this->faker->dateTimeBetween('now', '+3 months'),
         ];
     }
 }

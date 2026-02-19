@@ -6,6 +6,8 @@ use App\Models\CompanyProfile;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use App\Enums\UserRole;
+use App\Enums\ContractStatus;
 
 /**
  * CompanyController
@@ -51,7 +53,7 @@ class CompanyController extends Controller
         $user = auth()->user();
         
         // Controleer of de gebruiker een zakelijke adverteerder is
-        if ($user->role !== 'business_ad' || !$user->companyProfile) {
+        if ($user->role !== UserRole::BusinessSeller || !$user->companyProfile) {
             abort(403, 'Alleen zakelijke gebruikers kunnen een contract downloaden.');
         }
 
@@ -77,7 +79,7 @@ class CompanyController extends Controller
 
         $user = auth()->user();
         
-        if ($user->role !== 'business_ad' || !$user->companyProfile) {
+        if ($user->role !== UserRole::BusinessSeller || !$user->companyProfile) {
             abort(403, 'Alleen zakelijke gebruikers kunnen een contract uploaden.');
         }
         
@@ -89,7 +91,7 @@ class CompanyController extends Controller
         // Werk profiel bij: status gaat naar 'pending' voor handmatige controle
         $company->update([
             'contract_file_path' => $path,
-            'contract_status' => 'pending' 
+            'contract_status' => ContractStatus::Pending 
         ]);
 
         return back()->with('success', __('Contract successfully uploaded...'));
@@ -104,7 +106,7 @@ class CompanyController extends Controller
     {
         $user = auth()->user();
         
-        if ($user->role !== 'business_ad' || !$user->companyProfile) {
+        if ($user->role !== UserRole::BusinessSeller || !$user->companyProfile) {
             abort(403, 'Alleen zakelijke gebruikers kunnen deze actie uitvoeren.');
         }
         
@@ -112,7 +114,7 @@ class CompanyController extends Controller
         
         // Keur het contract direct goed
         $company->update([
-            'contract_status' => 'approved'
+            'contract_status' => ContractStatus::Approved
         ]);
 
         return back()->with('status', __('Contract is now approved!'));

@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateCompanyProfileRequest;
 use Illuminate\Http\Request;
 use App\Models\PageComponent;
 use App\Jobs\ProcessAdvertisementImport;
+use App\Enums\ContractStatus;
+use App\Enums\AdvertisementType;
 
 /**
  * CompanySettingsController
@@ -52,7 +54,7 @@ class CompanySettingsController extends Controller
         }
 
         // 1b. Security: Only allow return policy updates if contract is approved
-        if ($company->contract_status !== 'approved') {
+        if ($company->contract_status !== ContractStatus::Approved) {
             unset($data['wear_and_tear_policy']);
             unset($data['wear_and_tear_value']);
         }
@@ -97,7 +99,7 @@ class CompanySettingsController extends Controller
         $user = $request->user();
 
         // Beveiligingscheck: Contract moet goedgekeurd zijn voor API-toegang
-        if ($user->companyProfile->contract_status !== 'approved') {
+        if ($user->companyProfile->contract_status !== ContractStatus::Approved) {
             return back()->with('error', __('Approve your contract first to get API access.'));
         }
 
@@ -143,7 +145,7 @@ class CompanySettingsController extends Controller
         }
 
         // 2. Check: zijn alle type-waarden geldig?
-        $allowedTypes = ['sell', 'rent', 'auction'];
+        $allowedTypes = array_column(AdvertisementType::cases(), 'value');
         $invalidRows = [];
         $csvTypeCounts = []; // Telt hoeveel ads per type in de CSV staan
 
@@ -153,7 +155,7 @@ class CompanySettingsController extends Controller
             if (empty($type)) {
                 $invalidRows[] = "Rij {$index}: type is leeg";
             } elseif (!in_array($type, $allowedTypes)) {
-                $invalidRows[] = "Rij {$index}: ongeldig type '{$record['type']}' (toegestaan: sell, rent, auction)";
+                $invalidRows[] = "Rij {$index}: ongeldig type '{$record['type']}' (toegestaan: " . implode(', ', $allowedTypes) . ")";
             } else {
                 $csvTypeCounts[$type] = ($csvTypeCounts[$type] ?? 0) + 1;
             }

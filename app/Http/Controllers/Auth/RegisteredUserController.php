@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Enums\UserRole;
 
 /**
  * RegisteredUserController
@@ -46,9 +47,9 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'in:user,private_ad,business_ad'],
-            'company_name' => ['required_if:role,business_ad', 'nullable', 'string', 'max:255'],
-            'kvk_number' => ['required_if:role,business_ad', 'nullable', 'digits:8'],
+            'role' => ['required', 'in:' . implode(',', array_column(UserRole::cases(), 'value'))],
+            'company_name' => ['required_if:role,' . UserRole::BusinessSeller->value, 'nullable', 'string', 'max:255'],
+            'kvk_number' => ['required_if:role,' . UserRole::BusinessSeller->value, 'nullable', 'digits:8'],
         ]);
 
         // 2. Maak de nieuwe gebruikersaccount aan
@@ -60,7 +61,7 @@ class RegisteredUserController extends Controller
         ]);
 
         // 3. Voor zakelijke adverteerders: Bedrijfsprofiel aanmaken (whitelabel-onderdelen worden via Observer aangemaakt)
-        if ($request->role === 'business_ad') {
+        if ($request->role === UserRole::BusinessSeller->value) {
             \App\Models\CompanyProfile::create([
                 'user_id' => $user->id,
                 'company_name' => $request->company_name,

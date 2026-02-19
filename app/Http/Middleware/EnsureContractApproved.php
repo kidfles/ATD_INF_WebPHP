@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Enums\UserRole;
+use App\Enums\ContractStatus;
 
 class EnsureContractApproved
 {
@@ -18,13 +20,13 @@ class EnsureContractApproved
         }
 
         // 1. If not a business user, deny access
-        if ($user->role !== 'business_ad' || !$user->companyProfile) {
+        if ($user->role !== UserRole::BusinessSeller || !$user->companyProfile) {
             abort(403, 'Alleen voor zakelijke accounts.');
         }
 
         // 2. Check contract status
         // We assume a 'contract_status' column exists (pending, approved, rejected)
-        if ($user->companyProfile->contract_status !== 'approved') {
+        if ($user->companyProfile->contract_status !== ContractStatus::Approved) {
             
             // If it's an API request, return JSON
             if ($request->expectsJson()) {
