@@ -99,16 +99,6 @@
                                 </div>
                             </form>
 
-                            {{-- TEST BUTTON (DEVELOPMENT ONLY) --}}
-                            <div class="mt-6 pt-6 border-t border-slate-200">
-                                <p class="text-xs text-slate-300 mb-2 uppercase font-bold">Development Testing</p>
-                                <form action="{{ route('dashboard.company.contract.approve_test') }}" method="POST">
-                                    @csrf
-                                    <button type="submit" class="text-xs text-emerald-500 hover:text-emerald-600 underline font-bold transition">
-                                        {{ __('[TEST] Approve my contract properly') }}
-                                    </button>
-                                </form>
-                            </div>
                         @endif
                     </div>
                 </div>

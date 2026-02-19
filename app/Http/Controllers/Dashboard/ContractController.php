@@ -71,28 +71,5 @@ class ContractController extends Controller
         return back()->with('success', __('Contract successfully uploaded...'));
     }
 
-    /**
-     * TEST ONLY: Keur het contract direct goed voor ontwikkelings-/testdoeleinden.
-     * 
-     * @return \Illuminate\Http\RedirectResponse Redirect terug met statusmelding.
-     */
-    public function approveTest(): RedirectResponse
-    {
-        $user = auth()->user();
-        
-        abort_unless(
-            $user->role === UserRole::BusinessSeller && $user->companyProfile !== null,
-            403,
-            'Alleen zakelijke gebruikers kunnen deze actie uitvoeren.'
-        );
-        
-        $company = $user->companyProfile;
-        
-        // Keur het contract direct goed
-        $company->update([
-            'contract_status' => ContractStatus::Approved
-        ]);
-
-        return back()->with('status', __('Contract is now approved!'));
     }
 }
