@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Enums\UserRole;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -29,7 +30,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => 'user', // Standaard rol
+            'role' => UserRole::User, // Standaard rol
             'remember_token' => Str::random(10),
         ];
     }
@@ -50,7 +51,7 @@ class UserFactory extends Factory
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => 'admin',
+            'role' => UserRole::Admin,
         ]);
     }
     
@@ -60,7 +61,7 @@ class UserFactory extends Factory
     public function businessAdvertiser(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => \App\Enums\UserRole::BusinessSeller,
+            'role' => UserRole::BusinessSeller,
         ]);
     }
     
@@ -70,7 +71,7 @@ class UserFactory extends Factory
     public function privateAdvertiser(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => 'private_ad',
+            'role' => UserRole::PrivateSeller,
         ]);
     }
 }

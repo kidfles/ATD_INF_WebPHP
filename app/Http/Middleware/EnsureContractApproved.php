@@ -24,9 +24,11 @@ class EnsureContractApproved
             'Alleen voor zakelijke accounts.'
         );
 
+        $companyProfile = $user->companyProfile;
+
         // 2. Check contract status
         // We assume a 'contract_status' column exists (pending, approved, rejected)
-        if ($user->companyProfile->contract_status !== ContractStatus::Approved) {
+        if ($companyProfile === null || $companyProfile->contract_status !== ContractStatus::Approved) {
             
             // If it's an API request, return JSON
             if ($request->expectsJson()) {

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Advertisement;
 use App\Models\User;
 use App\Models\Bid;
+use App\Enums\UserRole;
 use Illuminate\Database\Seeder;
 
 class BidSeeder extends Seeder
@@ -14,7 +15,7 @@ class BidSeeder extends Seeder
         // Stap 1: Haal alle lopende veilingen op
         $auctions = Advertisement::where('type', 'auction')->get();
         // Stap 2: Haal particuliere gebruikers op die kunnen bieden
-        $bidders = User::where('role', 'private_ad')->get();
+        $bidders = User::where('role', UserRole::PrivateSeller->value)->get();
 
         if ($auctions->isEmpty() || $bidders->isEmpty()) {
             return;

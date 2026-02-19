@@ -26,6 +26,7 @@ class StoreBidRequest extends FormRequest
             'amount' => [
                 'required', 
                 'numeric',
+                'min:0.01',
                 function ($attribute, $value, $fail) {
                     $advertisement = $this->route('advertisement');
                     
