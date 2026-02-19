@@ -66,7 +66,15 @@ Route::middleware(['auth', 'verified'])->prefix('dashboard')->name('dashboard.')
     // Contractbeheer en Goedkeuring
     Route::get('/company/contract/download', [ContractController::class, 'download'])->name('company.contract.download');
     Route::post('/company/contract/upload', [ContractController::class, 'upload'])->name('company.contract.upload');
-    Route::post('/company/contract/approve-test', [ContractController::class, 'approveTest'])->name('company.contract.approve_test');
+    
+    // ZONE: Admin (Beveiligd met role:admin)
+    // Beheer van zakelijke contracten en verificaties
+    Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/contracts', [App\Http\Controllers\Dashboard\AdminContractController::class, 'index'])->name('contracts.index');
+        Route::get('/contracts/{companyProfile}/download', [App\Http\Controllers\Dashboard\AdminContractController::class, 'download'])->name('contracts.download');
+        Route::post('/contracts/{companyProfile}/approve', [App\Http\Controllers\Dashboard\AdminContractController::class, 'approve'])->name('contracts.approve');
+        Route::post('/contracts/{companyProfile}/decline', [App\Http\Controllers\Dashboard\AdminContractController::class, 'decline'])->name('contracts.decline');
+    });
     
     // API Toegang (Alleen als contract is goedgekeurd)
     Route::post('/company/api-token', [App\Http\Controllers\Dashboard\CompanySettingsController::class, 'generateToken'])->name('company.api_token')->middleware('contract.approved');

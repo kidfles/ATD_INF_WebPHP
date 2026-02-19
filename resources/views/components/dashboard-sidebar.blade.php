@@ -68,6 +68,16 @@
             </a>
         @endif
 
+        @if(Auth::user()->isAdmin())
+            <div class="border-t border-slate-100 my-2"></div>
+            <div class="px-3 pt-2 pb-1 text-xs font-bold text-slate-400 uppercase tracking-wider">{{ __('Admin Panel') }}</div>
+            
+            <a href="{{ route('dashboard.admin.contracts.index') }}" class="{{ request()->routeIs('dashboard.admin.contracts.*') ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-slate-500 hover:bg-slate-50 hover:text-emerald-600' }} group flex items-center px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200">
+                <svg aria-hidden="true" class="{{ request()->routeIs('dashboard.admin.contracts.*') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-500' }} flex-shrink-0 mr-3 h-5 w-5 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                {{ __('Contract Requests') }}
+            </a>
+        @endif
+
         <a href="{{ route('profile.edit') }}" 
             class="{{ request()->routeIs('profile.edit') ? 'bg-emerald-50 text-emerald-700 font-bold' : 'text-slate-500 hover:bg-slate-50 hover:text-emerald-600' }} group flex items-center px-3 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200">
             <svg aria-hidden="true" class="{{ request()->routeIs('profile.edit') ? 'text-emerald-600' : 'text-slate-400 group-hover:text-emerald-500' }} flex-shrink-0 mr-3 h-5 w-5 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>

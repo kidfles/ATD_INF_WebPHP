@@ -272,5 +272,21 @@
     "Price (Low-High)": "Price (Low-High)",
     "Price (High-Low)": "Price (High-Low)",
     "Delete?": "Delete?",
-    "Delete": "Delete"
+    "Delete": "Delete",
+    "Contract approved for :company.": "Contract approved for :company.",
+    "Contract rejected for :company. The file has been removed and the user can upload again.": "Contract rejected for :company. The file has been removed and the user can upload again.",
+    "Contract file not found.": "Contract file not found.",
+    "Admin Panel": "Admin Panel",
+    "Contract Requests": "Contract Requests",
+    "Company": "Company",
+    "KVK Number": "KVK Number",
+    "User": "User",
+    "Contract": "Contract",
+    "Approve": "Approve",
+    "Decline": "Decline",
+    "Are you sure you want to decline this contract?": "Are you sure you want to decline this contract?",
+    "No pending contract requests at the moment.": "No pending contract requests at the moment.",
+    "Rejected": "Rejected",
+    "Please upload a correct version.": "Please upload a correct version.",
+    "Company Name": "Company Name"
 }
