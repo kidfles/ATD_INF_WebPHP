@@ -113,7 +113,7 @@ class Rental extends Model
     public function getDaysCount(): int
     {
         // Fix: Exact difference with a minimum of 1 day
-        return max(1, $this->start_date->diffInDays($this->end_date));
+        return (int) max(1, $this->start_date->diffInDays($this->end_date));
     }
 
     /**

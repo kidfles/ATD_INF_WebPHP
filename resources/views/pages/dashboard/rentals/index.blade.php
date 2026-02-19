@@ -151,6 +151,8 @@
                                                         <span class="px-2.5 py-1 inline-flex text-[11px] font-bold rounded-full bg-teal-50 text-teal-600 border border-teal-200">{{ __('Active') }}</span>
                                                     @elseif($rental->status === 'overdue')
                                                         <span class="px-2.5 py-1 inline-flex text-[11px] font-bold rounded-full bg-red-50 text-red-500 border border-red-200">{{ __('Overdue') }}</span>
+                                                    @elseif($rental->status === 'pending')
+                                                        <span class="px-2.5 py-1 inline-flex text-[11px] font-bold rounded-full bg-slate-50 text-slate-500 border border-slate-200">{{ __('Pending') }}</span>
                                                     @else
                                                         <span class="px-2.5 py-1 inline-flex text-[11px] font-bold rounded-full bg-slate-50 text-slate-500 border border-slate-200">{{ ucfirst(__($rental->status)) }}</span>
                                                     @endif
