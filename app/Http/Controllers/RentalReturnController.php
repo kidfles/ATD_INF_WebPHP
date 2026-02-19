@@ -48,8 +48,8 @@ class RentalReturnController extends Controller
         // 3. Database record bijwerken met de resultaten
         $rental->update([
             'return_photo_path' => $path,
-            'wear_and_tear_cost' => $finalCost,
-            // Optioneel: status bijwerken naar 'returned'
+            'wear_and_tear_cost' => $breakdown['wear_and_tear'] + $breakdown['late_fee'],
+            'total_cost' => $finalCost, // Saves grand total into your new column
         ]);
 
         // 4. Feedback geven aan de gebruiker

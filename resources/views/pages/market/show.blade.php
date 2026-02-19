@@ -199,6 +199,13 @@
                                                 @error('end_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                                             </div>
                                         </div>
+                                        <div class="bg-white/50 rounded-xl p-4 border border-slate-200/50 mb-4 hidden" id="price-estimate">
+                                            <div class="flex justify-between items-center text-sm font-bold text-slate-500 mb-1">
+                                                <span>{{ __('Estimated Total') }}</span>
+                                                <span class="text-lg text-slate-800" id="estimated-total">€0.00</span>
+                                            </div>
+                                            <p class="text-[10px] text-slate-400 italic">{{ __('Final cost may include wear & tear or late fees.') }}</p>
+                                        </div>
                                          @error('start_date') <span class="text-red-500 text-xs block mt-1">{{ $message }}</span> @enderror
                                         <button type="submit" class="w-full text-white font-bold py-3 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-0.5"
                                                 style="background-color: {{ $brandColor }}">
@@ -368,12 +375,51 @@
                 }
             };
 
+            const pricePerDay = {{ $advertisement->price }};
+            const wtPolicy = '{{ $advertisement->user?->companyProfile?->wear_and_tear_policy ?? 'none' }}';
+            const wtValue = {{ $advertisement->user?->companyProfile?->wear_and_tear_value ?? 0 }};
+
+            function updateEstimatedPrice() {
+                const startStr = document.getElementById('start_date').value;
+                const endStr = document.getElementById('end_date').value;
+                const estimateDiv = document.getElementById('price-estimate');
+                const totalEl = document.getElementById('estimated-total');
+
+                if (startStr && endStr) {
+                    const start = new Date(startStr);
+                    const end = new Date(endStr);
+
+                    if (end >= start) {
+                        const diffTime = Math.abs(end - start);
+                        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if (diffDays === 0) diffDays = 1; 
+
+                        let basePrice = diffDays * pricePerDay;
+                        let wearAndTear = 0;
+
+                        if (wtPolicy === 'fixed') {
+                            wearAndTear = parseFloat(wtValue);
+                        } else if (wtPolicy === 'percentage') {
+                            wearAndTear = basePrice * (parseFloat(wtValue) / 100);
+                        }
+
+                        const total = basePrice + wearAndTear;
+                        totalEl.innerText = '€' + total.toFixed(2);
+                        estimateDiv.classList.remove('hidden');
+                    } else {
+                        estimateDiv.classList.add('hidden');
+                    }
+                } else {
+                    estimateDiv.classList.add('hidden');
+                }
+            }
+
             // Init Start Date
             const fpStart = flatpickr("#start_date", {
                 ...commonConfig,
                 onChange: function(selectedDates, dateStr, instance) {
-                    // Update minDate van end_date zodat je niet terug in de tijd kan selecteren
                     fpEnd.set('minDate', dateStr);
+                    updateEstimatedPrice();
                 }
             });
 
@@ -381,7 +427,7 @@
             const fpEnd = flatpickr("#end_date", {
                 ...commonConfig,
                 onChange: function(selectedDates, dateStr, instance) {
-                    // Optioneel: check of range valid is (geen overlap)
+                    updateEstimatedPrice();
                 }
             });
         });

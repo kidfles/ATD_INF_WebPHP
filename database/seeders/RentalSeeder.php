@@ -20,23 +20,30 @@ class RentalSeeder extends Seeder
             return;
         }
 
+        $calculator = app(\App\Services\WearAndTearCalculator::class);
+
         foreach ($rentAds as $ad) {
             // Scenario: 50% kans dat een verhuur-item daadwerkelijk verhuurd is geweest in het verleden.
             if (rand(0, 1)) {
                 $renter = $renters->random();
                 
                 // Maak een AFGERONDE verhuur historie aan
-                Rental::create([
+                $rental = new Rental([
                     'advertisement_id' => $ad->id,
                     'renter_id' => $renter->id,
-                    'start_date' => now()->subDays(10),
-                    'end_date' => now()->subDays(5),
-                    
-                    // Bedrijfsregel: Schade/Slijtage (Wear & Tear)
-                    // Als er schade is, wordt er een bedrag gerekend. Hier simuleren we 50% kans op schade.
-                    'wear_and_tear_cost' => rand(0, 1) ? 15.00 : null, 
-                    'return_photo_path' => 'images/placeholders/return.jpg',
+                    'start_date' => now()->subDays(rand(10, 15)),
+                    'end_date' => now()->subDays(rand(5, 9)),
+                    'return_photo_path' => 'images/placeholder/return.png',
                 ]);
+
+                // Gebruik de calculator om realistische data te genereren (inclusief mogelijke boetes)
+                $result = $calculator->calculate($rental);
+                
+                $rental->total_price = $result['breakdown']['base_cost'];
+                $rental->wear_and_tear_cost = $result['breakdown']['wear_and_tear'];
+                $rental->total_cost = $result['total'];
+                
+                $rental->save();
             }
         }
     }

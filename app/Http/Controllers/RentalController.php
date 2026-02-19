@@ -74,10 +74,18 @@ class RentalController extends Controller
             return back()->withErrors(['start_date' => __('This item is already rented for the selected dates.')])->withInput();
         }
 
+        $start = \Carbon\Carbon::parse($request->validated('start_date'));
+        $end = \Carbon\Carbon::parse($request->validated('end_date'));
+        
+        // Use the newly fixed logic: minimum of 1 day
+        $days = max(1, $start->diffInDays($end));
+        $totalPrice = $days * $advertisement->price;
+
         $advertisement->rentals()->create([
             'renter_id' => $request->user()->id,
             'start_date' => $start,
             'end_date' => $end,
+            'total_price' => $totalPrice,
         ]);
 
         return back()->with('success', __('Rental successfully booked!'));

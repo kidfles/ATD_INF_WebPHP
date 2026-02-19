@@ -14,48 +14,45 @@ class WearAndTearCalculator
      */
     public function calculate(Rental $rental): array
     {
-        // 1. Base Cost (Duration in Days * Price)
-        // Use inclusive calendar days (00:00 to 00:00 + 1 day)
-        $start = $rental->start_date->startOfDay();
-        $end = $rental->end_date->startOfDay();
-        
-        // Count inclusive days
-        $bookedDays = $start->diffInDays($end) + 1;
-        $pricePerDay = $rental->advertisement->price;
+        // 1. Basiskosten (Aantal dagen * Dagprijs)
+        // We vertrouwen hier op de logiek in het Rental model
+        $bookedDays = $rental->getDaysCount();
+        $pricePerDay = (float) ($rental->advertisement?->price ?? 0);
         $baseCost = $bookedDays * $pricePerDay;
 
-        // 2. Late Fee Logic
+        // 2. Boete-logica voor te laat inleveren
         // "Business Rule: Bij het terugbrengen na de einddatum wordt 50% extra boete per dag berekend bovenop de dagprijs."
         // 
-        // Example:
-        // Price = 10.00
-        // Late for 2 days.
-        // Extra rental cost = 2 * 10.00 = 20.00 (Added to baseCost)
-        // Late penalty (50%) = 2 * (10.00 * 0.5) = 10.00 (Recorded as lateFee)
-        // Total extra = 30.00
+        // Voorbeeld:
+        // Prijs = 10.00
+        // 2 dagen te laat.
+        // Extra huurkosten = 2 * 10.00 = 20.00 (Wordt opgeteld bij baseCost)
+        // Boete (50%) = 2 * (10.00 * 0.5) = 10.00 (Wordt opgeslagen als lateFee)
+        // Totaal extra = 30.00
         $lateFee = 0.00;
         $returnedDate = now()->startOfDay();
+        $end = $rental->end_date;
 
         if ($returnedDate->gt($end)) {
             $overdueDays = $end->diffInDays($returnedDate);
             if ($overdueDays > 0) {
-                // 1. Add normal rental cost for the overdue days to the base count
-                // as the user essentially extended the rental.
+                // 1. Voeg normale huurkosten toe voor de extra dagen.
+                // De gebruiker heeft het item immers langer in bezit gehad.
                 $additionalBaseCost = $pricePerDay * $overdueDays;
                 $baseCost += $additionalBaseCost;
 
-                // 2. Calculate the 50% penalty on top of that
+                // 2. Bereken de 50% boete bovenop die extra dagen
                 $lateFee = ($pricePerDay * 0.5) * $overdueDays;
             }
         }
 
-        // 3. Wear & Tear Policy
-        // Private advertisers (no company profile) cannot configure wear & tear.
-        // Default policy is 'none' (cost = 0.00).
+        // 3. Slijtagebeleid (Wear & Tear)
+        // Particuliere adverteerders hebben geen bedrijfsprofiel en dus geen slijtagebeleid.
+        // Standaardbeleid is 'none' (kosten = 0.00).
         $policy = 'none';
         $value = 0.00;
 
-        $company = $rental->advertisement->user->companyProfile;
+        $company = $rental->advertisement?->user?->companyProfile;
         if ($company) {
             $policy = $company->wear_and_tear_policy ?? 'none';
             $value = $company->wear_and_tear_value ?? 0.00;
@@ -66,7 +63,7 @@ class WearAndTearCalculator
         if ($policy === 'fixed') {
             $wearAndTearCost = (float) $value;
         } elseif ($policy === 'percentage') {
-            // Percentage of base rental cost
+            // Percentage van de basis huurkosten
             $percentage = (float) $value;
             $wearAndTearCost = ($baseCost * ($percentage / 100));
         }
