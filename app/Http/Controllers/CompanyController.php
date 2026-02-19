@@ -53,9 +53,11 @@ class CompanyController extends Controller
         $user = auth()->user();
         
         // Controleer of de gebruiker een zakelijke adverteerder is
-        if ($user->role !== UserRole::BusinessSeller || !$user->companyProfile) {
-            abort(403, 'Alleen zakelijke gebruikers kunnen een contract downloaden.');
-        }
+        abort_unless(
+            $user->role === UserRole::BusinessSeller && $user->companyProfile !== null,
+            403,
+            'Alleen zakelijke gebruikers kunnen een contract downloaden.'
+        );
 
         $company = $user->companyProfile;
         
@@ -79,9 +81,11 @@ class CompanyController extends Controller
 
         $user = auth()->user();
         
-        if ($user->role !== UserRole::BusinessSeller || !$user->companyProfile) {
-            abort(403, 'Alleen zakelijke gebruikers kunnen een contract uploaden.');
-        }
+        abort_unless(
+            $user->role === UserRole::BusinessSeller && $user->companyProfile !== null,
+            403,
+            'Alleen zakelijke gebruikers kunnen een contract uploaden.'
+        );
         
         $company = $user->companyProfile;
 
@@ -106,9 +110,11 @@ class CompanyController extends Controller
     {
         $user = auth()->user();
         
-        if ($user->role !== UserRole::BusinessSeller || !$user->companyProfile) {
-            abort(403, 'Alleen zakelijke gebruikers kunnen deze actie uitvoeren.');
-        }
+        abort_unless(
+            $user->role === UserRole::BusinessSeller && $user->companyProfile !== null,
+            403,
+            'Alleen zakelijke gebruikers kunnen deze actie uitvoeren.'
+        );
         
         $company = $user->companyProfile;
         

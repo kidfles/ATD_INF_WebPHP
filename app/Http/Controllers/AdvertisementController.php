@@ -43,9 +43,7 @@ class AdvertisementController extends Controller
     public function create(): View
     {
         // Bedrijfsregel: Kopers/huurders (rol 'user') mogen geen advertenties plaatsen
-        if (auth()->user()->role === UserRole::User) {
-            abort(403, 'Als koper/huurder kun je geen advertenties plaatsen.');
-        }
+        abort_unless(auth()->user()->role !== UserRole::User, 403, 'Als koper/huurder kun je geen advertenties plaatsen.');
 
         // Haal alle advertenties van de gebruiker op voor de gerelateerde advertenties selectie
         $myAdvertisements = auth()->user()->advertisements()->select('id', 'title', 'type')->get();
@@ -62,9 +60,7 @@ class AdvertisementController extends Controller
     public function store(StoreAdvertisementRequest $request): RedirectResponse
     {
         // Extra veiligheidscheck voor rol
-        if ($request->user()->role === UserRole::User) {
-            abort(403, 'Als koper/huurder kun je geen advertenties plaatsen.');
-        }
+        abort_unless($request->user()->role !== UserRole::User, 403, 'Als koper/huurder kun je geen advertenties plaatsen.');
 
         $data = $request->validated();
         
@@ -94,9 +90,8 @@ class AdvertisementController extends Controller
     public function show(Advertisement $advertisement): View
     {
         // Toegang beperken tot de eigenaar
-        if ($advertisement->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($advertisement->user_id === auth()->id(), 403);
+        
         return view('pages.dashboard.advertisements.show', compact('advertisement'));
     }
 
@@ -109,9 +104,7 @@ class AdvertisementController extends Controller
     public function edit(Advertisement $advertisement): View
     {
         // Eigendom controleren
-        if ($advertisement->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($advertisement->user_id === auth()->id(), 403);
 
         // Haal alle eigen advertenties op behalve de huidige (zelfreferentie voorkomen)
         $myAdvertisements = auth()->user()->advertisements()
@@ -155,9 +148,7 @@ class AdvertisementController extends Controller
     public function destroy(Advertisement $advertisement): RedirectResponse
     {
         // Alleen de eigenaar mag zijn eigen advertentie verwijderen
-        if ($advertisement->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($advertisement->user_id === auth()->id(), 403);
 
         $advertisement->delete();
 

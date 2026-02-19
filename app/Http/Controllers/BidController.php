@@ -87,9 +87,7 @@ class BidController extends Controller
     public function destroy(Bid $bid): RedirectResponse
     {
         // Alleen de eigenaar van het bod mag het annuleren
-        if ($bid->user_id !== auth()->id()) {
-            abort(403);
-        }
+        abort_unless($bid->user_id === auth()->id(), 403);
 
         $bid->delete();
 

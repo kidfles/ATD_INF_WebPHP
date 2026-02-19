@@ -15,14 +15,14 @@ class EnsureContractApproved
         $user = $request->user();
 
         // Check if user is authenticated
-        if (!$user) {
-            abort(403, 'Authenticatie vereist.');
-        }
+        abort_unless((bool) $user, 403, 'Authenticatie vereist.');
 
         // 1. If not a business user, deny access
-        if ($user->role !== UserRole::BusinessSeller || !$user->companyProfile) {
-            abort(403, 'Alleen voor zakelijke accounts.');
-        }
+        abort_unless(
+            $user->role === UserRole::BusinessSeller && $user->companyProfile !== null,
+            403,
+            'Alleen voor zakelijke accounts.'
+        );
 
         // 2. Check contract status
         // We assume a 'contract_status' column exists (pending, approved, rejected)

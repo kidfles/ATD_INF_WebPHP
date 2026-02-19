@@ -33,9 +33,11 @@ class ReviewController extends Controller
         ]);
 
         // 2. Bedrijfsregel: Heeft de gebruiker dit item daadwerkelijk gehuurd of gekocht?
-        if (!$advertisement->canBeReviewedBy($request->user())) {
-            return back()->withErrors(['msg' => 'Je mag alleen een review plaatsen als je dit product gekocht of gehuurd hebt.']);
-        }
+        abort_unless(
+            $advertisement->canBeReviewedBy($request->user()),
+            403,
+            'Je mag alleen een review plaatsen als je dit product gekocht of gehuurd hebt.'
+        );
 
         // 3. Controleer op dubbele reviews (één review per gebruiker per product)
         $existingReview = Review::where('reviewer_id', Auth::id())
@@ -73,14 +75,14 @@ class ReviewController extends Controller
         ]);
 
         // 2. Bedrijfsregel: Alleen reviewen als er een transactie is geweest
-        if (!$user->hasSoldTo(Auth::user()) && Auth::id() !== $user->id) {
-             return back()->withErrors(['msg' => 'Je mag alleen een verkoper reviewen als je iets bij hen hebt gekocht of gehuurd.']);
-        }
+        abort_unless(
+            $user->hasSoldTo(Auth::user()) || Auth::id() === $user->id,
+            403,
+            'Je mag alleen een verkoper reviewen als je iets bij hen hebt gekocht of gehuurd.'
+        );
         
         // Voorkom dat gebruikers zichzelf beoordelen
-        if (Auth::id() === $user->id) {
-             return back()->withErrors(['msg' => 'Je kunt jezelf niet reviewen.']);
-        }
+        abort_unless(Auth::id() !== $user->id, 403, 'Je kunt jezelf niet reviewen.');
 
         // 3. Controleer op dubbele reviews op dit verkopersprofiel
         $existingReview = Review::where('reviewer_id', Auth::id())
