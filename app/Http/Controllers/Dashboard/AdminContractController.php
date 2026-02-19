@@ -43,11 +43,10 @@ class AdminContractController extends Controller
      */
     public function download(CompanyProfile $companyProfile): StreamedResponse
     {
-        // Controleer of de file wel echt bestaat in de storage
         abort_unless(
             $companyProfile->contract_file_path && Storage::disk('local')->exists($companyProfile->contract_file_path),
             404,
-            'Het contractbestand kon niet worden gevonden.'
+            __('Contract file not found.')
         );
  
         return Storage::disk('local')->download(
@@ -68,7 +67,7 @@ class AdminContractController extends Controller
             'contract_status' => ContractStatus::Approved
         ]);
  
-        return back()->with('status', __('Contract goedgekeurd voor :company.', ['company' => $companyProfile->company_name]));
+        return back()->with('status', __('Contract approved for :company.', ['company' => $companyProfile->company_name]));
     }
  
     /**
@@ -91,6 +90,6 @@ class AdminContractController extends Controller
             'contract_file_path' => null,
         ]);
 
-        return back()->with('status', __('Contract afgewezen voor :company. Het bestand is verwijderd en de gebruiker kan opnieuw uploaden.', ['company' => $companyProfile->company_name]));
+        return back()->with('status', __('Contract rejected for :company. The file has been removed and the user can upload again.', ['company' => $companyProfile->company_name]));
     }
 }

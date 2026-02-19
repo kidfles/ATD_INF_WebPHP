@@ -62,7 +62,13 @@
                             <a href="{{ route('dashboard.rentals.index') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('dashboard.rentals.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-600' }} transition-all">{{ __('My Rentals') }}</a>
                             <a href="{{ route('dashboard.orders.index') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('dashboard.orders.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-600' }} transition-all">{{ __('My Purchases') }}</a>
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('profile.edit') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-600' }} transition-all">{{ __('Profile') }}</a>
-                            <div class="border-t border-slate-100 my-2"></div>
+                             
+                             @if(Auth::user()->isAdmin())
+                                <div class="border-t border-slate-100 my-2 px-4 pt-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ __('Admin Panel') }}</div>
+                                <a href="{{ route('dashboard.admin.contracts.index') }}" class="block px-4 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('dashboard.admin.contracts.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-600' }} transition-all">{{ __('Contract Requests') }}</a>
+                             @endif
+
+                             <div class="border-t border-slate-100 my-2"></div>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="block w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 transition-all">{{ __('Logout') }}</button>
