@@ -61,8 +61,7 @@
                             @foreach($myAdvertisements as $option)
                                 <option value="{{ $option->id }}" 
                                     @if($advertisement->relatedAds->contains($option->id)) selected @endif
-                     {{-- Calendar Component --}}
-            @if(in_array(Auth::user()->role->value, ['business_ad', 'private_ad']) && is_array(old('related_ads')) && in_array($option->id, old('related_ads'))) selected @endif
+                                    @if(Auth::user()->isAdvertiser() && is_array(old('related_ads')) && in_array($option->id, old('related_ads'))) selected @endif
                                 >
                                     {{ ucfirst($option->type->value) }}: {{ $option->title }}
                                 </option>
